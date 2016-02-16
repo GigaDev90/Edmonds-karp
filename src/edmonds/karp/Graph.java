@@ -5,6 +5,9 @@
  */
 package edmonds.karp;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  *
  * @author gabriele
@@ -13,11 +16,15 @@ public class Graph {
 
     private Node header;
     private int sizeNode;
+    private Node source;
+    private Node sink;
 
     public Graph() {
 
         header = new Node("header");
         sizeNode = 0;
+        source = null;
+        sink = null;
     }
 
     public void addNode(String name) {
@@ -34,12 +41,18 @@ public class Graph {
             System.out.println("rimozione fallita: non sono presenti nodi");
             return;
         }
+        int size = node.sizeEdge;
+        System.out.println("sizeEdge: "+node.sizeEdge);
+        Edge tmpEdge = node.getHeader().getNext();
+        for ( int i = 0; i < size; i++ ) {
+            disconnect(tmpEdge);
+            tmpEdge = tmpEdge.getNext();
 
-        for ( int i = 1; i < node.sizeEdge; i++ )
-            disconnect(node.getHeader().getNext());
-
+        }
+            
+        System.out.println("sizeEdge: "+node.sizeEdge);
         Node prevTmp = header;
-        for ( int i = 1; i <= sizeNode; i++ ) {
+        for ( int i = 0; i < sizeNode; i++ ) {
 
             if ( prevTmp.getNext() == node ) {
                 prevTmp.setNext(node.getNext());
@@ -51,17 +64,21 @@ public class Graph {
         sizeNode--;
     }
 
-    public void connect(Node a, Node adjacent) {
+    public void connect(Node a, Node adjacent, int capacity, int flow) {
 
-        if (sizeNode == 1) {
-            System.out.println("connessione fallita: esiste un solo nodo");
+        if (sizeNode == 1 || capacity < flow) {
+            System.out.println("connessione fallita: esiste un solo nodo o valore flusso non consentito");
             return;
         }
 
         Edge edge = new Edge (a, adjacent);
+        edge.setCapacity(capacity);
+        edge.setFlow(flow);
         a.addEdge(edge);
 
         Edge edgeRes = new Edge (adjacent, a);
+        edgeRes.setCapacity(capacity);
+        edgeRes.setFlow(flow);
         edgeRes.setIsResidual(true);
         adjacent.addEdge(edgeRes);
     }
@@ -77,6 +94,38 @@ public class Graph {
 
         a.removeEdge(b);
         b.removeEdge(a);
+    }
+    
+    public void BFSVisit() {
+
+        if ( source == null || sink == null) {
+            System.out.println("sorgente o pozzo non sono stati assegnati");
+            return;
+        }
+        Node tmp = header.getNext();
+        for ( int i = 0; i < sizeNode; i++ ) {
+            tmp.setParent(null);
+            tmp.setIsDiscovered(false);
+            tmp = tmp.getNext();
+        }
+
+        Queue<Node> q = new LinkedList();
+        q.add(source);
+
+        while ( !q.isEmpty() ) {
+            
+            Node current = q.remove();
+            Edge edge = current.getHeader().getNext();
+            for ( int i = 0; i < current.sizeEdge; i++ ) {
+                
+                if ( !edge.getNodeB().isDiscovered() ) {
+                    edge.getNodeB().setIsDiscovered(true);
+                    edge.getNodeB().setParent(current);
+                    q.add(edge.getNodeB());
+                }
+                edge = edge.getNext();
+            }
+        }  
     }
 
     public Node getHeader() {
@@ -101,13 +150,17 @@ class Node {
 
     private Edge header;
     private Node next;
+    private Node parent;
     private String name;
+    private boolean isDiscovered;
     int sizeEdge;
 
     public Node(String name) {
 
         header = new Edge(null, null);
         next = null;
+        parent =  null;
+        isDiscovered = false;
         this.name = name;
         sizeEdge = 0;
     }
@@ -126,14 +179,14 @@ class Node {
             System.out.println("Rimozione fallita: non sono presenti archi");
         }
 
-        for ( int i = 1; i <= sizeEdge; i++ ) {
-            Edge tmp = header;
-            if ( tmp.getNext() != null && tmp.getNext().getNodeB() == adjacent ) {
+        Edge tmp = header;
+        for ( int i = 0; i < sizeEdge - 1; i++ ) {
+            
+            if ( tmp.getNext().getNodeB() == adjacent ) 
                 tmp.setNext(tmp.getNext().getNext());
 
-            } else
-                tmp = tmp.getNext();
-
+          
+            tmp = tmp.getNext();
         }
 
         sizeEdge--;
@@ -153,6 +206,22 @@ class Node {
 
      public String getName() {
         return name;
+    }
+     
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+    
+    public boolean isDiscovered() {
+        return isDiscovered;
+    }
+
+    public void setIsDiscovered(boolean isDiscovered) {
+        this.isDiscovered = isDiscovered;
     }
 
 }
