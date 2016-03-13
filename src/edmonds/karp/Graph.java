@@ -26,13 +26,31 @@ public class Graph {
         source = null;
         sink = null;
     }
+    
+    public Node getSource() {
+        return source;
+    }
 
-    public void addNode(String name) {
+    public void setSource(Node source) {
+        this.source = source;
+    }
+
+    public Node getSink() {
+        return sink;
+    }
+
+    public void setSink(Node sink) {
+        this.sink = sink;
+    }
+
+    public Node addNode(String name) {
 
         Node node = new Node(name);
         node.setNext(header.getNext());
         header.setNext(node);
         sizeNode++;
+        
+        return node;
     }
 
     public void removeNode(Node node) {
@@ -69,6 +87,12 @@ public class Graph {
         if (sizeNode == 1 || capacity < flow) {
             System.out.println("connessione fallita: esiste un solo nodo o valore flusso non consentito");
             return;
+        } else if ( adjacent == source ) {
+            System.out.println("connessione fallita: la sorgente non può avere archi entranti");
+            return;
+        } else if ( a == sink ) {
+            System.out.println("connessione fallita: il pozzo non può avere archi uscenti");
+            return;
         }
 
         Edge edge = new Edge (a, adjacent);
@@ -96,12 +120,8 @@ public class Graph {
         b.removeEdge(a);
     }
     
-    public void BFSVisit() {
+    public void BFSVisit(Node root) {
 
-        if ( source == null || sink == null) {
-            System.out.println("sorgente o pozzo non sono stati assegnati");
-            return;
-        }
         Node tmp = header.getNext();
         for ( int i = 0; i < sizeNode; i++ ) {
             tmp.setParent(null);
@@ -110,21 +130,28 @@ public class Graph {
         }
 
         Queue<Node> q = new LinkedList();
-        q.add(source);
+        q.add(root);
+        root.setIsDiscovered(true);
+        root.setParent(null);
 
         while ( !q.isEmpty() ) {
             
             Node current = q.remove();
             Edge edge = current.getHeader().getNext();
+            
+           // System.out.println("parent "+current.getName());
+            
             for ( int i = 0; i < current.sizeEdge; i++ ) {
                 
                 if ( !edge.getNodeB().isDiscovered() ) {
                     edge.getNodeB().setIsDiscovered(true);
                     edge.getNodeB().setParent(current);
                     q.add(edge.getNodeB());
+                 //   System.out.println(edge.getNodeB().getName());
                 }
                 edge = edge.getNext();
             }
+          //  System.out.println("BFS ");
         }  
     }
 
@@ -142,6 +169,49 @@ public class Graph {
 
     public void setSizeNode(int sizeNode) {
         this.sizeNode = sizeNode;
+    }
+    
+    public void EdmondsKarp() {
+
+        if ( source == null || sink == null) {
+            System.out.println("sorgente o pozzo non sono stati assegnati");
+            return;
+        }
+
+        Node tmpNode = header.getNext();
+        for ( int i = 0; i < sizeNode; i++ ) {
+            Edge tmpEdge = tmpNode.getHeader().getNext();
+            for ( int j = 0; j < tmpNode.sizeEdge; j++) {
+                tmpEdge.setFlow(0);
+                tmpEdge = tmpEdge.getNext();
+            }
+            tmpNode = tmpNode.getNext();
+        }
+
+        BFSVisit(source);
+        while ( sink.getParent() != null ) {
+            
+            tmpNode = sink.getParent();
+            int min = tmpNode.getEdge(sink).getResidual();
+           // System.out.println("min "+min);
+            
+            while (tmpNode.getParent() != null) {
+                if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min )
+                    min = tmpNode.getParent().getEdge(tmpNode).getResidual();
+               // System.out.println(tmpNode);
+                tmpNode = tmpNode.getParent();
+            }
+            
+            tmpNode = sink.getParent();
+
+            while (tmpNode.getParent() != null) {
+                tmpNode.getParent().getEdge(tmpNode).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() + min );
+                tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                tmpNode = tmpNode.getParent();
+            }
+           // System.out.println("test");
+        BFSVisit(source);            
+        }
     }
 
 }
@@ -165,6 +235,16 @@ class Node {
         sizeEdge = 0;
     }
 
+    public Edge getEdge(Node adj) {
+        
+        Edge tmp = header.getNext();
+        while ( tmp != null && tmp.getNodeB() != adj ) 
+            tmp = tmp.getNext();
+        
+        return tmp;
+        
+    }
+    
     public void addEdge(Edge edge) {
 
         edge.setNext(header.getNext());
@@ -254,6 +334,10 @@ class Edge {
 
     public int getCapacity() {
         return capacity;
+    }
+    
+    public int getResidual() {
+        return capacity - flow;
     }
 
     public void setCapacity(int capacity) {
