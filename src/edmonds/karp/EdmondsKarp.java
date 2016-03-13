@@ -27,17 +27,15 @@ public class EdmondsKarp {
         }
         
         graph.setSource(graph.addNode((""+(element - 1))));
-        
-        System.out.println(graph.getSizeNode());
 
         Node tmp =  graph.getHeader().getNext();
         Node tmp2 = graph.getHeader().getNext();
          
         for ( int i = 0; i < graph.getSizeNode() - 1; i++ ) {
             
-                graph.connect(tmp, tmp.getNext(), 0, 0);
-
-            tmp =  tmp.getNext();
+            graph.connect(tmp, tmp.getNext(), 10, 0);
+            System.out.println(tmp.getName());
+            tmp = tmp.getNext();
         }
         
         tmp =  graph.getHeader().getNext();
@@ -52,7 +50,7 @@ public class EdmondsKarp {
             }
             
             if ( tmp != tmp2 && tmp != tmp.getNext() && tmp != graph.getSink() && tmp2 != graph.getSource() )
-                graph.connect(tmp, tmp2, 0, 0);
+                graph.connect(tmp, tmp2, random, 0);
             
             tmp = tmp.getNext();
         }
@@ -69,8 +67,24 @@ public class EdmondsKarp {
     
     public static void main(String[] args) {
         
-        makeTestGraph(100);
-        graph.EdmondsKarp(); 
+        makeTestGraph(10);
+        graph.EdmondsKarp();
+        
+        Node current =  graph.getHeader().getNext();
+        
+        for ( int i = 0; i < graph.getSizeNode() ; i++ ) {
+            
+            System.out.print(current.getName()+" ");
+            Edge edge = current.getHeader().getNext();
+            
+            for ( int j = 0; j < current.sizeEdge; j++ ) {
+                if ( !edge.isIsResidual())
+                    System.out.println("Flow "+edge.getFlow()+" "+edge.getCapacity()+" "+edge.getNodeB().getName());
+          
+                edge = edge.getNext();
+            }
+            current = current.getNext();
+        }
     }
     
 }

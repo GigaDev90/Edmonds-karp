@@ -97,6 +97,7 @@ public class Graph {
 
         Edge edge = new Edge (a, adjacent);
         edge.setCapacity(capacity);
+        edge.setIsResidual(false);
         edge.setFlow(flow);
         a.addEdge(edge);
 
@@ -143,11 +144,11 @@ public class Graph {
             
             for ( int i = 0; i < current.sizeEdge; i++ ) {
                 
-                if ( !edge.getNodeB().isDiscovered() ) {
+                if ( !edge.getNodeB().isDiscovered() && edge.getResidual() > 0 ) {
                     edge.getNodeB().setIsDiscovered(true);
                     edge.getNodeB().setParent(current);
                     q.add(edge.getNodeB());
-                 //   System.out.println(edge.getNodeB().getName());
+                    //System.out.println(edge.getNodeB().getName());
                 }
                 edge = edge.getNext();
             }
@@ -189,6 +190,7 @@ public class Graph {
         }
 
         BFSVisit(source);
+        
         while ( sink.getParent() != null ) {
             
             tmpNode = sink.getParent();
@@ -202,7 +204,7 @@ public class Graph {
                 tmpNode = tmpNode.getParent();
             }
             
-            tmpNode = sink.getParent();
+            tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
                 tmpNode.getParent().getEdge(tmpNode).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() + min );
