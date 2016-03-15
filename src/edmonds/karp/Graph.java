@@ -42,6 +42,19 @@ public class Graph {
     public void setSink(Node sink) {
         this.sink = sink;
     }
+    
+    public Node getNode(String name) {
+    	
+    	Node tmpNode =  header.getNext();
+    	for ( int i = 0; i <= sizeNode; i++ ) {
+    		if (tmpNode.getName().equals(name))
+    			return tmpNode;
+    		
+    		tmpNode = tmpNode.getNext();
+    	}
+    	
+    	return null;
+    }
 
     public Node addNode(String name) {
 
@@ -103,7 +116,7 @@ public class Graph {
 
         Edge edgeRes = new Edge (adjacent, a);
         edgeRes.setCapacity(capacity);
-        edgeRes.setFlow(flow);
+        edgeRes.setFlow(capacity);
         edgeRes.setIsResidual(true);
         adjacent.addEdge(edgeRes);
     }
@@ -130,17 +143,19 @@ public class Graph {
             tmp = tmp.getNext();
         }
 
-        Queue<Node> q = new LinkedList();
+        Queue<Node> q = new LinkedList<Node>();
         q.add(root);
         root.setIsDiscovered(true);
         root.setParent(null);
+        
+        System.out.println("BFS Path++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
         while ( !q.isEmpty() ) {
             
             Node current = q.remove();
             Edge edge = current.getHeader().getNext();
             
-           // System.out.println("parent "+current.getName());
+            System.out.println("parent "+current.getName());
             
             for ( int i = 0; i < current.sizeEdge; i++ ) {
                 
@@ -148,11 +163,10 @@ public class Graph {
                     edge.getNodeB().setIsDiscovered(true);
                     edge.getNodeB().setParent(current);
                     q.add(edge.getNodeB());
-                    //System.out.println(edge.getNodeB().getName());
+                    System.out.println("Son "+edge.getNodeB().getName());
                 }
                 edge = edge.getNext();
             }
-          //  System.out.println("BFS ");
         }  
     }
 
@@ -183,7 +197,9 @@ public class Graph {
         for ( int i = 0; i < sizeNode; i++ ) {
             Edge tmpEdge = tmpNode.getHeader().getNext();
             for ( int j = 0; j < tmpNode.sizeEdge; j++) {
-                tmpEdge.setFlow(0);
+            	if ( !tmpEdge.isIsResidual() )
+            		tmpEdge.setFlow(0);
+            	
                 tmpEdge = tmpEdge.getNext();
             }
             tmpNode = tmpNode.getNext();
@@ -195,23 +211,25 @@ public class Graph {
             
             tmpNode = sink.getParent();
             int min = tmpNode.getEdge(sink).getResidual();
-           // System.out.println("min "+min);
+           
             
             while (tmpNode.getParent() != null) {
                 if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min )
                     min = tmpNode.getParent().getEdge(tmpNode).getResidual();
-               // System.out.println(tmpNode);
+
                 tmpNode = tmpNode.getParent();
             }
-            
+            System.out.println("Min "+min);
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
+            	Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
                 tmpNode.getParent().getEdge(tmpNode).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() + min );
-                tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                //tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                System.out.println("Path "+tmpNode.getName());
                 tmpNode = tmpNode.getParent();
             }
-           // System.out.println("test");
+        
         BFSVisit(source);            
         }
     }
@@ -246,7 +264,7 @@ class Node {
         return tmp;
         
     }
-    
+
     public void addEdge(Edge edge) {
 
         edge.setNext(header.getNext());

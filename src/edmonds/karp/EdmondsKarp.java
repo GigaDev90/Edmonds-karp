@@ -20,54 +20,42 @@ public class EdmondsKarp {
         
         graph =  new Graph();
         
-        graph.setSink(graph.addNode("0"));
-        
-        for ( int i = 1; i < element - 1; i++ ) {
+        for ( int i = 1; i <= element; i++ ) {
             graph.addNode(""+i);
         }
         
-        graph.setSource(graph.addNode((""+(element - 1))));
-
-        Node tmp =  graph.getHeader().getNext();
-        Node tmp2 = graph.getHeader().getNext();
-         
-        for ( int i = 0; i < graph.getSizeNode() - 1; i++ ) {
-            
-            graph.connect(tmp, tmp.getNext(), 10, 0);
-            System.out.println(tmp.getName());
-            tmp = tmp.getNext();
-        }
+//        graph.setSource(graph.getNode("1"));
+//        graph.setSink(graph.getNode("4"));
+//        
+//        graph.connect(graph.getNode("1"), graph.getNode("2"), 100000, 0);
+//        graph.connect(graph.getNode("1"), graph.getNode("3"), 100000, 0);
+//        graph.connect(graph.getNode("2"), graph.getNode("4"), 100000, 0);
+//        graph.connect(graph.getNode("3"), graph.getNode("4"), 100000, 0);
+//        graph.connect(graph.getNode("2"), graph.getNode("3"), 1, 0);
         
-        tmp =  graph.getHeader().getNext();
+        graph.setSource(graph.getNode("1"));
+        graph.setSink(graph.getNode("6"));
         
-        for ( int i = 0; i < graph.getSizeNode() - 1; i++ ) {
-            
-            tmp2 = graph.getHeader().getNext();
-            int random = (int) ( Math.random() * graph.getSizeNode() );
+        graph.connect(graph.getNode("2"), graph.getNode("4"), 4, 0);
+        graph.connect(graph.getNode("3"), graph.getNode("5"), 5, 0);
+        graph.connect(graph.getNode("1"), graph.getNode("2"), 3, 0);
+        graph.connect(graph.getNode("1"), graph.getNode("3"), 4, 0);
+        graph.connect(graph.getNode("1"), graph.getNode("5"), 5, 0);
+        graph.connect(graph.getNode("1"), graph.getNode("4"), 4, 0);
+        graph.connect(graph.getNode("2"), graph.getNode("6"), 4, 0);
+        graph.connect(graph.getNode("4"), graph.getNode("6"), 3, 0);
+        graph.connect(graph.getNode("3"), graph.getNode("6"), 5, 0);
+        graph.connect(graph.getNode("5"), graph.getNode("6"), 4, 0);
+        
+        Edge edge = graph.getNode("1").getEdge(graph.getNode("4"));
+        System.out.println(edge.getNodeB().getName());
+        
 
-            for ( int j = 0; j < random; j++ ) {
-                tmp2 = tmp2.getNext();
-            }
-            
-            if ( tmp != tmp2 && tmp != tmp.getNext() && tmp != graph.getSink() && tmp2 != graph.getSource() )
-                graph.connect(tmp, tmp2, random, 0);
-            
-            tmp = tmp.getNext();
-        }
-        int test = 0;
-        tmp =  graph.getHeader().getNext();
-//        for ( int i = 0; i < graph.getSizeNode() ; i++ ) {
-//            System.out.print(tmp.getName()+" ");
-//            System.out.println(tmp.getEdge(tmp));
-//            test += tmp.sizeEdge;
-//            tmp = tmp.getNext();
-//        }
-//        System.out.println(test);
     }
     
     public static void main(String[] args) {
         
-        makeTestGraph(10);
+        makeTestGraph(6);
         graph.EdmondsKarp();
         
         Node current =  graph.getHeader().getNext();
