@@ -53,26 +53,26 @@ public class EdmondsKarp {
 
     }
     
-    public static void main(String[] args) {
-        
-        makeTestGraph(6);
-        graph.EdmondsKarp();
-        
-        Node current =  graph.getHeader().getNext();
-        
-        for ( int i = 0; i < graph.getSizeNode() ; i++ ) {
-            
-            System.out.print(current.getName()+" ");
-            Edge edge = current.getHeader().getNext();
-            
-            for ( int j = 0; j < current.sizeEdge; j++ ) {
-                if ( !edge.isIsResidual())
-                    System.out.println("Flow "+edge.getFlow()+" "+edge.getCapacity()+" "+edge.getNodeB().getName());
-          
-                edge = edge.getNext();
-            }
-            current = current.getNext();
-        }
-    }
+//    public static void main(String[] args) {
+//        
+//        makeTestGraph(6);
+//        graph.EdmondsKarp();
+//        
+//        Node current =  graph.getHeader().getNext();
+//        
+//        for ( int i = 0; i < graph.getSizeNode() ; i++ ) {
+//            
+//            System.out.print(current.getName()+" ");
+//            Edge edge = current.getHeader().getNext();
+//            
+//            for ( int j = 0; j < current.sizeEdge; j++ ) {
+//                if ( !edge.isIsResidual())
+//                    System.out.println("Flow "+edge.getFlow()+" "+edge.getCapacity()+" "+edge.getNodeB().getName());
+//          
+//                edge = edge.getNext();
+//            }
+//            current = current.getNext();
+//        }
+//    }
     
 }

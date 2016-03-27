@@ -5,17 +5,49 @@
  */
 package edmonds.karp.GUI;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Iterator;
 /**
  *
  * @author gabriele
  */
 public class EdmondsKarpGUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form EdmondsKarpGUI
-     */
-    public EdmondsKarpGUI() {
+  //  private static Paint paint;
+    private static EdmondsKarpGUI gui = new EdmondsKarpGUI();
+    private ArrayList<Circle> shapes;
+    private int MODE = 0;
+    private int name;
+    private boolean isSecond;
+    private Circle shapeTmp;
+    private final int CIRCLE = 0;
+    private final int ARROW = 1;
+    private final int DRAG = 2;
+    private final int ERASE = 3;
+    private Graphics2D graphics;
+    private BufferedImage bf;
+
+    private EdmondsKarpGUI() {
         initComponents();
+        shapes = new ArrayList<Circle>();
+        bf = new BufferedImage(jPanel2.getWidth(), jPanel2.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        graphics = bf.createGraphics();
+        //graphics.clearRect(0,0,getWidth(),getHeight());
+        graphics.setBackground(Color.WHITE);
+        name = 0;
+        isSecond = false;
+    }
+
+    public static EdmondsKarpGUI getGui() {
+        return gui;
     }
 
     /**
@@ -27,22 +59,211 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jToggleButton3 = new javax.swing.JToggleButton();
+        jPanel2 = new javax.swing.JPanel();
+        jToggleButton4 = new javax.swing.JToggleButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel1.setBackground(new java.awt.Color(169, 169, 169));
+
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/sistema_informativo_reti_004.png"))); // NOI18N
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/freccia.png"))); // NOI18N
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
+        jPanel2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel2MouseDragged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 686, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(228, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        MODE = CIRCLE;
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        MODE = ARROW;
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        MODE = DRAG;
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+        switch ( MODE ) {
+            case CIRCLE :
+                if(checkClik(evt.getPoint()) == null) {
+                    Circle circle = new Circle();
+                    circle.setFirstPoint(evt.getPoint());
+                    circle.setColor(Color.black);
+                    circle.setText(""+ name++);
+                    shapes.add(circle);
+                    drawShape(circle);
+                }
+                break;
+            case ARROW :
+                if ( isSecond ) {
+                    MyShape circ = checkClik(evt.getPoint());
+                    if ( circ != null && circ.getShape() instanceof Ellipse2D && circ != shapeTmp ) {
+                        Arrow arrow = new Arrow(shapeTmp, (Circle) circ);
+                        arrow.setText(""+ name++);
+                        shapeTmp.addArrowFrom(arrow);
+                        ((Circle)circ).addArrowTo(arrow);
+                        shapeTmp.setSelect(false);
+                        update();
+                        drawShape(arrow);
+                        isSecond = false;
+                    }
+                } else {
+                    MyShape circ = checkClik(evt.getPoint());
+                    
+                    if ( circ != null && circ.getShape() instanceof Ellipse2D ) {
+                        circ.setSelect(true);
+                        update();
+                        shapeTmp = (Circle) circ;
+                        isSecond = true;
+                    }
+                }
+        
+                
+                break;
+            case ERASE :
+                MyShape tmp = checkClik(evt.getPoint());
+                if ( tmp != null ) {
+                    shapes.remove(tmp);
+                    if ( tmp instanceof Circle ) {
+                        ((Circle) tmp).removeArrows();
+                    }
+                    update();
+                } else
+                    System.out.println("no elements found");
+                break;
+        }
+    }//GEN-LAST:event_jPanel2MouseClicked
+
+    private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
+        if ( MODE == DRAG)
+            for (MyShape shape : shapes) {
+                if (shape.getShape().contains(evt.getPoint())) {
+                    shape.setFirstPoint(evt.getPoint());
+                    ((Circle)shape).updateArrow();
+                    update();
+                    break;
+                }
+            }
+    }//GEN-LAST:event_jPanel2MouseDragged
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        MODE = ERASE;
+       
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void drawShape(MyShape shape) {
+        shape.draw(graphics);
+        shape.drawName(graphics);
+        jPanel2.getGraphics().drawImage(bf,0,0,jPanel2.getWidth(),jPanel2.getHeight(), null);
+    }
     /**
      * @param args the command line arguments
      */
@@ -78,6 +299,48 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
     }
 
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
+    private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
+
+    private MyShape checkClik(Point point) {
+        for (Iterator iterator = shapes.iterator(); iterator.hasNext();) {
+            MyShape shape = (MyShape) iterator.next();
+            if (shape.getShape().contains(point)) {
+                System.out.println("contains");
+                return shape;
+            }
+            
+        }
+        return null;
+    }
+
+    private void update() {
+        
+        graphics.clearRect(0, 0, jPanel2.getWidth(), jPanel2.getHeight());
+        
+        for (Circle circle : shapes) {
+            circle.draw(graphics);
+            circle.drawName(graphics);
+            circle.updateArrow();
+            circle.drawArrows(graphics);
+            
+            
+        }
+        jPanel2.getGraphics().drawImage(bf,0,0,jPanel2.getWidth(),jPanel2.getHeight(), null);
+        //graphics.dispose();
+    }
+
+    
+        
 }
