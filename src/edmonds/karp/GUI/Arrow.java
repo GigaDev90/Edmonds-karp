@@ -13,6 +13,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -74,8 +76,19 @@ public class Arrow extends MyShape {
     }
 
     @Override
-    public void drawName(Graphics2D g2) {
-        //g2.drawString(name,(int) pointName.getX() - 3,(int) pointName.getY() + 5);
+    public void drawText(Graphics2D g2) {
+        //g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
+        //AttributedString tmp = new AttributedString(text);
+        
+        AffineTransform orig = g2.getTransform();
+       // g2.rotate(Math.PI/2);
+        g2.setColor(Color.BLACK);
+        g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
+        g2.setTransform(orig);
+        
+       //g2.setTransform(orig);
+       
+        //g2.drawString( tmp.getIterator(), (int) pointText.getX(),(int) pointText.getY());
     }
 
     @Override
@@ -83,7 +96,6 @@ public class Arrow extends MyShape {
         draw.draw(shape, g2, c);
         draw.draw(head1, g2, c);
         draw.draw(head2, g2, c);
-        
     }
     
     private double calcSinx(Point2D from, Point2D to) {
@@ -106,36 +118,47 @@ public class Arrow extends MyShape {
     private Point2D[] calcPointsHead(double sinX, double cosX) {
         
         Point2D[] tmp = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 10, sinX, cosX );
+        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 40, sinX, cosX );
         
         double catA = 7 * sinX;
         double catC = 7 * cosX;
+        double catA2 = 20 * sinX;
+        double catC2 = 20 * cosX;
         double x0 = tmp[1].getX();
         double x1 = tmp[1].getX();
         double y0 = tmp[1].getY();
         double y1 = tmp[1].getY();
+        double x2 = tmp2[1].getX();
+        double y2 = tmp2[1].getY();
+        
 
         if ( tmp[1].getY() > points[1].getY() ) {
             x0 += catA;
             x1 -= catA;
+            x2 += catA2;
             
         } else {
             x0 -= catA;
             x1 += catA;
+            x2 -= catA2;
             
         }
         
         if ( tmp[1].getX() > points[1].getX() ) {
             y0 -= catC;
             y1 += catC;
+            y2 -= catC2;
         } else {
             y0 += catC;
             y1 -= catC;
+            y2 += catC2;
         }
         
         Point2D[] pointsTmp = new Point2D.Double[2];
         
         pointsTmp[0] = new Point2D.Double(x0, y0);
         pointsTmp[1] = new Point2D.Double(x1, y1);
+        pointText = new Point2D.Double(x2, y2);
         
         return pointsTmp;
     }

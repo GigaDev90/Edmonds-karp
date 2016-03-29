@@ -6,22 +6,19 @@
 package edmonds.karp.GUI;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
 /**
  *
  * @author gabriele
  */
 public class EdmondsKarpGUI extends javax.swing.JFrame {
 
-  //  private static Paint paint;
+    //  private static Paint paint;
     private static EdmondsKarpGUI gui = new EdmondsKarpGUI();
     private ArrayList<Circle> shapes;
     private int MODE = 0;
@@ -111,11 +108,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 686, Short.MAX_VALUE)
+            .addGap(0, 800, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
 
         jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
@@ -143,15 +140,18 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(228, Short.MAX_VALUE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 216, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jMenu1.setText("File");
@@ -191,25 +191,32 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton3ActionPerformed
 
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
-        switch ( MODE ) {
-            case CIRCLE :
-                if(checkClik(evt.getPoint()) == null) {
+        switch (MODE) {
+            case CIRCLE:
+                if (checkClik(evt.getPoint()) == null) {
                     Circle circle = new Circle();
                     circle.setFirstPoint(evt.getPoint());
                     circle.setColor(Color.black);
-                    circle.setText(""+ name++);
+                    circle.setText(""+ shapes.size());
                     shapes.add(circle);
                     drawShape(circle);
                 }
                 break;
-            case ARROW :
-                if ( isSecond ) {
+            case ARROW:
+                if (isSecond) {
+                    if ( evt.getButton() == MouseEvent.BUTTON3) {
+                        shapeTmp.setSelect(false);
+                        update();
+                        isSecond = false;
+                        break;
+                    }
+                        
                     MyShape circ = checkClik(evt.getPoint());
-                    if ( circ != null && circ.getShape() instanceof Ellipse2D && circ != shapeTmp ) {
+                    if (circ != null && circ.getShape() instanceof Ellipse2D && circ != shapeTmp) {
                         Arrow arrow = new Arrow(shapeTmp, (Circle) circ);
-                        arrow.setText(""+ name++);
+                        arrow.setText("0/" + name++);
                         shapeTmp.addArrowFrom(arrow);
-                        ((Circle)circ).addArrowTo(arrow);
+                        ((Circle) circ).addArrowTo(arrow);
                         shapeTmp.setSelect(false);
                         update();
                         drawShape(arrow);
@@ -217,53 +224,60 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     }
                 } else {
                     MyShape circ = checkClik(evt.getPoint());
-                    
-                    if ( circ != null && circ.getShape() instanceof Ellipse2D ) {
+
+                    if (circ != null && circ.getShape() instanceof Ellipse2D) {
                         circ.setSelect(true);
                         update();
                         shapeTmp = (Circle) circ;
                         isSecond = true;
                     }
                 }
-        
                 
                 break;
-            case ERASE :
-                MyShape tmp = checkClik(evt.getPoint());
-                if ( tmp != null ) {
-                    shapes.remove(tmp);
-                    if ( tmp instanceof Circle ) {
-                        ((Circle) tmp).removeArrows();
+            case ERASE:
+                for (Circle circle : shapes) {
+                    
+                    if (circle.getShape().contains(evt.getPoint())) {
+                        shapes.remove(circle);
+                        circle.removeArrows();
+                        break;
+                    } else {
+                         Arrow arrow = circle.checkForArrow(evt.getPoint());
+                         if (arrow != null) {
+                             arrow.from.removeArrowFrom(arrow);
+                             arrow.to.removeArrowTo(arrow);
+                         }
                     }
-                    update();
-                } else
-                    System.out.println("no elements found");
+                }
+                update();
                 break;
         }
     }//GEN-LAST:event_jPanel2MouseClicked
 
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
-        if ( MODE == DRAG)
+        //if (MODE == DRAG) {
             for (MyShape shape : shapes) {
                 if (shape.getShape().contains(evt.getPoint())) {
                     shape.setFirstPoint(evt.getPoint());
-                    ((Circle)shape).updateArrow();
+                    ((Circle) shape).updateArrow();
                     update();
                     break;
                 }
             }
+       // }
     }//GEN-LAST:event_jPanel2MouseDragged
 
     private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
         MODE = ERASE;
-       
+
     }//GEN-LAST:event_jToggleButton4ActionPerformed
 
     private void drawShape(MyShape shape) {
         shape.draw(graphics);
-        shape.drawName(graphics);
-        jPanel2.getGraphics().drawImage(bf,0,0,jPanel2.getWidth(),jPanel2.getHeight(), null);
+        shape.drawText(graphics);
+        jPanel2.getGraphics().drawImage(bf, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(), null);
     }
+
     /**
      * @param args the command line arguments
      */
@@ -300,7 +314,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }
 
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -314,33 +327,27 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private MyShape checkClik(Point point) {
-        for (Iterator iterator = shapes.iterator(); iterator.hasNext();) {
-            MyShape shape = (MyShape) iterator.next();
+        for (MyShape shape : shapes) {
             if (shape.getShape().contains(point)) {
                 System.out.println("contains");
                 return shape;
             }
-            
         }
         return null;
     }
 
     private void update() {
-        
+
         graphics.clearRect(0, 0, jPanel2.getWidth(), jPanel2.getHeight());
-        
+
         for (Circle circle : shapes) {
             circle.draw(graphics);
-            circle.drawName(graphics);
+            circle.drawText(graphics);
             circle.updateArrow();
             circle.drawArrows(graphics);
-            
-            
         }
-        jPanel2.getGraphics().drawImage(bf,0,0,jPanel2.getWidth(),jPanel2.getHeight(), null);
+        jPanel2.getGraphics().drawImage(bf, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(), null);
         //graphics.dispose();
     }
 
-    
-        
 }

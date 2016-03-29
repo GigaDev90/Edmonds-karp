@@ -7,6 +7,7 @@ package edmonds.karp.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -100,17 +101,19 @@ public class Circle extends MyShape {
     }
     
     public void drawArrows(Graphics2D g2) {
-         for (Arrow arrow : arrowsFrom) {
+        for (Arrow arrow : arrowsFrom) {
             arrow.draw(g2);
+            arrow.drawText(g2);
         }
         
         for (Arrow arrow : arrowsTo) {
             arrow.draw(g2);
+            arrow.drawText(g2);
         }
     }
 
     @Override
-    public void drawName(Graphics2D g2) {
+    public void drawText(Graphics2D g2) {
         g2.drawString(text, (int)pointText.getX(), (int)pointText.getY() );
     }
 
@@ -122,6 +125,20 @@ public class Circle extends MyShape {
         for (Arrow arrow : arrowsTo) {
             arrow.update();
         }
+    }
+
+    public Arrow checkForArrow(Point2D point) {
+        for (Arrow arrow : arrowsFrom) {
+            if (arrow.getShape().getBounds().contains(point))
+                return arrow;
+        }
+        
+        for (Arrow arrow : arrowsTo) {
+            if (arrow.getShape().getBounds().contains(point))
+                return arrow;
+        }
+        
+        return null;
     }
 
 }

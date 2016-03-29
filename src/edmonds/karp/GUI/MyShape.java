@@ -72,7 +72,7 @@ public abstract class MyShape {
 
     public abstract void draw(Graphics2D g2);
 
-    public abstract void drawName(Graphics2D g2);
+    public abstract void drawText(Graphics2D g2);
     
     
 
