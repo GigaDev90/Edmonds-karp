@@ -81,12 +81,12 @@ public class Arrow extends MyShape {
         //AttributedString tmp = new AttributedString(text);
         
         AffineTransform orig = g2.getTransform();
-       // g2.rotate(Math.PI/2);
+        g2.rotate(Math.PI/2);
         g2.setColor(Color.BLACK);
         g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
         g2.setTransform(orig);
         
-       //g2.setTransform(orig);
+        //g2.setTransform(orig);
        
         //g2.drawString( tmp.getIterator(), (int) pointText.getX(),(int) pointText.getY());
     }
