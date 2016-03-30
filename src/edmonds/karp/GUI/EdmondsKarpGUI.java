@@ -9,10 +9,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import javax.swing.JPanel;
+
 /**
  *
  * @author gabriele
@@ -20,28 +19,27 @@ import javax.swing.JPanel;
 public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     //  private static Paint paint;
-    private static EdmondsKarpGUI gui = new EdmondsKarpGUI();
-    private ArrayList<Circle> shapes;
+    private static final EdmondsKarpGUI gui = new EdmondsKarpGUI();
+    private final ArrayList<Circle> circles;
     private int MODE = 0;
     private int name;
     private boolean isSecond;
+    private boolean isInDragging;
     private Circle shapeTmp;
     private final int CIRCLE = 0;
-    private final int ARROW = 1;
-    private final int DRAG = 2;
     private final int ERASE = 3;
     private Graphics2D graphics;
     private BufferedImage bf;
 
     private EdmondsKarpGUI() {
         initComponents();
-        shapes = new ArrayList<Circle>();
+        circles = new ArrayList<>();
         bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         graphics = bf.createGraphics();
-        //graphics.clearRect(0,0,getWidth(),getHeight());
         graphics.setBackground(Color.WHITE);
         name = 0;
         isSecond = false;
+        isInDragging = false;
     }
 
     public static EdmondsKarpGUI getGui() {
@@ -60,8 +58,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -78,6 +74,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2.setMaximumSize(new java.awt.Dimension(1920, 1080));
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 600));
         jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jPanel2MouseReleased(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel2MouseClicked(evt);
             }
@@ -115,20 +114,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/freccia.png"))); // NOI18N
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
-            }
-        });
-
         jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
         jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,12 +127,12 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,12 +140,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(382, Short.MAX_VALUE))
+                .addContainerGap(494, Short.MAX_VALUE))
         );
 
         jMenu1.setText("File");
@@ -193,89 +174,68 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         MODE = CIRCLE;
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        MODE = ARROW;
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
-
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
-        MODE = DRAG;
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
-
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
-        switch (MODE) {
-            case CIRCLE:
-                if (checkClik(evt.getPoint()) == null) {
-                    Circle circle = new Circle();
-                    circle.setFirstPoint(evt.getPoint());
-                    circle.setColor(Color.black);
-                    circle.setText(""+ shapes.size());
-                    shapes.add(circle);
-                    drawShape(circle);
-                }
-                break;
-            case ARROW:
-                if (isSecond) {
-                    if ( evt.getButton() == MouseEvent.BUTTON3) {
-                        shapeTmp.setSelect(false);
-                        update();
-                        isSecond = false;
-                        break;
-                    }
-                        
-                    MyShape circ = checkClik(evt.getPoint());
-                    if (circ != null && circ.getShape() instanceof Ellipse2D && circ != shapeTmp) {
-                        Arrow arrow = new Arrow(shapeTmp, (Circle) circ);
-                        arrow.setText("0/" + name++);
-                        shapeTmp.addArrowFrom(arrow);
-                        ((Circle) circ).addArrowTo(arrow);
-                        shapeTmp.setSelect(false);
-                        update();
-                        drawShape(arrow);
-                        isSecond = false;
-                    }
+        if (MODE == ERASE || evt.getButton() == MouseEvent.BUTTON3 ) {
+            for (Circle circle : circles) {
+                if (circle.getShape().contains(evt.getPoint())) {
+                    circles.remove(circle);
+                    circle.removeArrows();
+                    break;
                 } else {
-                    MyShape circ = checkClik(evt.getPoint());
-
-                    if (circ != null && circ.getShape() instanceof Ellipse2D) {
-                        circ.setSelect(true);
-                        update();
-                        shapeTmp = (Circle) circ;
-                        isSecond = true;
+                    Arrow arrow = circle.checkForArrow(evt.getPoint());
+                    if (arrow != null) {
+                        arrow.from.removeArrowFrom(arrow);
+                        arrow.to.removeArrowTo(arrow);
                     }
                 }
-                
-                break;
-            case ERASE:
-                for (Circle circle : shapes) {
-                    
-                    if (circle.getShape().contains(evt.getPoint())) {
-                        shapes.remove(circle);
-                        circle.removeArrows();
-                        break;
-                    } else {
-                         Arrow arrow = circle.checkForArrow(evt.getPoint());
-                         if (arrow != null) {
-                             arrow.from.removeArrowFrom(arrow);
-                             arrow.to.removeArrowTo(arrow);
-                         }
-                    }
-                }
+            }
+            update();
+            return;
+        }
+        
+        if (isSecond) {
+            addArrow(evt.getPoint());
+            shapeTmp.setSelect(false);
+            isSecond = false;
+            update();
+            return;
+        } else {
+            Circle circ = getSelectedCircle(evt.getPoint());
+            if (circ != null) {
+                shapeTmp = circ;
+                shapeTmp.setSelect(true);
+                isSecond = true;
                 update();
-                break;
+                return;
+            }
+            
+        }
+
+        if (getSelectedCircle(evt.getPoint()) == null) {
+            addCircle(evt.getPoint());
+            
         }
     }//GEN-LAST:event_jPanel2MouseClicked
 
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
-        //if (MODE == DRAG) {
-            for (MyShape shape : shapes) {
-                if (shape.getShape().contains(evt.getPoint())) {
-                    shape.setFirstPoint(evt.getPoint());
-                    ((Circle) shape).updateArrow();
-                    update();
-                    break;
-                }
+        if (!isInDragging) {
+            if ( shapeTmp != null) {
+                shapeTmp.setSelect(false);
+                isSecond = false;
             }
-       // }
+            shapeTmp = getSelectedCircle(evt.getPoint());
+            if (shapeTmp != null) {
+                shapeTmp.setFirstPoint(evt.getPoint());
+                isInDragging = true;
+            } else {
+                addCircle(evt.getPoint());
+            }
+                
+        } else {
+            shapeTmp.setFirstPoint(evt.getPoint());
+            shapeTmp.updateArrow();
+        }
+        update();
     }//GEN-LAST:event_jPanel2MouseDragged
 
     private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
@@ -284,21 +244,67 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton4ActionPerformed
 
     private void jPanel2AncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_jPanel2AncestorResized
-        System.out.println("fuck update");
-        if ( graphics != null && ( jPanel2.getWidth() != this.getWidth() || jPanel2.getHeight() != this.getHeight()) ) {
-            System.out.println("update");
+        if (graphics != null && (jPanel2.getWidth() != this.getWidth() || jPanel2.getHeight() != this.getHeight())) {
             bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = bf.createGraphics();
             graphics.setBackground(Color.WHITE);
             update();
         }
-        
     }//GEN-LAST:event_jPanel2AncestorResized
 
+    private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
+        isInDragging = false;
+    }//GEN-LAST:event_jPanel2MouseReleased
+
     private void drawShape(MyShape shape) {
-        shape.draw(graphics);
-        shape.drawText(graphics);
+        shape.draw((Graphics2D) jPanel2.getGraphics());
+        shape.drawText((Graphics2D) jPanel2.getGraphics());
+    }
+
+    private void eraseShape(MyShape shape) {
+
+    }
+
+    private Circle getSelectedCircle(Point point) {
+        for (Circle circle : circles) {
+            if (circle.getShape().contains(point)) {
+                return circle;
+            }
+        }
+
+        return null;
+    }
+
+    private void update() {
+        graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+        for (Circle circle : circles) {
+            circle.draw(graphics);
+            circle.drawText(graphics);
+            circle.updateArrow();
+            circle.drawArrows(graphics);
+        }
         jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
+    }
+
+    private void addCircle(Point point) {
+        Circle circle = new Circle();
+        circle.setFirstPoint(point);
+        circle.setColor(Color.black);
+        circle.setText("" + circles.size()); //TODO 
+        circles.add(circle);
+        drawShape(circle);
+    }
+
+    private void addArrow(Point point) {
+        Circle circ = getSelectedCircle(point);
+        if (circ != null && circ != shapeTmp) {
+            Arrow arrow = new Arrow(shapeTmp, circ);
+            arrow.setText("0/" + name++); //TODO
+            shapeTmp.addArrowFrom(arrow);
+            circ.addArrowTo(arrow);
+            shapeTmp.setSelect(false);
+            drawShape(arrow);
+        }
     }
 
     /**
@@ -335,8 +341,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -344,33 +348,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
-
-    private MyShape checkClik(Point point) {
-        for (MyShape shape : shapes) {
-            if (shape.getShape().contains(point)) {
-                System.out.println("contains");
-                return shape;
-            }
-        }
-        return null;
-    }
-
-    private void update() {
-
-        graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
-
-        for (Circle circle : shapes) {
-            circle.draw(graphics);
-            circle.drawText(graphics);
-            circle.updateArrow();
-            circle.drawArrows(graphics);
-        }
-        jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
-        //graphics.dispose();
-    }
-
 }

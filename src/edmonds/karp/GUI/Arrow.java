@@ -7,17 +7,10 @@ package edmonds.karp.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  *
  * @author gabriele
@@ -35,7 +28,6 @@ public class Arrow extends MyShape {
         head1 =  new Line2D.Double();
         head2 =  new Line2D.Double();
         points = new Point2D[2];
-        draw = new DrawBorder();
         scale = 30;
         select = false;
         this.from = from;
@@ -49,32 +41,6 @@ public class Arrow extends MyShape {
         ((Line2D) shape).setLine(points[0], points[1]);
         
     }
-
-    @Override
-    public void setFirstPoint(Point2D p) {
-        points[0] = p;
-        points[1] = new Point2D.Double(p.getX() + scale, p.getY() + scale);
-        pointText = p;
-        makeShape();
-    }
-
-    @Override
-    public void setStile(int stile) {
-        switch (stile) {
-            case 0: {
-                draw = new DrawBorder();
-            }
-            break;
-            case 1: {
-                draw = new DrawBorder();
-            }
-            break;
-            case 2: {
-                draw = new DrawWhiteBorder();
-            }
-        }
-    }
-
     @Override
     public void drawText(Graphics2D g2) {
         //g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
@@ -90,12 +56,12 @@ public class Arrow extends MyShape {
        
         //g2.drawString( tmp.getIterator(), (int) pointText.getX(),(int) pointText.getY());
     }
-
     @Override
     public void draw(Graphics2D g2) {
-        draw.draw(shape, g2, c);
-        draw.draw(head1, g2, c);
-        draw.draw(head2, g2, c);
+        g2.setColor(c);
+        g2.draw(shape);
+        g2.draw(head1);
+        g2.draw(head2);
     }
     
     private double calcSinx(Point2D from, Point2D to) {
@@ -207,7 +173,7 @@ public class Arrow extends MyShape {
         
         double sinX = calcSinx(from.getCenter(), to.getCenter());
         double cosX = calcCosx(from.getCenter(), to.getCenter());
-        
+        //System.out.println("sinX"+ sinX+" cosX "+cosX);
         points = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2, sinX, cosX );
         Point2D[] tmp = calcPointsHead(sinX, cosX);
         

@@ -7,13 +7,9 @@ package edmonds.karp.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  *
  * @author gabriele
@@ -28,7 +24,6 @@ public class Circle extends MyShape {
         points = new Point2D[2];
         scale = 30;
         select = false;
-        draw = new DrawBorder();
         arrowsFrom = new ArrayList<>();
         arrowsTo = new ArrayList<>();
      
@@ -85,19 +80,20 @@ public class Circle extends MyShape {
         Point2D tmp = new Point2D.Double( ((Ellipse2D)shape).getCenterX(), ((Ellipse2D)shape).getCenterY() );
         return tmp;        
     }
-    
     @Override
     public void draw(Graphics2D g2) {
-        draw.draw(shape, g2, c);
-        if(select) {
+        g2.setColor(c);
+        g2.draw(shape);
+        if ( select ) {
             double scale2 = scale - 10;
             Point2D temp0 = this.getCenter();
             Point2D temp1 = new Point2D.Double( temp0.getX() + scale2, temp0.getY() + scale2 );
             Point2D temp2 = new Point2D.Double( temp0.getX() - scale2, temp0.getY() - scale2 );
             Ellipse2D circle = new Ellipse2D.Double();
             circle.setFrameFromDiagonal(temp1, temp2 );
-            draw.draw(circle, g2, Color.blue);
-        }
+            g2.setColor(Color.BLUE);
+            g2.draw(circle);
+        } 
     }
     
     public void drawArrows(Graphics2D g2) {
@@ -105,13 +101,7 @@ public class Circle extends MyShape {
             arrow.draw(g2);
             arrow.drawText(g2);
         }
-        
-        for (Arrow arrow : arrowsTo) {
-            arrow.draw(g2);
-            arrow.drawText(g2);
-        }
     }
-
     @Override
     public void drawText(Graphics2D g2) {
         g2.drawString(text, (int)pointText.getX(), (int)pointText.getY() );
@@ -121,22 +111,12 @@ public class Circle extends MyShape {
         for (Arrow arrow : arrowsFrom) {
             arrow.update();
         }
-        
-        for (Arrow arrow : arrowsTo) {
-            arrow.update();
-        }
     }
 
     public Arrow checkForArrow(Point2D point) {
-        for (Arrow arrow : arrowsFrom) {
+        for (Arrow arrow : arrowsFrom)
             if (arrow.getShape().getBounds().contains(point))
                 return arrow;
-        }
-        
-        for (Arrow arrow : arrowsTo) {
-            if (arrow.getShape().getBounds().contains(point))
-                return arrow;
-        }
         
         return null;
     }

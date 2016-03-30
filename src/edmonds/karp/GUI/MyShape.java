@@ -6,9 +6,6 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 
 public abstract class MyShape {
-    //istanza per disegnare con il giusto stile
-
-    protected Draw draw;
     //punti usato per settare dove la figura andrà posizionata
     protected Point2D[] points;
     // punto su cui stampare il nome della figura
@@ -41,22 +38,6 @@ public abstract class MyShape {
     public boolean isSelect() { return select; }
     
     public void setSelect(boolean b) { select = b; }
-    
-    public void setStile(int stile) {
-        switch (stile) {
-            case 0: {
-                draw = new DrawFill();
-            }
-            break;
-            case 1: {
-                draw = new DrawBorder();
-            }
-            break;
-            case 2: {
-                draw = new DrawWhiteBorder();
-            }
-        }
-    }
 
     public void setColor(Color colorC) { c = colorC; }
 
@@ -66,14 +47,9 @@ public abstract class MyShape {
     
     public double getScale() { return scale; }
 
-    public abstract void setFirstPoint(Point2D point);
-
     public abstract void makeShape();
 
-    public abstract void draw(Graphics2D g2);
+    public abstract void draw(Graphics2D graphics2D);
 
-    public abstract void drawText(Graphics2D g2);
-    
-    
-
+    public abstract void drawText(Graphics2D graphics2D);  
 }
