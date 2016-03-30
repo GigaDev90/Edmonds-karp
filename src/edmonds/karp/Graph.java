@@ -15,14 +15,14 @@ import java.util.Queue;
 public class Graph {
 
     private Node header;
-    private int sizeNode;
+    public int size;
     private Node source;
     private Node sink;
 
     public Graph() {
 
         header = new Node("header");
-        sizeNode = 0;
+        size = 0;
         source = null;
         sink = null;
     }
@@ -46,7 +46,7 @@ public class Graph {
     public Node getNode(String name) {
     	
     	Node tmpNode =  header.getNext();
-    	for ( int i = 0; i <= sizeNode; i++ ) {
+    	for ( int i = 0; i <= size; i++ ) {
     		if (tmpNode.getName().equals(name))
     			return tmpNode;
     		
@@ -61,14 +61,14 @@ public class Graph {
         Node node = new Node(name);
         node.setNext(header.getNext());
         header.setNext(node);
-        sizeNode++;
+        size++;
         
         return node;
     }
 
     public void removeNode(Node node) {
 
-        if ( sizeNode == 0) {
+        if ( size == 0) {
             System.out.println("rimozione fallita: non sono presenti nodi");
             return;
         }
@@ -83,7 +83,7 @@ public class Graph {
             
         System.out.println("sizeEdge: "+node.sizeEdge);
         Node prevTmp = header;
-        for ( int i = 0; i < sizeNode; i++ ) {
+        for ( int i = 0; i < this.size; i++ ) {
 
             if ( prevTmp.getNext() == node ) {
                 prevTmp.setNext(node.getNext());
@@ -92,12 +92,12 @@ public class Graph {
                 prevTmp = prevTmp.getNext();
         }
 
-        sizeNode--;
+        this.size--;
     }
 
     public void connect(Node a, Node adjacent, int capacity, int flow) {
 
-        if (sizeNode == 1 || capacity < flow) {
+        if (size == 1 || capacity < flow) {
             System.out.println("connessione fallita: esiste un solo nodo o valore flusso non consentito");
             return;
         } else if ( adjacent == source ) {
@@ -122,7 +122,7 @@ public class Graph {
     }
 
     public void disconnect(Edge edge) {
-        if ( sizeNode == 1) {
+        if ( size == 1) {
             System.out.println("disconnessione fallita: esiste un solo nodo");
             return;
         }
@@ -137,7 +137,7 @@ public class Graph {
     public void BFSVisit(Node root) {
 
         Node tmp = header.getNext();
-        for ( int i = 0; i < sizeNode; i++ ) {
+        for ( int i = 0; i < size; i++ ) {
             tmp.setParent(null);
             tmp.setIsDiscovered(false);
             tmp = tmp.getNext();
@@ -178,12 +178,12 @@ public class Graph {
         this.header = header;
     }
 
-    public int getSizeNode() {
-        return sizeNode;
+    public int getSize() {
+        return size;
     }
 
-    public void setSizeNode(int sizeNode) {
-        this.sizeNode = sizeNode;
+    public void setSize(int size) {
+        this.size = size;
     }
     
     public void EdmondsKarp() {
@@ -194,7 +194,7 @@ public class Graph {
         }
 
         Node tmpNode = header.getNext();
-        for ( int i = 0; i < sizeNode; i++ ) {
+        for ( int i = 0; i < size; i++ ) {
             Edge tmpEdge = tmpNode.getHeader().getNext();
             for ( int j = 0; j < tmpNode.sizeEdge; j++) {
             	if ( !tmpEdge.isIsResidual() )

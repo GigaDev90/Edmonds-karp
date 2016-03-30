@@ -5,6 +5,7 @@
  */
 package edmonds.karp.GUI;
 
+import edmonds.karp.Graph;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -32,6 +33,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private final int ERASE = 3;
     private Graphics2D graphics;
     private BufferedImage bf;
+    private Graph graph;
 
     private EdmondsKarpGUI() {
         initComponents();
@@ -44,6 +46,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         name = 0;
         isSecond = false;
         isInDragging = false;
+        graph = new Graph();
     }
 
     public static EdmondsKarpGUI getGui() {
@@ -71,8 +74,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setAlignmentX(0.0F);
-        jPanel2.setAlignmentY(0.0F);
         jPanel2.setMaximumSize(new java.awt.Dimension(1920, 1080));
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 600));
         jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -244,6 +245,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
         MODE = ERASE;
+        graph.EdmondsKarp();
+        testUpdate();
 
     }//GEN-LAST:event_jToggleButton4ActionPerformed
 
@@ -291,25 +294,31 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void addCircle(Point point) {
         Circle circle = new Circle();
+        circles.add(circle);
         circle.setFirstPoint(point);
         circle.setColor(Color.black);
         circle.setText("" + circles.size()); //TODO 
-        circles.add(circle);
         drawShape(circle);
+        graph.addNode("" + circles.size());
+        if(graph.size == 1)
+            graph.setSource(graph.getNode("1"));
+        else if (graph.size == 10)
+            graph.setSink(graph.getNode("10"));
     }
 
     private void addArrow(Point point) {
         Circle circ = getSelectedCircle(point);
         if (circ != null && circ != shapeTmp) {
             Arrow arrow = new Arrow(shapeTmp, circ);
-            arrow.setText("0/" + name++); //TODO
+            arrow.setText("0/10"); //TODO
             shapeTmp.addArrowFrom(arrow);
             circ.addArrowTo(arrow);
             shapeTmp.setSelect(false);
             drawShape(arrow);
+            System.out.println(shapeTmp.getText()+" "+circ.getText());
+            graph.connect(graph.getNode(shapeTmp.getText()), graph.getNode(circ.getText()), 10, 0);
         }
     }
-
     /**
      * @param args the command line arguments
      */
@@ -353,4 +362,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
+
+    private void testUpdate() {
+        for ( Circle circle : circles) {
+            graph.getNode(circle.getText());
+            
+        }
+    }
 }
