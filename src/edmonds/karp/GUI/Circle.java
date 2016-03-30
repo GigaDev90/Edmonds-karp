@@ -26,6 +26,7 @@ public class Circle extends MyShape {
         select = false;
         arrowsFrom = new ArrayList<>();
         arrowsTo = new ArrayList<>();
+        pointText = new Point2D.Double[2];
      
     }
     
@@ -72,7 +73,7 @@ public class Circle extends MyShape {
         Point2D temp3 = new Point2D.Double( (int) point.getX() - 3,(int) point.getY() + 5 );
         points[1] = temp1;
         points[0] = temp2;
-        pointText = temp3;
+        pointText[0] = temp3;
         makeShape();
     }
     
@@ -104,7 +105,7 @@ public class Circle extends MyShape {
     }
     @Override
     public void drawText(Graphics2D g2) {
-        g2.drawString(text, (int)pointText.getX(), (int)pointText.getY() );
+        g2.drawString(text, (int)pointText[0].getX(), (int)pointText[0].getY() );
     }
 
     public void updateArrow() {

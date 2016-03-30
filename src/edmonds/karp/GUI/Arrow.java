@@ -27,6 +27,7 @@ public class Arrow extends MyShape {
         shape = new Line2D.Double();
         head1 =  new Line2D.Double();
         head2 =  new Line2D.Double();
+        pointText =  new Point2D[2];
         points = new Point2D[2];
         scale = 30;
         select = false;
@@ -43,18 +44,22 @@ public class Arrow extends MyShape {
     }
     @Override
     public void drawText(Graphics2D g2) {
-        //g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
-        //AttributedString tmp = new AttributedString(text);
-        
-        AffineTransform orig = g2.getTransform();
-        g2.rotate(Math.PI/2);
-        g2.setColor(Color.BLACK);
-        g2.drawString(text,(int) pointText.getX(),(int) pointText.getY());
-        g2.setTransform(orig);
-        
-        //g2.setTransform(orig);
-       
-        //g2.drawString( tmp.getIterator(), (int) pointText.getX(),(int) pointText.getY());
+        double angle = Math.asin(calcSinx(from.getCenter(), to.getCenter()));
+        Point2D tmp = pointText[0];
+        if ( from.getCenter().getX() > to.getCenter().getX() ) {
+            angle = -angle;
+            tmp = pointText[1];
+        }
+        if ( from.getCenter().getY() > to.getCenter().getY() ) {
+           angle = -angle;
+           //tmp = pointText[1];
+        }
+      
+        g2.translate(tmp.getX(), tmp.getY());
+        g2.rotate(angle);
+        g2.drawString(text,0,0);
+        g2.rotate(-angle);
+        g2.translate(-(float)tmp.getX(),-(float)tmp.getY());
     }
     @Override
     public void draw(Graphics2D g2) {
@@ -84,29 +89,36 @@ public class Arrow extends MyShape {
     private Point2D[] calcPointsHead(double sinX, double cosX) {
         
         Point2D[] tmp = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 10, sinX, cosX );
-        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 40, sinX, cosX );
-        
+        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 50, sinX, cosX );
+        Point2D[] tmp3 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 31, sinX, cosX );
+      
         double catA = 7 * sinX;
         double catC = 7 * cosX;
-        double catA2 = 20 * sinX;
-        double catC2 = 20 * cosX;
+        double catA2 = 16 * sinX;
+        double catC2 = 16 * cosX;
+        double catA3 = 8 * sinX;
+        double catC3 = 8 * cosX;
         double x0 = tmp[1].getX();
         double x1 = tmp[1].getX();
         double y0 = tmp[1].getY();
         double y1 = tmp[1].getY();
         double x2 = tmp2[1].getX();
         double y2 = tmp2[1].getY();
+        double x3 = tmp3[1].getX();
+        double y3 = tmp3[1].getY();
         
 
         if ( tmp[1].getY() > points[1].getY() ) {
             x0 += catA;
             x1 -= catA;
             x2 += catA2;
+            x3 += catA3;
             
         } else {
             x0 -= catA;
             x1 += catA;
             x2 -= catA2;
+            x3 -= catA3;
             
         }
         
@@ -114,17 +126,20 @@ public class Arrow extends MyShape {
             y0 -= catC;
             y1 += catC;
             y2 -= catC2;
+            y3 -= catC3;
         } else {
             y0 += catC;
             y1 -= catC;
             y2 += catC2;
+            y3 += catC3;
         }
         
         Point2D[] pointsTmp = new Point2D.Double[2];
         
         pointsTmp[0] = new Point2D.Double(x0, y0);
         pointsTmp[1] = new Point2D.Double(x1, y1);
-        pointText = new Point2D.Double(x2, y2);
+        pointText[0] = new Point2D.Double(x2, y2);
+        pointText[1] = new Point2D.Double(x3, y3);
         
         return pointsTmp;
     }

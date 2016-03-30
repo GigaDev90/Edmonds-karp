@@ -9,7 +9,7 @@ public abstract class MyShape {
     //punti usato per settare dove la figura andrà posizionata
     protected Point2D[] points;
     // punto su cui stampare il nome della figura
-    protected Point2D pointText;
+    protected Point2D[] pointText;
     //colore della figura
     protected Color c;
     //Oggetto Shape è quello che andrà realmente ad essere disegnato
