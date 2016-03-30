@@ -6,8 +6,10 @@
 package edmonds.karp.GUI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         graphics = bf.createGraphics();
         graphics.setBackground(Color.WHITE);
+        graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         name = 0;
         isSecond = false;
         isInDragging = false;
@@ -65,8 +69,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(1920, 1080));
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setAlignmentX(0.0F);
@@ -226,6 +228,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             shapeTmp = getSelectedCircle(evt.getPoint());
             if (shapeTmp != null) {
                 shapeTmp.setFirstPoint(evt.getPoint());
+                shapeTmp.needUpdate();
                 isInDragging = true;
             } else {
                 addCircle(evt.getPoint());
@@ -233,6 +236,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 
         } else {
             shapeTmp.setFirstPoint(evt.getPoint());
+            shapeTmp.needUpdate();
             shapeTmp.updateArrow();
         }
         update();
@@ -248,6 +252,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = bf.createGraphics();
             graphics.setBackground(Color.WHITE);
+            graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
             update();
         }
     }//GEN-LAST:event_jPanel2AncestorResized
@@ -257,12 +263,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MouseReleased
 
     private void drawShape(MyShape shape) {
-        shape.draw((Graphics2D) jPanel2.getGraphics());
-        shape.drawText((Graphics2D) jPanel2.getGraphics());
-    }
-
-    private void eraseShape(MyShape shape) {
-
+        shape.draw(graphics);
+        shape.drawText(graphics);
+        jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
     }
 
     private Circle getSelectedCircle(Point point) {
