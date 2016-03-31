@@ -22,6 +22,7 @@ public class Arrow extends MyShape {
     protected Circle to;
     private Line2D.Double head1;
     private Line2D.Double head2;
+    protected StringBuilder str;
     
 
     public Arrow(Circle from, Circle to) {
@@ -30,13 +31,17 @@ public class Arrow extends MyShape {
         head2 =  new Line2D.Double();
         pointText =  new Point2D[2];
         points = new Point2D[2];
+        str = new StringBuilder("0/10");
         scale = 30;
         select = false;
         this.from = from;
         this.to = to;
         c = Color.BLACK;
         update();
+        
     }
+    
+    public StringBuilder getStringBuilder() { return str; }
 
     @Override
     public void makeShape() {
@@ -58,7 +63,7 @@ public class Arrow extends MyShape {
       
         g2.translate(tmp.getX(), tmp.getY());
         g2.rotate(angle);
-        g2.drawString(text,0,0);
+        g2.drawString(str.toString(),0,0);
         g2.rotate(-angle);
         g2.translate(-(float)tmp.getX(),-(float)tmp.getY());
     }
@@ -71,19 +76,19 @@ public class Arrow extends MyShape {
     }
     
     private double calcSinx(Point2D from, Point2D to) {
-        double deltaX = Math.abs(from.getX() - to.getX());
-        double deltaY = Math.abs(from.getY() - to.getY());
+        double deltaX = (to.getX() - from.getX());
+        double deltaY = (to.getY() - from.getY());
         double dnm = Math.sqrt(Math.pow(deltaX, 2)+ Math.pow(deltaY, 2)) + 0.0000001;
         double sinx = deltaY / dnm;
-        //System.out.println("sinx "+sinx);
+        System.out.println("sinx "+sinx);
         return sinx;
     }
     private double calcCosx(Point2D from, Point2D to) {
-        double deltaX = Math.abs(from.getX() - to.getX());
-        double deltaY = Math.abs(from.getY() - to.getY());
+        double deltaX = (to.getX() - from.getX());
+        double deltaY = (to.getY() - from.getY());
         double dnm = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) + 0.0000001;
         double cosx = deltaX / dnm;
-        //System.out.println("cosx "+cosx);
+        System.out.println("cosx "+cosx);
         return cosx;
     }
     
@@ -109,7 +114,7 @@ public class Arrow extends MyShape {
         double y3 = tmp3[1].getY();
         
 
-        if ( tmp[1].getY() > points[1].getY() ) {
+        if ( tmp[1].getY() > points[1].getY() && false) {
             x0 += catA;
             x1 -= catA;
             x2 += catA2;
@@ -123,7 +128,7 @@ public class Arrow extends MyShape {
             
         }
         
-        if ( tmp[1].getX() > points[1].getX() ) {
+        if ( tmp[1].getX() > points[1].getX() && false) {
             y0 -= catC;
             y1 += catC;
             y2 -= catC2;
@@ -154,28 +159,11 @@ public class Arrow extends MyShape {
         //System.out.println("catA "+catA);
         double catB = r * cosX;
         //System.out.println("catB "+catB);
-
-        double x0 = from.getX();
-        double x1 = to.getX();
-        double y0 = from.getY();
-        double y1 = to.getY();
-        
-        if ( to.getX() > from.getX() ) {
-            x0 += catB;
-            x1 -= catB;
-        } else {
-            x0 -= catB;
-            x1 += catB;
-        }
-        
-        if ( to.getY() > from.getY() ) {
-            y0 += catA;
-            y1 -= catA;
-        } else {
-            y0 -= catA;
-            y1 += catA;
-        }
-        
+        double x0 = from.getX() + catB;
+        double x1 = to.getX() - catB;
+        double y0 = from.getY() + catA;
+        double y1 = to.getY() - catA;
+             
         Point2D[] points = new Point2D.Double[2];
         
         points[0] = new Point2D.Double(x0, y0);

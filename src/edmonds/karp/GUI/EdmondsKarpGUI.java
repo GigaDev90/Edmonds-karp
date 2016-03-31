@@ -5,6 +5,7 @@
  */
 package edmonds.karp.GUI;
 
+import edmonds.karp.Edge;
 import edmonds.karp.Graph;
 import java.awt.Color;
 import java.awt.Font;
@@ -65,7 +66,10 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
+        jToggleButton5 = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -96,31 +100,73 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 jPanel2AncestorResized(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 812, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jPanel1.setBackground(new java.awt.Color(169, 169, 169));
 
-        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/sistema_informativo_reti_004.png"))); // NOI18N
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/draw.png"))); // NOI18N
+        jToggleButton1.setToolTipText("draw");
+        jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton1.setMaximumSize(new java.awt.Dimension(30, 30));
+        jToggleButton1.setMinimumSize(new java.awt.Dimension(24, 24));
+        jToggleButton1.setName(""); // NOI18N
+        jToggleButton1.setPreferredSize(new java.awt.Dimension(32, 32));
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
             }
         });
 
-        jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/rette-perpendicolari-e-orientate-per-il-piano-cartesiano.png"))); // NOI18N
+        jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/back.png"))); // NOI18N
+        jToggleButton2.setToolTipText("draw");
+        jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton2.setMaximumSize(new java.awt.Dimension(30, 30));
+        jToggleButton2.setMinimumSize(new java.awt.Dimension(24, 24));
+        jToggleButton2.setName(""); // NOI18N
+        jToggleButton2.setPreferredSize(new java.awt.Dimension(32, 32));
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/play.png"))); // NOI18N
+        jToggleButton3.setToolTipText("draw");
+        jToggleButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton3.setMaximumSize(new java.awt.Dimension(30, 30));
+        jToggleButton3.setMinimumSize(new java.awt.Dimension(24, 24));
+        jToggleButton3.setName(""); // NOI18N
+        jToggleButton3.setPreferredSize(new java.awt.Dimension(32, 32));
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/forward.png"))); // NOI18N
+        jToggleButton4.setToolTipText("draw");
+        jToggleButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton4.setMaximumSize(new java.awt.Dimension(30, 30));
+        jToggleButton4.setMinimumSize(new java.awt.Dimension(24, 24));
+        jToggleButton4.setName(""); // NOI18N
+        jToggleButton4.setPreferredSize(new java.awt.Dimension(32, 32));
         jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton4ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/square.png"))); // NOI18N
+        jToggleButton5.setToolTipText("draw");
+        jToggleButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton5.setMaximumSize(new java.awt.Dimension(30, 30));
+        jToggleButton5.setMinimumSize(new java.awt.Dimension(24, 24));
+        jToggleButton5.setName(""); // NOI18N
+        jToggleButton5.setPreferredSize(new java.awt.Dimension(32, 32));
+        jToggleButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton5ActionPerformed(evt);
             }
         });
 
@@ -130,22 +176,31 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(494, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -155,27 +210,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        MODE = CIRCLE;
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
         if (MODE == ERASE || evt.getButton() == MouseEvent.BUTTON3 ) {
@@ -243,13 +279,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         update();
     }//GEN-LAST:event_jPanel2MouseDragged
 
-    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
-        MODE = ERASE;
-        graph.EdmondsKarp();
-        testUpdate();
-
-    }//GEN-LAST:event_jToggleButton4ActionPerformed
-
     private void jPanel2AncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_jPanel2AncestorResized
         if (graphics != null && (jPanel2.getWidth() != this.getWidth() || jPanel2.getHeight() != this.getHeight())) {
             bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -264,6 +293,26 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
         isInDragging = false;
     }//GEN-LAST:event_jPanel2MouseReleased
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void jToggleButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton5ActionPerformed
 
     private void drawShape(MyShape shape) {
         shape.draw(graphics);
@@ -300,6 +349,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         circle.setText("" + circles.size()); //TODO 
         drawShape(circle);
         graph.addNode("" + circles.size());
+        
         if(graph.size == 1)
             graph.setSource(graph.getNode("1"));
         else if (graph.size == 10)
@@ -316,7 +366,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             shapeTmp.setSelect(false);
             drawShape(arrow);
             System.out.println(shapeTmp.getText()+" "+circ.getText());
-            graph.connect(graph.getNode(shapeTmp.getText()), graph.getNode(circ.getText()), 10, 0);
+            //Edge e = graph.connect(graph.getNode(shapeTmp.getText()), graph.getNode(circ.getText()), 10, 0);
+            //arrow.setEdge(e);
+            
         }
     }
     /**
@@ -360,13 +412,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
+    private javax.swing.JToggleButton jToggleButton5;
     // End of variables declaration//GEN-END:variables
-
-    private void testUpdate() {
-        for ( Circle circle : circles) {
-            graph.getNode(circle.getText());
-            
-        }
-    }
 }

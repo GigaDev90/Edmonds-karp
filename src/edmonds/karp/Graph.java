@@ -95,17 +95,17 @@ public class Graph {
         this.size--;
     }
 
-    public void connect(Node a, Node adjacent, int capacity, int flow) {
+    public Edge connect(Node a, Node adjacent, int capacity, int flow) {
 
         if (size == 1 || capacity < flow) {
             System.out.println("connessione fallita: esiste un solo nodo o valore flusso non consentito");
-            return;
+            return null;
         } else if ( adjacent == source ) {
             System.out.println("connessione fallita: la sorgente non può avere archi entranti");
-            return;
+            return null;
         } else if ( a == sink ) {
             System.out.println("connessione fallita: il pozzo non può avere archi uscenti");
-            return;
+            return null;
         }
 
         Edge edge = new Edge (a, adjacent);
@@ -119,6 +119,8 @@ public class Graph {
         edgeRes.setFlow(capacity);
         edgeRes.setIsResidual(true);
         adjacent.addEdge(edgeRes);
+        
+        return edge;
     }
 
     public void disconnect(Edge edge) {
@@ -225,6 +227,7 @@ public class Graph {
             while (tmpNode.getParent() != null) {
             	Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
                 tmpNode.getParent().getEdge(tmpNode).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() + min );
+                tmpNode.getParent().getEdge(tmpNode).setInfo( tmpNode.getParent().getEdge(tmpNode).getFlow()+"/10");
                 //tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
                 System.out.println("Path "+tmpNode.getName());
                 tmpNode = tmpNode.getParent();
@@ -232,167 +235,5 @@ public class Graph {
         
         BFSVisit(source);            
         }
-    }
-
-}
-
-class Node {
-
-    private Edge header;
-    private Node next;
-    private Node parent;
-    private String name;
-    private boolean isDiscovered;
-    int sizeEdge;
-
-    public Node(String name) {
-
-        header = new Edge(null, null);
-        next = null;
-        parent =  null;
-        isDiscovered = false;
-        this.name = name;
-        sizeEdge = 0;
-    }
-
-    public Edge getEdge(Node adj) {
-        
-        Edge tmp = header.getNext();
-        while ( tmp != null && tmp.getNodeB() != adj ) 
-            tmp = tmp.getNext();
-        
-        return tmp;
-        
-    }
-
-    public void addEdge(Edge edge) {
-
-        edge.setNext(header.getNext());
-        header.setNext(edge);
-
-        sizeEdge++;
-    }
-
-    public void removeEdge(Node adjacent) {
-
-        if ( sizeEdge == 0) {
-            System.out.println("Rimozione fallita: non sono presenti archi");
-        }
-
-        Edge tmp = header;
-        for ( int i = 0; i < sizeEdge - 1; i++ ) {
-            
-            if ( tmp.getNext().getNodeB() == adjacent ) 
-                tmp.setNext(tmp.getNext().getNext());
-
-          
-            tmp = tmp.getNext();
-        }
-
-        sizeEdge--;
-    }
-
-    public Node getNext() {
-        return next;
-    }
-
-    public void setNext(Node next) {
-        this.next = next;
-    }
-
-    public Edge getHeader() {
-        return header;
-    }
-
-     public String getName() {
-        return name;
-    }
-     
-    public Node getParent() {
-        return parent;
-    }
-
-    public void setParent(Node parent) {
-        this.parent = parent;
-    }
-    
-    public boolean isDiscovered() {
-        return isDiscovered;
-    }
-
-    public void setIsDiscovered(boolean isDiscovered) {
-        this.isDiscovered = isDiscovered;
-    }
-
-}
-
-class Edge {
-
-    private Node nodeA;
-    private Node nodeB;
-    private Edge next;
-    private boolean isResidual;
-    private int capacity;
-    private int flow;
-
-    public Edge(Node a, Node b) {
-        nodeA = a;
-        nodeB = b;
-        next = null;
-        isResidual = false;
-        setCapacity(-1);
-        setFlow(-1);
-    }
-
-    public Edge getNext() {
-        return next;
-    }
-
-    public void setNext(Edge next) {
-        this.next = next;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-    
-    public int getResidual() {
-        return capacity - flow;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public int getFlow() {
-        return flow;
-    }
-
-    public void setFlow(int flow) {
-        this.flow = flow;//TODO controllo, scalare l'arco residuo
-    }
-
-    public boolean isIsResidual() {
-        return isResidual;
-    }
-
-    public void setIsResidual(boolean isResidual) {
-        this.isResidual = isResidual;
-    }
-    
-    public Node getNodeA() {
-        return nodeA;
-    }
-
-    public void setNodeA(Node nodeA) {
-        this.nodeA = nodeA;
-    }
-
-    public Node getNodeB() {
-        return nodeB;
-    }
-
-    public void setNodeB(Node nodeB) {
-        this.nodeB = nodeB;
     }
 }
