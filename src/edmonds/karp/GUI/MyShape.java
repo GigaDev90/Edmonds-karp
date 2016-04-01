@@ -19,7 +19,7 @@ public abstract class MyShape {
     //booleano per verificare se si tratta di una classe che può essere selezionata
     protected boolean select;
     
-    protected String text;
+    protected String name;
 
     public MyShape() {}
 
@@ -27,9 +27,9 @@ public abstract class MyShape {
         return shape;
     }
     
-    public void setText(String name) { this.text = name; }
+    public void setName(String name) { this.name = name; }
     
-    public String getText() { return text; }
+    public String getName() { return name; }
 
     public Point2D[] getPoints() { return points; }
 

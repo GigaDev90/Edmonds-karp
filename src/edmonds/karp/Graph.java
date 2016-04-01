@@ -122,6 +122,10 @@ public class Graph {
         
         return edge;
     }
+    
+    public Edge connect(String a, String b, int capacity, int flow) {
+        return connect(getNode(a), getNode(b), capacity, flow);
+    }
 
     public void disconnect(Edge edge) {
         if ( size == 1) {
@@ -195,17 +199,8 @@ public class Graph {
             return;
         }
 
+        cleanGraph();
         Node tmpNode = header.getNext();
-        for ( int i = 0; i < size; i++ ) {
-            Edge tmpEdge = tmpNode.getHeader().getNext();
-            for ( int j = 0; j < tmpNode.sizeEdge; j++) {
-            	if ( !tmpEdge.isIsResidual() )
-            		tmpEdge.setFlow(0);
-            	
-                tmpEdge = tmpEdge.getNext();
-            }
-            tmpNode = tmpNode.getNext();
-        }
 
         BFSVisit(source);
         
@@ -235,5 +230,57 @@ public class Graph {
         
         BFSVisit(source);            
         }
+    }
+    
+    public void cleanGraph() {
+        Node tmpNode = header.getNext();
+        for ( int i = 0; i < size; i++ ) {
+            Edge tmpEdge = tmpNode.getHeader().getNext();
+            for ( int j = 0; j < tmpNode.sizeEdge; j++) {
+            	if ( !tmpEdge.isIsResidual() )
+            		tmpEdge.setFlow(0);
+            	
+                tmpEdge = tmpEdge.getNext();
+            }
+            tmpNode = tmpNode.getNext();
+        }
+    }
+    
+    public void EdmondsKarpOneStep() {
+        
+        if ( source == null || sink == null) {
+            System.out.println("sorgente o pozzo non sono stati assegnati");
+            return;
+        }
+
+        Node tmpNode = header.getNext();
+
+        //BFSVisit(source);
+        
+        if ( sink.getParent() != null ) {
+            
+            tmpNode = sink.getParent();
+            int min = tmpNode.getEdge(sink).getResidual();
+           
+            
+            while (tmpNode.getParent() != null) {
+                if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min )
+                    min = tmpNode.getParent().getEdge(tmpNode).getResidual();
+
+                tmpNode = tmpNode.getParent();
+            }
+            System.out.println("Min "+min);
+            tmpNode = sink;
+
+            while (tmpNode.getParent() != null) {
+            	Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
+                tmpNode.getParent().getEdge(tmpNode).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() + min );
+                tmpNode.getParent().getEdge(tmpNode).setInfo( tmpNode.getParent().getEdge(tmpNode).getFlow()+"/10");
+                //tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                System.out.println("Path "+tmpNode.getName());
+                tmpNode = tmpNode.getParent();
+            }          
+        }
+        
     }
 }

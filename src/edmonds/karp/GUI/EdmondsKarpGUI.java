@@ -5,16 +5,17 @@
  */
 package edmonds.karp.GUI;
 
-import edmonds.karp.Edge;
-import edmonds.karp.Graph;
+import edmonds.karp.Controller.EdmondsKarpController;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 
 /**
  *
@@ -22,19 +23,17 @@ import java.util.ArrayList;
  */
 public class EdmondsKarpGUI extends javax.swing.JFrame {
 
-    //  private static Paint paint;
-    private static final EdmondsKarpGUI gui = new EdmondsKarpGUI();
     private final ArrayList<Circle> circles;
     private int MODE = 0;
     private int name;
     private boolean isSecond;
     private boolean isInDragging;
     private Circle shapeTmp;
-    private final int CIRCLE = 0;
+    private final int DRAW = 0;
     private final int ERASE = 3;
     private Graphics2D graphics;
     private BufferedImage bf;
-    private Graph graph;
+    private EdmondsKarpController controller;
 
     private EdmondsKarpGUI() {
         initComponents();
@@ -43,15 +42,15 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         graphics = bf.createGraphics();
         graphics.setBackground(Color.WHITE);
         graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        controller = new EdmondsKarpController(this);
         name = 0;
         isSecond = false;
         isInDragging = false;
-        graph = new Graph();
     }
 
-    public static EdmondsKarpGUI getGui() {
-        return gui;
+    public EdmondsKarpGUI getGUI() {
+        return this;
     }
 
     /**
@@ -63,16 +62,31 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
-        jToggleButton4 = new javax.swing.JToggleButton();
-        jToggleButton5 = new javax.swing.JToggleButton();
+        pencilButton = new javax.swing.JToggleButton();
+        rubberButton = new javax.swing.JToggleButton();
+        playButton = new javax.swing.JToggleButton();
+        pauseButton = new javax.swing.JToggleButton();
+        backButton = new javax.swing.JButton();
+        forwardButton = new javax.swing.JButton();
+        stopButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+
+        jPopupMenu1.setLightWeightPopupEnabled(false);
+        jPopupMenu1.setOpaque(false);
+        jPopupMenu1.setRequestFocusEnabled(false);
+
+        jMenuItem2.setText("jMenuItem2");
+        jPopupMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("jMenuItem3");
+        jPopupMenu1.add(jMenuItem3);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -104,69 +118,66 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jPanel1.setBackground(new java.awt.Color(169, 169, 169));
+        jPanel1.setPreferredSize(new java.awt.Dimension(824, 50));
 
-        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/draw.png"))); // NOI18N
-        jToggleButton1.setToolTipText("draw");
-        jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton1.setMaximumSize(new java.awt.Dimension(30, 30));
-        jToggleButton1.setMinimumSize(new java.awt.Dimension(24, 24));
-        jToggleButton1.setName(""); // NOI18N
-        jToggleButton1.setPreferredSize(new java.awt.Dimension(32, 32));
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        pencilButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/draw.png"))); // NOI18N
+        pencilButton.setSelected(true);
+        pencilButton.setToolTipText("draw");
+        pencilButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pencilButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        pencilButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        pencilButton.setName(""); // NOI18N
+        pencilButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                pencilButtonActionPerformed(evt);
             }
         });
 
-        jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/back.png"))); // NOI18N
-        jToggleButton2.setToolTipText("draw");
-        jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton2.setMaximumSize(new java.awt.Dimension(30, 30));
-        jToggleButton2.setMinimumSize(new java.awt.Dimension(24, 24));
-        jToggleButton2.setName(""); // NOI18N
-        jToggleButton2.setPreferredSize(new java.awt.Dimension(32, 32));
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+        rubberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/remove.png"))); // NOI18N
+        rubberButton.setToolTipText("erase");
+        rubberButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        rubberButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        rubberButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        rubberButton.setName(""); // NOI18N
+        rubberButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
+                rubberButtonActionPerformed(evt);
             }
         });
 
-        jToggleButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/play.png"))); // NOI18N
-        jToggleButton3.setToolTipText("draw");
-        jToggleButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton3.setMaximumSize(new java.awt.Dimension(30, 30));
-        jToggleButton3.setMinimumSize(new java.awt.Dimension(24, 24));
-        jToggleButton3.setName(""); // NOI18N
-        jToggleButton3.setPreferredSize(new java.awt.Dimension(32, 32));
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+        playButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/play.png"))); // NOI18N
+        playButton.setToolTipText("play");
+        playButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        playButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        playButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        playButton.setName(""); // NOI18N
+        playButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
+                playButtonActionPerformed(evt);
             }
         });
 
-        jToggleButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/forward.png"))); // NOI18N
-        jToggleButton4.setToolTipText("draw");
-        jToggleButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton4.setMaximumSize(new java.awt.Dimension(30, 30));
-        jToggleButton4.setMinimumSize(new java.awt.Dimension(24, 24));
-        jToggleButton4.setName(""); // NOI18N
-        jToggleButton4.setPreferredSize(new java.awt.Dimension(32, 32));
-        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+        pauseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/bars.png"))); // NOI18N
+        pauseButton.setToolTipText("pause");
+        pauseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pauseButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        pauseButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        pauseButton.setName(""); // NOI18N
+        pauseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton4ActionPerformed(evt);
+                pauseButtonActionPerformed(evt);
             }
         });
 
-        jToggleButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/square.png"))); // NOI18N
-        jToggleButton5.setToolTipText("draw");
-        jToggleButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton5.setMaximumSize(new java.awt.Dimension(30, 30));
-        jToggleButton5.setMinimumSize(new java.awt.Dimension(24, 24));
-        jToggleButton5.setName(""); // NOI18N
-        jToggleButton5.setPreferredSize(new java.awt.Dimension(32, 32));
-        jToggleButton5.addActionListener(new java.awt.event.ActionListener() {
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/back.png"))); // NOI18N
+
+        forwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/forward.png"))); // NOI18N
+
+        stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/square.png"))); // NOI18N
+        stopButton.setToolTipText("stop");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton5ActionPerformed(evt);
+                stopButtonActionPerformed(evt);
             }
         });
 
@@ -176,28 +187,34 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pencilButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rubberButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(forwardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pauseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(535, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToggleButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(stopButton)
+                    .addComponent(forwardButton)
+                    .addComponent(backButton)
+                    .addComponent(pauseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rubberButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pencilButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(628, 628, 628))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -214,54 +231,52 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
-        if (MODE == ERASE || evt.getButton() == MouseEvent.BUTTON3 ) {
-            for (Circle circle : circles) {
-                if (circle.getShape().contains(evt.getPoint())) {
-                    circles.remove(circle);
-                    circle.removeArrows();
-                    break;
-                } else {
-                    Arrow arrow = circle.checkForArrow(evt.getPoint());
-                    if (arrow != null) {
-                        arrow.from.removeArrowFrom(arrow);
-                        arrow.to.removeArrowTo(arrow);
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+
+            if (MODE == ERASE) {
+                eraseShape(evt.getPoint());
+            } else if (MODE == DRAW) {
+
+                if (isSecond) {
+                    Circle circ = getSelectedCircle(evt.getPoint());
+                    if (circ != null && circ != shapeTmp) {
+                        addArrow(circ);
+                        shapeTmp.setSelect(false);
+                        isSecond = false;
+                        update();
+                        return;
                     }
+                } else {
+                    Circle circ = getSelectedCircle(evt.getPoint());
+                    if (circ != null) {
+                        shapeTmp = circ;
+                        shapeTmp.setSelect(true);
+                        isSecond = true;
+                        update();
+                        return;
+                    }
+
+                }
+
+                if (getSelectedCircle(evt.getPoint()) == null) {
+                    addCircle(evt.getPoint());
                 }
             }
-            update();
-            return;
-        }
-        
-        if (isSecond) {
-            addArrow(evt.getPoint());
-            shapeTmp.setSelect(false);
-            isSecond = false;
-            update();
-            return;
-        } else {
-            Circle circ = getSelectedCircle(evt.getPoint());
-            if (circ != null) {
-                shapeTmp = circ;
-                shapeTmp.setSelect(true);
-                isSecond = true;
-                update();
-                return;
-            }
-            
-        }
-
-        if (getSelectedCircle(evt.getPoint()) == null) {
-            addCircle(evt.getPoint());
-            
+        } else if (evt.getButton() == MouseEvent.BUTTON3) {
+           jPopupMenu1.show(this, evt.getX(), evt.getY());
+           //System.out.println("start");
+            //update();
         }
     }//GEN-LAST:event_jPanel2MouseClicked
 
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
         if (!isInDragging) {
-            if ( shapeTmp != null) {
+            
+            if (shapeTmp != null) {
                 shapeTmp.setSelect(false);
                 isSecond = false;
             }
+            
             shapeTmp = getSelectedCircle(evt.getPoint());
             if (shapeTmp != null) {
                 shapeTmp.setFirstPoint(evt.getPoint());
@@ -269,14 +284,17 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 isInDragging = true;
             } else {
                 addCircle(evt.getPoint());
+                isInDragging = false;
+                shapeTmp = null;
             }
-                
+
         } else {
             shapeTmp.setFirstPoint(evt.getPoint());
             shapeTmp.needUpdate();
             shapeTmp.updateArrow();
         }
         update();
+        
     }//GEN-LAST:event_jPanel2MouseDragged
 
     private void jPanel2AncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_jPanel2AncestorResized
@@ -285,7 +303,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             graphics = bf.createGraphics();
             graphics.setBackground(Color.WHITE);
             graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             update();
         }
     }//GEN-LAST:event_jPanel2AncestorResized
@@ -294,25 +312,51 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         isInDragging = false;
     }//GEN-LAST:event_jPanel2MouseReleased
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+        rubberButton.setSelected(false);
+        MODE = DRAW;
+    }//GEN-LAST:event_pencilButtonActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+    private void rubberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rubberButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+        pencilButton.setSelected(false);
+        MODE = ERASE;
+    }//GEN-LAST:event_rubberButtonActionPerformed
 
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+    private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
+        pauseButton.setSelected(false);
 
-    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton4ActionPerformed
+    }//GEN-LAST:event_playButtonActionPerformed
 
-    private void jToggleButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton5ActionPerformed
+    private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton5ActionPerformed
+        playButton.setSelected(false);
+    }//GEN-LAST:event_pauseButtonActionPerformed
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        // TODO add your handling code here:
+        playButton.setSelected(false);
+        pauseButton.setSelected(false);
+    }//GEN-LAST:event_stopButtonActionPerformed
+
+    private void eraseShape(Point2D point) {
+        for (Circle circle : circles) {
+            if (circle.getShape().contains(point)) {
+                circles.remove(circle);
+                circle.removeArrows();
+                break;
+            } else {
+                Arrow arrow = circle.checkForArrow(point);
+                if (arrow != null) {
+                    arrow.getFrom().removeArrowFrom(arrow);
+                    arrow.getTo().removeArrowTo(arrow);
+                }
+            }
+        }
+        update();
+    }
 
     private void drawShape(MyShape shape) {
         shape.draw(graphics);
@@ -330,7 +374,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         return null;
     }
 
-    private void update() {
+    public void update() {
         graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
         for (Circle circle : circles) {
             circle.draw(graphics);
@@ -346,31 +390,19 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         circles.add(circle);
         circle.setFirstPoint(point);
         circle.setColor(Color.black);
-        circle.setText("" + circles.size()); //TODO 
+        circle.setName("" + circles.size()); //TODO 
+        controller.addNode(circle);
         drawShape(circle);
-        graph.addNode("" + circles.size());
-        
-        if(graph.size == 1)
-            graph.setSource(graph.getNode("1"));
-        else if (graph.size == 10)
-            graph.setSink(graph.getNode("10"));
     }
 
-    private void addArrow(Point point) {
-        Circle circ = getSelectedCircle(point);
-        if (circ != null && circ != shapeTmp) {
-            Arrow arrow = new Arrow(shapeTmp, circ);
-            arrow.setText("0/10"); //TODO
-            shapeTmp.addArrowFrom(arrow);
-            circ.addArrowTo(arrow);
-            shapeTmp.setSelect(false);
-            drawShape(arrow);
-            System.out.println(shapeTmp.getText()+" "+circ.getText());
-            //Edge e = graph.connect(graph.getNode(shapeTmp.getText()), graph.getNode(circ.getText()), 10, 0);
-            //arrow.setEdge(e);
-            
-        }
+    private void addArrow(Circle circ) {
+        Arrow arrow = new Arrow(shapeTmp, circ);
+        shapeTmp.addArrowFrom(arrow);
+        circ.addArrowTo(arrow);
+        controller.addEdge(arrow);
+        drawShape(arrow);
     }
+
     /**
      * @param args the command line arguments
      */
@@ -406,15 +438,20 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton forwardButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
-    private javax.swing.JToggleButton jToggleButton5;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JToggleButton pauseButton;
+    private javax.swing.JToggleButton pencilButton;
+    private javax.swing.JToggleButton playButton;
+    private javax.swing.JToggleButton rubberButton;
+    private javax.swing.JButton stopButton;
     // End of variables declaration//GEN-END:variables
 }

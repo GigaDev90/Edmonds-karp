@@ -5,6 +5,7 @@
  */
 package edmonds.karp.GUI;
 
+import edmonds.karp.Node;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -20,6 +21,7 @@ public class Circle extends MyShape {
     ArrayList<Arrow> arrowsFrom;
     ArrayList<Arrow> arrowsTo;
     private boolean isUpdate;
+    private Node node;
 
     public Circle() {
         shape = new Ellipse2D.Double();
@@ -31,6 +33,7 @@ public class Circle extends MyShape {
         pointText = new Point2D.Double[2];
         isUpdate = false;
     }
+    public void addNode(Node node) {this.node = node; }
 
     public void addArrowFrom(Arrow arrow) {
         arrowsFrom.add(arrow);
@@ -50,11 +53,11 @@ public class Circle extends MyShape {
 
     public void removeArrows() {
         for (Arrow arrow : arrowsFrom) {
-            arrow.to.removeArrowTo(arrow);
+            arrow.getTo().removeArrowTo(arrow);
         }
 
         for (Arrow arrow : arrowsTo) {
-            arrow.from.removeArrowFrom(arrow);
+            arrow.getFrom().removeArrowFrom(arrow);
         }
 
         arrowsFrom.clear();
@@ -106,7 +109,7 @@ public class Circle extends MyShape {
 
     @Override
     public void drawText(Graphics2D g2) {
-        g2.drawString(text, (int) pointText[0].getX(), (int) pointText[0].getY());
+        g2.drawString(name, (int) pointText[0].getX(), (int) pointText[0].getY());
     }
 
     public void needUpdate() {
