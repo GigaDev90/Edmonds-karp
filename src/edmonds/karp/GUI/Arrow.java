@@ -62,16 +62,31 @@ public class Arrow extends MyShape {
 
         g2.translate(tmp.getX(), tmp.getY());
         g2.rotate(angle);
+        if ( edge.getFlow() ==  edge.getCapacity())
+            g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
         g2.drawString(edge.getFlow()+"/"+edge.getCapacity(),0,0);
+        g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         g2.rotate(-angle);
         g2.translate(-(float)tmp.getX(),-(float)tmp.getY());
     }
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(c);
-        g2.draw(shape);
-        g2.draw(head1);
-        g2.draw(head2);
+        if (  edge.getFlow() == edge.getCapacity()) {
+            g2.setColor(Color.RED);
+            g2.draw(shape);
+            g2.draw(head1);
+            g2.draw(head2);
+        } else if ( edge.getFlow() > 0 ) {
+            g2.setColor(Color.BLUE);
+            g2.draw(shape);
+            g2.draw(head1);
+            g2.draw(head2);
+        } else {
+            g2.setColor(Color.DARK_GRAY);
+            g2.draw(shape);
+            g2.draw(head1);
+            g2.draw(head2);
+        }
     }
     
     private double calcSinx(Point2D from, Point2D to) {

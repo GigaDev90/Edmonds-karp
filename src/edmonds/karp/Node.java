@@ -15,6 +15,8 @@ public class Node {
     private Node next;
     private Node parent;
     private String name;
+    private boolean isSource;
+    private boolean isSink;
     private boolean isDiscovered;
     int sizeEdge;
 
@@ -26,8 +28,22 @@ public class Node {
         isDiscovered = false;
         this.name = name;
         sizeEdge = 0;
+        isSource = false;
+        isSink = false;
     }
-
+    
+    public void setSource(boolean b) {
+        isSource = b;
+    }
+    
+    public void setSink(boolean b) {
+        isSink = b;
+    }
+    
+    public boolean isSource() { return isSource; }
+    
+    public boolean isSink() { return isSink; }
+    
     public Edge getEdge(Node adj) {
         
         Edge tmp = header.getNext();

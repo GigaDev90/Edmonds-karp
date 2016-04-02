@@ -7,6 +7,7 @@ package edmonds.karp.GUI;
 
 import edmonds.karp.Node;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -33,6 +34,8 @@ public class Circle extends MyShape {
         pointText = new Point2D.Double[2];
         isUpdate = false;
     }
+    public Node getNode() { return node; }
+    
     public void addNode(Node node) {this.node = node; }
 
     public void addArrowFrom(Arrow arrow) {
@@ -97,6 +100,7 @@ public class Circle extends MyShape {
             circle.setFrameFromDiagonal(temp1, temp2);
             g2.setColor(Color.BLUE);
             g2.draw(circle);
+            g2.setColor(c);
         }
     }
 
@@ -109,7 +113,17 @@ public class Circle extends MyShape {
 
     @Override
     public void drawText(Graphics2D g2) {
-        g2.drawString(name, (int) pointText[0].getX(), (int) pointText[0].getY());
+        g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
+        if (node.isSource()) {
+            g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
+            g2.drawString("S", (int) pointText[0].getX(), (int) pointText[0].getY() - 15);
+            g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
+        }
+        else if (node.isSink()) {
+            g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
+            g2.drawString("P", (int) pointText[0].getX(), (int) pointText[0].getY() - 15);
+            g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
+        }
     }
 
     public void needUpdate() {

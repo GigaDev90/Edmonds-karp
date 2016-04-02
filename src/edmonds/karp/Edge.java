@@ -17,7 +17,6 @@ public class Edge {
     private boolean isResidual;
     private int capacity;
     private int flow;
-    public StringBuilder info;
 
     public Edge(Node a, Node b) {
         nodeA = a;
@@ -26,15 +25,6 @@ public class Edge {
         isResidual = false;
         setCapacity(-1);
         setFlow(-1);
-    }
-    
-    public StringBuilder getInfo() { return info; }
-    
-    public void setStringBuilder( StringBuilder str ) { info = str; }
-    
-    public void setInfo(String info) { 
-        this.info.delete(0, this.info.length());
-        this.info.append(info);
     }
 
     public Edge getNext() {
