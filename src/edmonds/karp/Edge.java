@@ -15,6 +15,7 @@ public class Edge {
     private Node nodeB;
     private Edge next;
     private boolean isResidual;
+    private boolean isDiscovered;
     private int capacity;
     private int flow;
 
@@ -23,9 +24,16 @@ public class Edge {
         nodeB = b;
         next = null;
         isResidual = false;
+        isDiscovered = false;
         setCapacity(-1);
         setFlow(-1);
     }
+    
+    public void setIsDiscovered(boolean b) {
+        isDiscovered = b;
+    }
+    
+    public boolean isDiscovered() { return isDiscovered; }
 
     public Edge getNext() {
         return next;

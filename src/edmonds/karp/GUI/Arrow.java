@@ -81,6 +81,11 @@ public class Arrow extends MyShape {
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
+        } else if ( edge.isDiscovered() ){
+            g2.setColor(Color.green);
+            g2.draw(shape);
+            g2.draw(head1);
+            g2.draw(head2);
         } else {
             g2.setColor(Color.DARK_GRAY);
             g2.draw(shape);

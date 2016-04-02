@@ -187,6 +187,12 @@ public class Graph {
 
         Node tmp = header.getNext();
         for (int i = 0; i < size; i++) {
+            Edge tmpEdge = tmp.getHeader().getNext();
+            for (int j = 0; j < tmp.sizeEdge; j++) {
+                tmpEdge.setIsDiscovered(false);
+
+            tmpEdge = tmpEdge.getNext();
+        }
             tmp.setParent(null);
             tmp.setIsDiscovered(false);
             tmp = tmp.getNext();
@@ -211,6 +217,7 @@ public class Graph {
                 if (!edge.getNodeB().isDiscovered() && edge.getResidual() > 0) {
                     edge.getNodeB().setIsDiscovered(true);
                     edge.getNodeB().setParent(current);
+                    edge.setIsDiscovered(true);
                     q.add(edge.getNodeB());
                     System.out.println("Son " + edge.getNodeB().getName());
                 }

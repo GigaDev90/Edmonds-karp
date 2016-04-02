@@ -11,11 +11,13 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.RepaintManager;
 
 /**
  *
@@ -39,6 +41,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private EdmondsKarpGUI() {
         initComponents();
+        RepaintManager.currentManager(this).markCompletelyClean(jPanel2);
         circles = new ArrayList<>();
         bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         graphics = bf.createGraphics();
@@ -148,6 +151,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/back.png"))); // NOI18N
 
         forwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/forward.png"))); // NOI18N
+        forwardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forwardButtonActionPerformed(evt);
+            }
+        });
 
         stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/square.png"))); // NOI18N
         stopButton.setToolTipText("stop");
@@ -324,8 +332,10 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             shapeTmp.setFirstPoint(evt.getPoint());
             shapeTmp.needUpdate();
             shapeTmp.updateArrow();
+            update();
         }
-        update();
+        
+        
 
     }//GEN-LAST:event_jPanel2MouseDragged
 
@@ -336,7 +346,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             graphics.setBackground(Color.WHITE);
             graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            RepaintManager.currentManager(this).markCompletelyClean(jPanel2);
             update();
+            
         }
     }//GEN-LAST:event_jPanel2AncestorResized
 
@@ -358,6 +370,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
         // TODO add your handling code here:
+        if ( playButton.isSelected() )
+            controller.play();
     }//GEN-LAST:event_playButtonActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
@@ -386,6 +400,13 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_stopButton2ActionPerformed
 
+    private void forwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forwardButtonActionPerformed
+        // TODO add your handling code here:
+        controller.oneStepForward();
+    }//GEN-LAST:event_forwardButtonActionPerformed
+
+    public boolean isPlaySelected() { return playButton.isSelected(); }
+    
     private void eraseShape(Point2D point) {
         for (Circle circle : circles) {
             if (circle.getShape().contains(point)) {
@@ -452,7 +473,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         }
     }
     
-    public void lunchMessage(String str) {
+    public void displayMessage(String str) {
         JOptionPane.showMessageDialog(this, str);
     }
 
