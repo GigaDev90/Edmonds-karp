@@ -18,7 +18,7 @@ public class Node {
     private boolean isSource;
     private boolean isSink;
     private boolean isDiscovered;
-    int sizeEdge;
+    public int sizeEdge;
 
     public Node(String name) {
 

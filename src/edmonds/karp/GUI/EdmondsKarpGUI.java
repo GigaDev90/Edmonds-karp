@@ -11,13 +11,24 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
+import org.json.JSONException;
 
 /**
  *
@@ -25,9 +36,9 @@ import javax.swing.RepaintManager;
  */
 public class EdmondsKarpGUI extends javax.swing.JFrame {
 
-    private final ArrayList<Circle> circles;
+    private ArrayList<Circle> circles;
     private int MODE = 0;
-    private int name =  0;
+    private int name = 0;
     private int test = 0;
     private boolean isSecond;
     private boolean isInDragging;
@@ -38,6 +49,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private BufferedImage bf;
     private EdmondsKarpController controller;
     private Point2D pointTmp;
+    private JFileChooser chooser = new JFileChooser();
 
     private EdmondsKarpGUI() {
         initComponents();
@@ -52,11 +64,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         isSecond = false;
         isInDragging = false;
     }
-
-    public EdmondsKarpGUI getGUI() {
-        return this;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,6 +88,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         jPopupMenu1.setLightWeightPopupEnabled(false);
@@ -254,6 +263,23 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
+
+        jMenuItem1.setText("Open");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpenActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem4.setText("Save");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -291,8 +317,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     }
 
                 }
-              
-                    
+
                 if (getSelectedCircle(evt.getPoint()) == null && !isSecond) {
                     addCircle(evt.getPoint());
                 } else {
@@ -323,7 +348,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 shapeTmp.needUpdate();
                 isInDragging = true;
             } else {
-               // addCircle(evt.getPoint());
+                // addCircle(evt.getPoint());
                 isInDragging = false;
                 shapeTmp = null;
             }
@@ -334,8 +359,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             shapeTmp.updateArrow();
             update();
         }
-        
-        
+
 
     }//GEN-LAST:event_jPanel2MouseDragged
 
@@ -348,7 +372,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             RepaintManager.currentManager(this).markCompletelyClean(jPanel2);
             update();
-            
+
         }
     }//GEN-LAST:event_jPanel2AncestorResized
 
@@ -370,8 +394,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
         // TODO add your handling code here:
-        if ( playButton.isSelected() )
+        if (playButton.isSelected()) {
             controller.play();
+        }
     }//GEN-LAST:event_playButtonActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
@@ -397,7 +422,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void stopButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButton2ActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_stopButton2ActionPerformed
 
     private void forwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forwardButtonActionPerformed
@@ -405,8 +430,27 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         controller.oneStepForward();
     }//GEN-LAST:event_forwardButtonActionPerformed
 
-    public boolean isPlaySelected() { return playButton.isSelected(); }
-    
+    private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+        // TODO add your handling code here:
+        openGraph();
+    }//GEN-LAST:event_OpenActionPerformed
+
+    private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
+      
+       
+        try {
+            controller.save();
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+      
+    }//GEN-LAST:event_SaveActionPerformed
+
+    public boolean isPlaySelected() {
+        return playButton.isSelected();
+    }
+
     private void eraseShape(Point2D point) {
         for (Circle circle : circles) {
             if (circle.getShape().contains(point)) {
@@ -451,7 +495,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             circle.drawArrows(graphics);
         }
         jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
-        System.out.println("update "+test++);
+        System.out.println("update " + test++);
     }
 
     private void addCircle(Point point) {
@@ -472,9 +516,85 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             drawShape(arrow);
         }
     }
-    
+
     public void displayMessage(String str) {
         JOptionPane.showMessageDialog(this, str);
+    }
+    
+    public ArrayList getCircles() { return circles; }
+    
+    public void setCircles(ArrayList array) { circles = array; }
+
+    private FileReader openGraph() {
+
+        //Visualizzo la finestra di dialogo
+        int risposta = chooser.showOpenDialog(this);
+        String txt = null;
+        if (risposta == chooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
+
+            //Recupero il file selezionato
+            File f = chooser.getSelectedFile();
+            try {
+                FileReader fileReader = new FileReader(f);
+//                BufferedReader bufferedReader = new BufferedReader(fileReader);
+//                String line = null;
+//                while((line = bufferedReader.readLine()) != null) {
+//                    txt += line+"\n";
+//                }
+                
+                return fileReader;
+
+            } catch (IOException e) {
+            }
+        }
+        return null;
+    }
+
+    public void saveGraph(String txt) {
+        
+        int option2 = JOptionPane.NO_OPTION;
+        File f = null;
+        String ext = "txt";
+        String str = null;
+        while (option2 == JOptionPane.NO_OPTION) //Finche' non decido di salvare
+        {
+            //Visualizzo la finestra di dialogo
+            int option = chooser.showSaveDialog(this);
+            if (option == chooser.APPROVE_OPTION) //Se ho premuto il tasto salva
+            {
+                try {
+                    //Recupero il file selezionato
+                    f = chooser.getSelectedFile();
+                    //Recupero il path del file
+                    str = f.getCanonicalPath();
+                    //Se il nome del file non contiene l'estensione, la aggiungo io a mano
+                    if (!str.toLowerCase().endsWith("." + ext)) {
+                        str = str + "." + ext;
+                    }
+                    //Se il file esiste chiedo se lo voglio sovrascrivere
+                    if (f.exists()) {
+                        option2 = JOptionPane.showConfirmDialog(this, "Il file esiste gia'.\nLo vuoi sovrascrivere?", "Sovrascrittura", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    } else {
+                        option2 = JOptionPane.YES_OPTION;
+                    }
+                } catch (Exception ex) {
+                }
+            } else {
+                option2 = JOptionPane.CANCEL_OPTION;
+            }
+        }
+        if (option2 == JOptionPane.YES_OPTION) {
+            try {
+                FileWriter writer = new FileWriter(str);
+                BufferedWriter bWriter = new BufferedWriter(writer);
+                bWriter.write(txt);
+                bWriter.close();
+                writer.close();
+            } catch (MalformedURLException e) {
+            } catch (IOException e) {
+            }
+
+        }
     }
 
     /**
@@ -517,8 +637,10 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;

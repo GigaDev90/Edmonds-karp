@@ -34,6 +34,8 @@ public class Circle extends MyShape {
         pointText = new Point2D.Double[2];
         isUpdate = false;
     }
+    public ArrayList getArrowFrom() { return arrowsFrom; }
+    
     public Node getNode() { return node; }
     
     public void addNode(Node node) {this.node = node; }
@@ -151,5 +153,5 @@ public class Circle extends MyShape {
 
         return null;
     }
-
+    
 }
