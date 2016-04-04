@@ -75,13 +75,13 @@ public class Arrow extends MyShape {
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
-        } else if ( edge.getFlow() > 0 ) {
-            g2.setColor(Color.BLUE);
+        } else if ( edge.isDiscovered() ) {
+            g2.setColor(Color.green);
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
-        } else if ( edge.isDiscovered() ){
-            g2.setColor(Color.green);
+        } else if ( edge.getFlow() > 0 ) {
+            g2.setColor(Color.BLUE);
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);

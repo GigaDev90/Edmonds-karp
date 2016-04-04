@@ -61,10 +61,13 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         isSecond = false;
         isInDragging = false;
         try {
-            controller.open(openGraph("/home/gabriele/CanonicalGraph.txt"));
+            String tmp = openGraph("/home/gabriele/CanonicalGraph.txt");
+            if ( tmp != null )
+                controller.open(tmp);
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        update();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,6 +93,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -265,8 +269,21 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
+        jMenu1.setPreferredSize(new java.awt.Dimension(50, 21));
 
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem5.setText("New");
+        jMenuItem5.setPreferredSize(new java.awt.Dimension(110, 25));
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Open");
+        jMenuItem1.setPreferredSize(new java.awt.Dimension(110, 25));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OpenActionPerformed(evt);
@@ -274,7 +291,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem4.setText("Save");
+        jMenuItem4.setPreferredSize(new java.awt.Dimension(110, 25));
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SaveActionPerformed(evt);
@@ -435,26 +454,32 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
         try {
             // TODO add your handling code here:
-            controller.open(openGraph(null));
+            String tmp = openGraph(null);
+            if ( tmp != null) {
+                System.out.println(tmp);
+                controller.open(tmp);
+            }
+            //update();
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_OpenActionPerformed
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
-      
-       
-        try {
-            saveGraph(controller.save());
-        } catch (JSONException ex) {
-            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-     
-      
+        saveGraph();
     }//GEN-LAST:event_SaveActionPerformed
+
+    private void newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newActionPerformed
+        // TODO add your handling code here:
+        controller.newGraph();
+    }//GEN-LAST:event_newActionPerformed
 
     public boolean isPlaySelected() {
         return playButton.isSelected();
+    }
+    
+    public void setUpPlayButton() {
+        playButton.setSelected(false);
     }
 
     private void eraseShape(Point2D point) {
@@ -501,7 +526,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             circle.drawArrows(graphics);
         }
         jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
-        System.out.println("update " + test++);
+        //System.out.println("update " + test++);
     }
 
     private void addCircle(Point point) {
@@ -573,7 +598,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         return null;
     }
 
-    public void saveGraph(String txt) {
+    public void saveGraph() {
         
         int option2 = JOptionPane.NO_OPTION;
         File f = null;
@@ -608,14 +633,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         }
         if (option2 == JOptionPane.YES_OPTION) {
             try {
-                FileWriter writer = new FileWriter(str);
-                BufferedWriter bWriter = new BufferedWriter(writer);
-                bWriter.write(txt);
-                bWriter.close();
-                writer.close();
-            } catch (MalformedURLException e) {
-            } catch (IOException e) {
+                controller.save(str);
+            } catch (JSONException ex) {
+                Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+      
 
         }
     }
@@ -664,6 +686,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
