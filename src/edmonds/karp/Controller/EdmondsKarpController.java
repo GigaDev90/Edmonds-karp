@@ -15,10 +15,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +37,7 @@ public class EdmondsKarpController {
     private EdmondsKarpGUI gui;
     private Timer tmr1;
     private Timer tmr2;
+    private int name = 0;
     
     public EdmondsKarpController(EdmondsKarpGUI gui) {
         this.gui = gui;
@@ -46,10 +45,10 @@ public class EdmondsKarpController {
         setTimer();
     }
     
-    public boolean addEdge(Arrow edge) {
-       Edge e = graph.connect(edge.getFrom().getName(), edge.getTo().getName(),(int)(Math.random() *100 + 1), 0);
+    public boolean addEdge(Arrow arrow) {
+       Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(),(int)(Math.random() *100 + 1), 0);
        if ( e!= null) {
-           edge.setEdge(e);
+           arrow.setEdge(e);
            return true;
        } else {
             gui.displayMessage("collegamento non valido");
@@ -57,17 +56,17 @@ public class EdmondsKarpController {
        }
     }
     
-    public void addNode(Circle node) {
-        node.addNode(graph.addNode(node.getName()));
+    public void addNode(Circle circle ) {
+        circle.addNode(graph.addNode(""+name++));
     }
     
-    public void removeNode(Circle node) {
-        graph.removeNode(graph.getNode(node.getName()));
+    public void removeNode(Circle circle) {
+        graph.removeNode(graph.getNode(circle.getName()));
         
     }
     
-    public void setSink(Circle node) {
-        if (!graph.setSink(graph.getNode(node.getName()))) {
+    public void setSink(Circle circle) {
+        if (!graph.setSink(graph.getNode(circle.getName()))) {
             gui.displayMessage("Il pozzo non può avere archi uscenti");
         } else { 
             gui.update();
@@ -149,86 +148,82 @@ public class EdmondsKarpController {
     }
     
     public void open(String s) throws JSONException {
-        ArrayList<Circle> circles = new ArrayList();
+        System.out.println(s);
+        Map<String, Circle> circles = new HashMap<String, Circle>();
+        graph = new Graph();
+        gui.getCircles().clear();
 
-        JSONObject rootObject = new JSONObject(s); // Parse the JSON to a JSONObject
-        JSONArray rows = rootObject.getJSONArray("Graph");
+        JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
+        JSONArray jNodes = jNodeEdge.getJSONArray("Node");
+        JSONArray jEdges = jNodeEdge.getJSONArray("Edge");
         
-        for (int i = 0; i < rows.length(); i++) { // Loop over each each row
+        for (int i = 0; i < jNodes.length(); i++) { // Loop over each each row of node
             Circle circle = new Circle();
             Point point = new Point();
-            JSONObject row = rows.getJSONObject(i);
-            JSONArray elements = row.getJSONArray("Edge"); 
-            circle.setName(row.getString("ID"));
-            point.setLocation(row.getInt("posX"), row.getInt("posY"));
-            circle.setFirstPoint(point);
             
-            for (int j = 0; j < elements.length(); j++) {
-                
-                JSONObject element = elements.getJSONObject(j);
-                
-                System.out.println("adj: " + element.getString("Adj")); 
-            }
+            JSONObject jNode = jNodes.getJSONObject(i);
+            
+            point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
+            circle.setFirstPoint(point);
+            this.addNode(circle);
+            
+            circles.put(jNode.getString("ID"), circle);
+            
         }
+        
+        for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
+            JSONObject jEdge = jEdges.getJSONObject(i);
+            //aggiungo al grafo l'arco
+            //Edge edge = new Edge(graph.getNode(jEdge.getString("From")), graph.getNode(jEdge.getString("To")));
+            //edge.setCapacity(jEdge.getInt("Capacity"));
+            
+            Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
+            this.addEdge(arrow);
+            circles.get(jEdge.getString("From")).addArrowFrom(arrow);
+            circles.get(jEdge.getString("To")).addArrowTo(arrow);
+            arrow.getEdge().setCapacity(jEdge.getInt("Capacity"));
+        }
+        
+        gui.setCircles(new ArrayList(circles.values()));
+        gui.update();
 
     }
 
-    public void save() throws JSONException {
+    public String save() throws JSONException {
 
-        JSONArray jArray1 = new JSONArray();
+        JSONArray nodeJArray = new JSONArray();
+        JSONArray edgeJArray = new JSONArray();
+        
         ArrayList<Circle> arrayCircle = gui.getCircles();
         ArrayList<Arrow> arrayArrow;
         
          
         for ( Circle circle : arrayCircle ) {
             arrayArrow = circle.getArrowFrom();
-            JSONObject jObj1 = new JSONObject();
-            JSONArray jArray2 = new JSONArray();
-            jObj1.put("Edge", jArray2);
-            jObj1.put("ID", circle.getNode().getName());
-            jObj1.put("posX", circle.getCenter().getX());
-            jObj1.put("posY", circle.getCenter().getY());
+            JSONObject jNode = new JSONObject();
+            
+            jNode.put("ID", circle.getNode().getName());
+            jNode.put("PosX", circle.getCenter().getX());
+            jNode.put("PosY", circle.getCenter().getY());
             
             for ( Arrow arrow : arrayArrow ) {
+                
                 if ( !arrow.getEdge().isIsResidual() ) {
-                    JSONObject jObj2 = new JSONObject();
-                    jObj2.put("Adj", arrow.getEdge().getNodeB().getName());
-                    jObj2.put("Capacity", arrow.getEdge().getCapacity());
-                    jArray2.put(jObj2);
+                    JSONObject jEdge = new JSONObject();
+                    jEdge.put("From", arrow.getEdge().getNodeA().getName());
+                    jEdge.put("To", arrow.getEdge().getNodeB().getName());
+                    jEdge.put("Capacity", arrow.getEdge().getCapacity());
+                    edgeJArray.put(jEdge);
                 }
             }
-            jArray1.put(jObj1);
+            nodeJArray.put(jNode);
         }
         
-        JSONObject jObj3 = new JSONObject();
-        jObj3.put("Graph", jArray1);
+        JSONObject jNodeEdge = new JSONObject();
+        jNodeEdge.put("Node", nodeJArray);
+        jNodeEdge.put("Edge", edgeJArray);
         
-//        for (  int i = 0; i < arrayNode.size(); i++ ) {
-//            Arrow edge = node.getHeader().getNext();
-//            JSONObject jObj1 = new JSONObject();
-//            JSONArray jArray2 = new JSONArray();
-//            jObj1.put("ID", node.getName());
-//           
-//            for( int j = 0; j < node.sizeEdge; j++ ) {
-//                if ( !edge.isIsResidual() ) {
-//                    JSONObject jObj2 = new JSONObject();
-//                    jObj2.put("Adj", edge.getNodeB().getName());
-//                    jObj2.put("Capacity", edge.getCapacity());
-//                    jArray2.put(jObj2);
-//                }
-//                edge = edge.getNext();
-//            }
-//            jObj1.put("Edge", jArray2);
-//            jArray1.put(jObj1);
-//            node = node.getNext();
-//            
-//        }
-        
-//        JSONObject jObj3 = new JSONObject();
-//        jObj3.put("Graph", jArray1);
-        
-        
-       System.out.println(jObj3.toString()); 
-       open(jObj3.toString());
+       //System.out.println(jNodeEdge.toString()); 
+       return jNodeEdge.toString();
     }
 }

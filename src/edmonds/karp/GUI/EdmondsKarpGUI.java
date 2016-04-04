@@ -24,12 +24,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
 import org.json.JSONException;
-
 /**
  *
  * @author gabriele
@@ -38,7 +36,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private ArrayList<Circle> circles;
     private int MODE = 0;
-    private int name = 0;
     private int test = 0;
     private boolean isSecond;
     private boolean isInDragging;
@@ -431,15 +428,19 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_forwardButtonActionPerformed
 
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
-        // TODO add your handling code here:
-        openGraph();
+        try {
+            // TODO add your handling code here:
+            controller.open(openGraph());
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_OpenActionPerformed
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
       
        
         try {
-            controller.save();
+            saveGraph(controller.save());
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -500,10 +501,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void addCircle(Point point) {
         Circle circle = new Circle();
-        circles.add(circle);
         circle.setFirstPoint(point);
-        circle.setColor(Color.black);
-        circle.setName("" + name++); //TODO 
+        circles.add(circle);
         controller.addNode(circle);
         drawShape(circle);
     }
@@ -523,26 +522,27 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     
     public ArrayList getCircles() { return circles; }
     
+   
     public void setCircles(ArrayList array) { circles = array; }
 
-    private FileReader openGraph() {
+    private String openGraph() {
 
         //Visualizzo la finestra di dialogo
         int risposta = chooser.showOpenDialog(this);
-        String txt = null;
+        String txt = "";
         if (risposta == chooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
 
             //Recupero il file selezionato
             File f = chooser.getSelectedFile();
             try {
                 FileReader fileReader = new FileReader(f);
-//                BufferedReader bufferedReader = new BufferedReader(fileReader);
-//                String line = null;
-//                while((line = bufferedReader.readLine()) != null) {
-//                    txt += line+"\n";
-//                }
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                String line = "";
+                while((line = bufferedReader.readLine()) != null) {
+                    txt += line;
+                }
                 
-                return fileReader;
+                return txt;
 
             } catch (IOException e) {
             }

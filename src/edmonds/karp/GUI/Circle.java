@@ -33,7 +33,10 @@ public class Circle extends MyShape {
         arrowsTo = new ArrayList<>();
         pointText = new Point2D.Double[2];
         isUpdate = false;
+        c = Color.BLACK;
     }
+    public String getName() { return node.getName(); }
+    
     public ArrayList getArrowFrom() { return arrowsFrom; }
     
     public Node getNode() { return node; }
