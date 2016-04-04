@@ -71,8 +71,10 @@ public class Node {
         Edge tmp = header;
         for ( int i = 0; i < sizeEdge - 1; i++ ) {
             
-            if ( tmp.getNext().getNodeB() == adjacent ) 
+            if ( tmp.getNext().getNodeB() == adjacent ) {
                 tmp.setNext(tmp.getNext().getNext());
+                break;
+            }
 
           
             tmp = tmp.getNext();

@@ -102,7 +102,7 @@ public class EdmondsKarpController {
                     return;
                 }
                 if (graph.isSafe()) {
-                    graph.discoverPath();
+                    graph.selectPath();
                 } else {
                     gui.displayMessage("Errore: controllare sorgente o pozzo");
                     gui.setUpPlayButton();
@@ -146,14 +146,14 @@ public class EdmondsKarpController {
     }
 
     public void oneStepForward() {
-
+        
         if (!graph.BFSVisit(graph.getSource())) {
             gui.displayMessage("Finish");
             return;
         }
         if ( graph.isSafe() ) {
-            if ( !graph.isDiscovered() ) {
-                graph.discoverPath();
+            if ( !graph.isSelected() ) {
+                graph.selectPath();
                 System.out.println("search");
             } else {
                 if ( !graph.EdmondsKarpOneStep() ) {
@@ -164,6 +164,7 @@ public class EdmondsKarpController {
         } else {
             gui.displayMessage("Errore, controllare sorgente o pozzo");
         }
+        
 
         bfVisit++;
         gui.update();

@@ -25,8 +25,6 @@ public class Edge {
         next = null;
         isResidual = false;
         isDiscovered = false;
-        setCapacity(-1);
-        setFlow(-1);
     }
     
     public void setIsDiscovered(boolean b) {
@@ -60,6 +58,8 @@ public class Edge {
     }
 
     public void setFlow(int flow) {
+        if ( flow < 0)
+            System.out.println("minore di 0");
         this.flow = flow;//TODO controllo, scalare l'arco residuo
     }
 

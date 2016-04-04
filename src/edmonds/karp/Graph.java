@@ -31,6 +31,22 @@ public class Graph {
         return source;
     }
 
+    public Node getHeader() {
+        return header;
+    }
+
+    public void setHeader(Node header) {
+        this.header = header;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     public boolean setSource(Node source) {
 
         Edge tmpEdge = source.getHeader().getNext();
@@ -104,16 +120,15 @@ public class Graph {
             System.out.println("rimozione fallita: non sono presenti nodi");
             return;
         }
-        int size = node.sizeEdge;
-        System.out.println("sizeEdge: " + node.sizeEdge);
+
+        int sizeTmp = node.sizeEdge;
         Edge tmpEdge = node.getHeader().getNext();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < sizeTmp; i++) {
             disconnect(tmpEdge);
             tmpEdge = tmpEdge.getNext();
 
         }
 
-        System.out.println("sizeEdge: " + node.sizeEdge);
         Node prevTmp = header;
         for (int i = 0; i < this.size; i++) {
 
@@ -186,12 +201,6 @@ public class Graph {
     public void BFVisitClear() {
         Node tmp = header.getNext();
         for (int i = 0; i < size; i++) {
-//            Edge tmpEdge = tmp.getHeader().getNext();
-//            for (int j = 0; j < tmp.sizeEdge; j++) {
-//                tmpEdge.setIsDiscovered(false);
-//
-//                tmpEdge = tmpEdge.getNext();
-//            }
             tmp.setParent(null);
             tmp.setIsDiscovered(false);
             tmp = tmp.getNext();
@@ -199,10 +208,13 @@ public class Graph {
     }
 
     public boolean BFSVisit(Node root) {
-        
-        BFVisitClear();
 
-        Queue<Node> q = new LinkedList<Node>();
+        if (root == null) {
+            return false;
+        }
+
+        BFVisitClear();
+        Queue<Node> q = new LinkedList<>();
         q.add(root);
         root.setIsDiscovered(true);
         root.setParent(null);
@@ -227,24 +239,8 @@ public class Graph {
                 edge = edge.getNext();
             }
         }
-        
-        return sink.getParent() != null;
-    }
 
-    public Node getHeader() {
-        return header;
-    }
-
-    public void setHeader(Node header) {
-        this.header = header;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
+        return true;
     }
 
     public boolean EdmondsKarp() {
@@ -255,13 +251,11 @@ public class Graph {
         }
 
         edmondsKarpClear();
-        Node tmpNode = header.getNext();
-
         BFSVisit(source);
 
         while (sink.getParent() != null) {
 
-            tmpNode = sink.getParent();
+            Node tmpNode = sink.getParent();
             int min = tmpNode.getEdge(sink).getResidual();
 
             while (tmpNode.getParent() != null) {
@@ -276,8 +270,8 @@ public class Graph {
 
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
-                tmpNode.getParent().getEdge(tmpNode).setFlow(tmpNode.getParent().getEdge(tmpNode).getFlow() + min);
-                //tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                tmpEdge.setFlow(tmpEdge.getFlow() + min);
+                tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
                 System.out.println("Path " + tmpNode.getName());
                 tmpNode = tmpNode.getParent();
             }
@@ -301,24 +295,22 @@ public class Graph {
             tmpNode = tmpNode.getNext();
         }
     }
-    
-    public void discoverPath() {
-         
-        Node tmpNode = sink.getParent();
-        
-        tmpNode.getEdge(sink).setIsDiscovered(true);
 
+    public void selectPath() {
+
+        Node tmpNode = sink;
+        // tmpNode.getEdge(sink).setIsDiscovered(true);
         while (tmpNode.getParent() != null) {
             tmpNode.getParent().getEdge(tmpNode).setIsDiscovered(true);
             tmpNode = tmpNode.getParent();
         }
     }
-    
-    public boolean isDiscovered() {
+
+    public boolean isSelected() {
         return sink.getParent().getEdge(sink).isDiscovered();
     }
-    
-     public boolean isSafe() {
+
+    public boolean isSafe() {
         return sink != null && sink.getParent() != null && sink.getParent().getEdge(sink) != null;
     }
 
@@ -330,10 +322,10 @@ public class Graph {
         }
 
         if (sink.getParent() != null) {
-            
+
             Node tmpNode = sink.getParent();
             int min = tmpNode.getEdge(sink).getResidual();
-            
+
             while (tmpNode.getParent() != null) {
                 if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min) {
                     min = tmpNode.getParent().getEdge(tmpNode).getResidual();
@@ -342,19 +334,19 @@ public class Graph {
                 }
                 tmpNode = tmpNode.getParent();
             }
-            
+
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
-                tmpNode.getParent().getEdge(tmpNode).setFlow(tmpNode.getParent().getEdge(tmpNode).getFlow() + min);
-                tmpNode.getParent().getEdge(tmpNode).setIsDiscovered(false);
-                tmpNode.getEdge(tmpNode.getParent()).setFlow( tmpNode.getParent().getEdge(tmpNode).getFlow() - min );
+                tmpEdge.setFlow(tmpEdge.getFlow() + min);
+                tmpEdge.setIsDiscovered(false);
+                tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
                 System.out.println("Path " + tmpNode.getName());
                 //System.out.println("Min " + min);
                 tmpNode = tmpNode.getParent();
             }
-            
+
             return true;
         }
         return false;
