@@ -38,11 +38,13 @@ public class EdmondsKarpController {
     private Timer tmr1;
     private Timer tmr2;
     private int name = 0;
+    private boolean bfVisit;
     
     public EdmondsKarpController(EdmondsKarpGUI gui) {
         this.gui = gui;
         graph = new Graph();
         setTimer();
+        bfVisit = true;
     }
     
     public boolean addEdge(Arrow arrow) {
@@ -110,7 +112,12 @@ public class EdmondsKarpController {
         
         ActionListener taskPerformer2 = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                graph.EdmondsKarpOneStep();
+                if ( !graph.EdmondsKarpOneStep() ) {
+                    gui.displayMessage("Finish");
+                    
+                    return;
+                }
+                
                 gui.update();
                 if ( gui.isPlaySelected() )
                     tmr1.start();
@@ -122,6 +129,7 @@ public class EdmondsKarpController {
     
     public void stop() {
         graph.cleanGraph();
+        graph.BFVisitClear();
         gui.update();
     }
     
@@ -134,24 +142,21 @@ public class EdmondsKarpController {
     }
     
     public void oneStepForward() {
-        graph.BFSVisit(graph.getSource());
-        gui.update();
-        int delay = 5000; //milliseconds
-        ActionListener taskPerformer = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                graph.EdmondsKarpOneStep();
+        
+        if ( bfVisit )
+            graph.BFSVisit(graph.getSource());
+        else
+            if (!graph.EdmondsKarpOneStep()) {
+                gui.displayMessage("Finish");
             }
-        };
-        new Timer(delay, taskPerformer).start();
+        
+        bfVisit = !bfVisit;
         gui.update();
-
     }
     
     public void open(String s) throws JSONException {
-        System.out.println(s);
         Map<String, Circle> circles = new HashMap<String, Circle>();
         graph = new Graph();
-        gui.getCircles().clear();
 
         JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
         JSONArray jNodes = jNodeEdge.getJSONArray("Node");
@@ -173,9 +178,6 @@ public class EdmondsKarpController {
         
         for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
             JSONObject jEdge = jEdges.getJSONObject(i);
-            //aggiungo al grafo l'arco
-            //Edge edge = new Edge(graph.getNode(jEdge.getString("From")), graph.getNode(jEdge.getString("To")));
-            //edge.setCapacity(jEdge.getInt("Capacity"));
             
             Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
             this.addEdge(arrow);
@@ -184,9 +186,12 @@ public class EdmondsKarpController {
             arrow.getEdge().setCapacity(jEdge.getInt("Capacity"));
         }
         
+        graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
+        graph.setSink(graph.getNode(jNodeEdge.getString("Sink")));
+        
+        
         gui.setCircles(new ArrayList(circles.values()));
         gui.update();
-
     }
 
     public String save() throws JSONException {
@@ -222,8 +227,9 @@ public class EdmondsKarpController {
         JSONObject jNodeEdge = new JSONObject();
         jNodeEdge.put("Node", nodeJArray);
         jNodeEdge.put("Edge", edgeJArray);
+        jNodeEdge.put("Source", graph.getSource().getName());
+        jNodeEdge.put("Sink", graph.getSink().getName());
         
-       //System.out.println(jNodeEdge.toString()); 
        return jNodeEdge.toString();
     }
 }

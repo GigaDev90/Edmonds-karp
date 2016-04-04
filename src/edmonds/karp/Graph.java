@@ -35,16 +35,17 @@ public class Graph {
 
         Edge tmpEdge = source.getHeader().getNext();
         for (int j = 0; j < source.sizeEdge; j++) {
-            if ( tmpEdge.isIsResidual() && tmpEdge.getNodeA() == source) {
+            if (tmpEdge.isIsResidual() && tmpEdge.getNodeA() == source) {
                 return false;
             }
 
             tmpEdge = tmpEdge.getNext();
         }
-        
-        if (this.source != null)
+
+        if (this.source != null) {
             this.source.setSource(false);
-        
+        }
+
         this.source = source;
         this.source.setSource(true);
         return true;
@@ -55,7 +56,7 @@ public class Graph {
     }
 
     public boolean setSink(Node sink) {
-        
+
         Edge tmpEdge = sink.getHeader().getNext();
         for (int j = 0; j < sink.sizeEdge; j++) {
             if (!tmpEdge.isIsResidual() && tmpEdge.getNodeA() == sink) {
@@ -64,9 +65,10 @@ public class Graph {
 
             tmpEdge = tmpEdge.getNext();
         }
-        if (this.sink != null)
+        if (this.sink != null) {
             this.sink.setSink(false);
-        
+        }
+
         this.sink = sink;
         this.sink.setSink(true);
         return true;
@@ -148,8 +150,6 @@ public class Graph {
                 tmpEdge = tmpEdge.getNext();
             }
         }
-                
-        
 
         Edge edge = new Edge(a, adjacent);
         edge.setCapacity(capacity);
@@ -183,20 +183,24 @@ public class Graph {
         b.removeEdge(a);
     }
 
-    public void BFSVisit(Node root) {
-
+    public void BFVisitClear() {
         Node tmp = header.getNext();
         for (int i = 0; i < size; i++) {
             Edge tmpEdge = tmp.getHeader().getNext();
             for (int j = 0; j < tmp.sizeEdge; j++) {
                 tmpEdge.setIsDiscovered(false);
 
-            tmpEdge = tmpEdge.getNext();
-        }
+                tmpEdge = tmpEdge.getNext();
+            }
             tmp.setParent(null);
             tmp.setIsDiscovered(false);
             tmp = tmp.getNext();
         }
+    }
+
+    public void BFSVisit(Node root) {
+        
+        BFVisitClear();
 
         Queue<Node> q = new LinkedList<Node>();
         q.add(root);
@@ -297,13 +301,14 @@ public class Graph {
         }
     }
 
-    public void EdmondsKarpOneStep() {
+    public boolean EdmondsKarpOneStep() {
 
         if (source == null || sink == null) {
             System.out.println("sorgente o pozzo non sono stati assegnati");
-            return;
+            return false;
         }
 
+        boolean checkStatus = false;
         Node tmpNode = header.getNext();
 
         //BFSVisit(source);
@@ -321,6 +326,9 @@ public class Graph {
             }
             System.out.println("Min " + min);
             tmpNode = sink;
+            
+            if( tmpNode.getParent() != null )
+                checkStatus = true;
 
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
@@ -330,6 +338,7 @@ public class Graph {
                 tmpNode = tmpNode.getParent();
             }
         }
+        return checkStatus;
 
     }
 }

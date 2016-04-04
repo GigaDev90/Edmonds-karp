@@ -60,6 +60,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         controller = new EdmondsKarpController(this);
         isSecond = false;
         isInDragging = false;
+        try {
+            controller.open(openGraph("/home/gabriele/CanonicalGraph.txt"));
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -430,7 +435,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
         try {
             // TODO add your handling code here:
-            controller.open(openGraph());
+            controller.open(openGraph(null));
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -525,11 +530,29 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
    
     public void setCircles(ArrayList array) { circles = array; }
 
-    private String openGraph() {
+    private String openGraph(String defaultGraph) {
+        
+        String txt = "";
+        if (defaultGraph != null) {
+           // File f = defaultGraph;
+            try {
+                FileReader fileReader = new FileReader(defaultGraph);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                String line = "";
+                while((line = bufferedReader.readLine()) != null) {
+                    txt += line;
+                }
+                
+                return txt;
 
+            } catch (IOException e) {
+            }
+        }
+        
+        
         //Visualizzo la finestra di dialogo
         int risposta = chooser.showOpenDialog(this);
-        String txt = "";
+        //String txt = "";
         if (risposta == chooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
 
             //Recupero il file selezionato
