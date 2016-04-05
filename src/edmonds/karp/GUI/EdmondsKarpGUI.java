@@ -8,7 +8,9 @@ package edmonds.karp.GUI;
 import edmonds.karp.Controller.EdmondsKarpController;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -26,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import org.json.JSONException;
 /**
@@ -50,7 +53,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private EdmondsKarpGUI() {
         initComponents();
-        RepaintManager.currentManager(this).markCompletelyClean(jPanel2);
         circles = new ArrayList<>();
         bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         graphics = bf.createGraphics();
@@ -67,7 +69,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        update();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,7 +91,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         stopButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         stopButton2 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        myPanel = new MyPanel(this);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -242,31 +243,31 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setMaximumSize(new java.awt.Dimension(1920, 1080));
-        jPanel2.setPreferredSize(new java.awt.Dimension(800, 600));
-        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        myPanel.setBackground(new java.awt.Color(255, 255, 255));
+        myPanel.setMaximumSize(new java.awt.Dimension(1920, 1080));
+        myPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+        myPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jPanel2MouseReleased(evt);
+                myPanelMouseReleased(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel2MouseClicked(evt);
+                myPanelMouseClicked(evt);
             }
         });
-        jPanel2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        myPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jPanel2MouseDragged(evt);
+                myPanelMouseDragged(evt);
             }
         });
-        jPanel2.addHierarchyBoundsListener(new java.awt.event.HierarchyBoundsListener() {
+        myPanel.addHierarchyBoundsListener(new java.awt.event.HierarchyBoundsListener() {
             public void ancestorMoved(java.awt.event.HierarchyEvent evt) {
             }
             public void ancestorResized(java.awt.event.HierarchyEvent evt) {
-                jPanel2AncestorResized(evt);
+                myPanelAncestorResized(evt);
             }
         });
-        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
+        myPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        getContentPane().add(myPanel, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
         jMenu1.setPreferredSize(new java.awt.Dimension(50, 21));
@@ -311,7 +312,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+    private void myPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1) {
 
             if (MODE == ERASE) {
@@ -324,7 +325,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                         addArrow(circ);
                         shapeTmp.setSelect(false);
                         isSecond = false;
-                        update();
+                       update();
                         return;
                     }
                 } else {
@@ -349,13 +350,13 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
             if (getSelectedCircle(evt.getPoint()) != null) {
-                jPopupMenu1.show(jPanel2, evt.getX(), evt.getY());
+                jPopupMenu1.show(myPanel, evt.getX(), evt.getY());
                 pointTmp = evt.getPoint();
             }
         }
-    }//GEN-LAST:event_jPanel2MouseClicked
+    }//GEN-LAST:event_myPanelMouseClicked
 
-    private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
+    private void myPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseDragged
         if (!isInDragging) {
 
             if (shapeTmp != null) {
@@ -382,24 +383,22 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         }
 
 
-    }//GEN-LAST:event_jPanel2MouseDragged
+    }//GEN-LAST:event_myPanelMouseDragged
 
-    private void jPanel2AncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_jPanel2AncestorResized
-        if (graphics != null && (jPanel2.getWidth() != this.getWidth() || jPanel2.getHeight() != this.getHeight())) {
+    private void myPanelAncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_myPanelAncestorResized
+        if (graphics != null && (myPanel.getWidth() != this.getWidth() || myPanel.getHeight() != this.getHeight())) {
             bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = bf.createGraphics();
             graphics.setBackground(Color.WHITE);
             graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            RepaintManager.currentManager(this).markCompletelyClean(jPanel2);
             update();
-
         }
-    }//GEN-LAST:event_jPanel2AncestorResized
+    }//GEN-LAST:event_myPanelAncestorResized
 
-    private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
+    private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
         isInDragging = false;
-    }//GEN-LAST:event_jPanel2MouseReleased
+    }//GEN-LAST:event_myPanelMouseReleased
 
     private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
         // TODO add your handling code here:
@@ -459,7 +458,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 System.out.println(tmp);
                 controller.open(tmp);
             }
-            //update();
+            update();
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -504,7 +503,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private void drawShape(MyShape shape) {
         shape.draw(graphics);
         shape.drawText(graphics);
-        jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
+        update();
     }
 
     private Circle getSelectedCircle(Point2D point) {
@@ -517,7 +516,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         return null;
     }
 
-    public void update() {
+    public void update(Graphics g) {
         graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
         for (Circle circle : circles) {
             circle.draw(graphics);
@@ -525,8 +524,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             circle.updateArrow();
             circle.drawArrows(graphics);
         }
-        jPanel2.getGraphics().drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
-        //System.out.println("update " + test++);
+        g.drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
+    }
+    
+    public void update() {
+        myPanel.repaint();
     }
 
     private void addCircle(Point point) {
@@ -578,7 +580,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         //Visualizzo la finestra di dialogo
         int risposta = chooser.showOpenDialog(this);
         //String txt = "";
-        if (risposta == chooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
+        if (risposta == JFileChooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
 
             //Recupero il file selezionato
             File f = chooser.getSelectedFile();
@@ -608,7 +610,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         {
             //Visualizzo la finestra di dialogo
             int option = chooser.showSaveDialog(this);
-            if (option == chooser.APPROVE_OPTION) //Se ho premuto il tasto salva
+            if (option == JFileChooser.APPROVE_OPTION) //Se ho premuto il tasto salva
             {
                 try {
                     //Recupero il file selezionato
@@ -625,7 +627,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     } else {
                         option2 = JOptionPane.YES_OPTION;
                     }
-                } catch (Exception ex) {
+                } catch (IOException | HeadlessException ex) {
                 }
             } else {
                 option2 = JOptionPane.CANCEL_OPTION;
@@ -688,8 +690,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPanel myPanel;
     private javax.swing.JToggleButton pencilButton;
     private javax.swing.JToggleButton playButton;
     private javax.swing.JToggleButton rubberButton;
@@ -697,4 +699,20 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JButton stopButton;
     private javax.swing.JButton stopButton2;
     // End of variables declaration//GEN-END:variables
+}
+
+
+class MyPanel extends JPanel {
+    
+    private final EdmondsKarpGUI gui;
+    
+    public MyPanel ( EdmondsKarpGUI gui ) {
+        this.gui = gui; 
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);       
+        gui.update(g);
+    }  
 }
