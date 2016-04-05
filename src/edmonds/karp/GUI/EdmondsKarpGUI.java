@@ -54,11 +54,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private EdmondsKarpGUI() {
         initComponents();
         circles = new ArrayList<>();
-        bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        graphics = bf.createGraphics();
-        graphics.setBackground(Color.WHITE);
-        graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         controller = new EdmondsKarpController(this);
         isSecond = false;
         isInDragging = false;
@@ -82,6 +77,13 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         pencilButton = new javax.swing.JToggleButton();
         rubberButton = new javax.swing.JToggleButton();
@@ -118,8 +120,42 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
         jPopupMenu1.add(jMenuItem3);
+        jPopupMenu1.add(jSeparator1);
+
+        jMenuItem6.setText("delete node");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteNodeActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem6);
 
         jPopupMenu1.getAccessibleContext().setAccessibleDescription("");
+
+        jMenuItem7.setText("set capacity");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setCapacityActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(jMenuItem7);
+
+        jMenuItem8.setText("set flow");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setFlowActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(jMenuItem8);
+        jPopupMenu2.add(jSeparator2);
+
+        jMenuItem9.setText("delete edge");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEdgeActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(jMenuItem9);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -259,13 +295,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 myPanelMouseDragged(evt);
             }
         });
-        myPanel.addHierarchyBoundsListener(new java.awt.event.HierarchyBoundsListener() {
-            public void ancestorMoved(java.awt.event.HierarchyEvent evt) {
-            }
-            public void ancestorResized(java.awt.event.HierarchyEvent evt) {
-                myPanelAncestorResized(evt);
-            }
-        });
         myPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
         getContentPane().add(myPanel, java.awt.BorderLayout.CENTER);
 
@@ -352,7 +381,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             if (getSelectedCircle(evt.getPoint()) != null) {
                 jPopupMenu1.show(myPanel, evt.getX(), evt.getY());
                 pointTmp = evt.getPoint();
+            } else if ( getSelectedArrow(evt.getPoint()) != null ) {
+                jPopupMenu2.show(myPanel, evt.getX(), evt.getY());
             }
+            
+        
         }
     }//GEN-LAST:event_myPanelMouseClicked
 
@@ -384,17 +417,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_myPanelMouseDragged
-
-    private void myPanelAncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_myPanelAncestorResized
-        if (graphics != null && (myPanel.getWidth() != this.getWidth() || myPanel.getHeight() != this.getHeight())) {
-            bf = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            graphics = bf.createGraphics();
-            graphics.setBackground(Color.WHITE);
-            graphics.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            update();
-        }
-    }//GEN-LAST:event_myPanelAncestorResized
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
         isInDragging = false;
@@ -473,6 +495,23 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         controller.newGraph();
     }//GEN-LAST:event_newActionPerformed
 
+    private void deleteNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNodeActionPerformed
+        // TODO add your handling code here:
+        eraseShape(pointTmp);
+    }//GEN-LAST:event_deleteNodeActionPerformed
+
+    private void setCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCapacityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_setCapacityActionPerformed
+
+    private void setFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setFlowActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_setFlowActionPerformed
+
+    private void deleteEdgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEdgeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteEdgeActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -494,15 +533,10 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     arrow.getFrom().removeArrowFrom(arrow);
                     arrow.getTo().removeArrowTo(arrow);
                     controller.removeEdge(arrow);
+                    break;
                 }
             }
         }
-        update();
-    }
-
-    private void drawShape(MyShape shape) {
-        shape.draw(graphics);
-        shape.drawText(graphics);
         update();
     }
 
@@ -515,16 +549,26 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         return null;
     }
+    
+    
+    private Arrow getSelectedArrow(Point point) {
+         for (Circle circle : circles) {
+            Arrow arrow = circle.checkForArrow(point);
+            if (arrow != null) {
+                return arrow;
+            }
+        }
+        return null;
+    }
 
     public void update(Graphics g) {
-        graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+        Graphics2D g2 = (Graphics2D) g;
         for (Circle circle : circles) {
-            circle.draw(graphics);
-            circle.drawText(graphics);
+            circle.draw(g2);
+            circle.drawText(g2);
             circle.updateArrow();
-            circle.drawArrows(graphics);
+            circle.drawArrows(g2);
         }
-        g.drawImage(bf, 0, 0, this.getWidth(), this.getHeight(), null);
     }
     
     public void update() {
@@ -536,7 +580,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         circle.setFirstPoint(point);
         circles.add(circle);
         controller.addNode(circle);
-        drawShape(circle);
+        update();
+        //drawShape(circle);
     }
 
     private void addArrow(Circle circ) {
@@ -544,7 +589,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         if (controller.addEdge(arrow)) {
             shapeTmp.addArrowFrom(arrow);
             circ.addArrowTo(arrow);
-            drawShape(arrow);
+            update();
+            //drawShape(arrow);
         }
     }
 
@@ -689,8 +735,15 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPanel myPanel;
     private javax.swing.JToggleButton pencilButton;
     private javax.swing.JToggleButton playButton;
@@ -712,7 +765,8 @@ class MyPanel extends JPanel {
     
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);       
+        super.paintComponent(g);
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         gui.update(g);
     }  
 }

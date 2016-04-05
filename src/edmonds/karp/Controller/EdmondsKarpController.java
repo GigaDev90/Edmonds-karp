@@ -10,7 +10,6 @@ import edmonds.karp.GUI.Arrow;
 import edmonds.karp.GUI.Circle;
 import edmonds.karp.GUI.EdmondsKarpGUI;
 import edmonds.karp.Graph;
-import edmonds.karp.Node;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +24,6 @@ import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  *

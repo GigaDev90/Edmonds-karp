@@ -60,6 +60,16 @@ public class Edge {
     public void setFlow(int flow) {
         if ( flow < 0)
             System.out.println("minore di 0");
+        
+        Edge tmpEdge = nodeB.getHeader().getNext();
+        for (int j = 0; j < nodeB.sizeEdge; j++) {
+            if ( tmpEdge.isIsResidual() && tmpEdge.getNodeA() == nodeA ) {
+                tmpEdge.flow = -flow;
+                System.out.println("Testssssssssssssssssssssssssssssssssssssssssssssssssssss");
+            }
+
+            tmpEdge = tmpEdge.getNext();
+        }
         this.flow = flow;//TODO controllo, scalare l'arco residuo
     }
 

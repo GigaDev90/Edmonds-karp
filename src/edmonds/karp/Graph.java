@@ -341,7 +341,7 @@ public class Graph {
                 Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
                 tmpEdge.setFlow(tmpEdge.getFlow() + min);
                 tmpEdge.setIsDiscovered(false);
-                tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
+               // tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
                 System.out.println("Path " + tmpNode.getName());
                 //System.out.println("Min " + min);
                 tmpNode = tmpNode.getParent();

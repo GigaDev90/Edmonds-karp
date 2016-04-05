@@ -10,7 +10,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /**
@@ -149,12 +151,17 @@ public class Circle extends MyShape {
 
     public Arrow checkForArrow(Point2D point) {
         for (Arrow arrow : arrowsFrom) {
-            if (arrow.getShape().getBounds().contains(point)) {
-                return arrow;
-            }
+            int boxX = (int) (point.getX() - 30 / 2);
+            int boxY = (int) (point.getY() - 30 / 2);
+
+            int width = 30;
+            int height = 30;
+
+            if (((Line2D)arrow.getShape()).intersects(boxX, boxY, width, height)) {
+                    return arrow;	
+            }	
         }
 
         return null;
-    }
-    
+    } 
 }
