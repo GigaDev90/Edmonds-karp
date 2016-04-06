@@ -140,11 +140,9 @@ public class Circle extends MyShape {
         if (!isUpdate) {
             for (Arrow arrow : arrowsFrom) {
                 arrow.update();
-                System.out.println("update from");
             }
             for (Arrow arrow : arrowsTo) {
                 arrow.update();
-                System.out.println("update to");
             }
             isUpdate = true;
         }

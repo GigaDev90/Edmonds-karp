@@ -13,7 +13,7 @@ public class Edge {
 
     private Node nodeA;
     private Node nodeB;
-    private Edge next;
+    private Edge inverse;
     private boolean isResidual;
     private boolean isDiscovered;
     private int capacity;
@@ -22,35 +22,36 @@ public class Edge {
     public Edge(Node a, Node b) {
         nodeA = a;
         nodeB = b;
-        next = null;
         isResidual = false;
         isDiscovered = false;
     }
-    
+
+    public void setInverse(Edge inverse) {
+        this.inverse = inverse;
+    }
+
+    public Edge getInverse() {
+        return inverse;
+    }
+
     public void setIsDiscovered(boolean b) {
         isDiscovered = b;
     }
-    
-    public boolean isDiscovered() { return isDiscovered; }
 
-    public Edge getNext() {
-        return next;
-    }
-
-    public void setNext(Edge next) {
-        this.next = next;
+    public boolean isDiscovered() {
+        return isDiscovered;
     }
 
     public int getCapacity() {
         return capacity;
     }
-    
-    public int getResidual() {
-        return capacity - flow;
-    }
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public int getResidual() {
+        return capacity - flow;
     }
 
     public int getFlow() {
@@ -58,29 +59,22 @@ public class Edge {
     }
 
     public void setFlow(int flow) {
-        if ( flow < 0)
+        if (flow < 0) {
             System.out.println("minore di 0");
-        
-        Edge tmpEdge = nodeB.getHeader().getNext();
-        for (int j = 0; j < nodeB.sizeEdge; j++) {
-            if ( tmpEdge.isIsResidual() && tmpEdge.getNodeA() == nodeA ) {
-                tmpEdge.flow = -flow;
-                System.out.println("Testssssssssssssssssssssssssssssssssssssssssssssssssssss");
-            }
-
-            tmpEdge = tmpEdge.getNext();
         }
-        this.flow = flow;//TODO controllo, scalare l'arco residuo
+        System.out.println("flow "+flow);
+        //inverse.setFlow(-flow);//to verify
+        this.flow = flow;
     }
 
-    public boolean isIsResidual() {
+    public boolean isResidual() {
         return isResidual;
     }
 
     public void setIsResidual(boolean isResidual) {
         this.isResidual = isResidual;
     }
-    
+
     public Node getNodeA() {
         return nodeA;
     }

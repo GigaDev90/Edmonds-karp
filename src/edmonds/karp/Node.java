@@ -5,100 +5,97 @@
  */
 package edmonds.karp;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gabriele
  */
 public class Node {
-    
-    private Edge header;
-    private Node next;
+
+    //private Edge header;
+    private ArrayList<Edge> edges;
+    //private Node next;
     private Node parent;
     private String name;
     private boolean isSource;
     private boolean isSink;
     private boolean isDiscovered;
-    public int sizeEdge;
 
     public Node(String name) {
-
-        header = new Edge(null, null);
-        next = null;
-        parent =  null;
+        edges = new ArrayList<>();
+        parent = null;
         isDiscovered = false;
         this.name = name;
-        sizeEdge = 0;
         isSource = false;
         isSink = false;
     }
-    
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
     public void setSource(boolean b) {
         isSource = b;
     }
-    
+
     public void setSink(boolean b) {
         isSink = b;
     }
-    
-    public boolean isSource() { return isSource; }
-    
-    public boolean isSink() { return isSink; }
-    
-    public Edge getEdge(Node adj) {
-        
-        Edge tmp = header.getNext();
-        while ( tmp != null && tmp.getNodeB() != adj ) 
-            tmp = tmp.getNext();
-        
-        return tmp;
-        
+
+    public boolean isSource() {
+        return isSource;
+    }
+
+    public boolean isSink() {
+        return isSink;
+    }
+
+    public Edge getEdgeB(Node adj) {
+        for (Edge edge : edges) {
+            if (edge.getNodeB() == adj) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
+    public Edge getEdgeA(Node adj) {
+        for (Edge edge : edges) {
+            if (edge.getNodeA() == adj) {
+                return edge;
+            }
+        }
+        return null;
     }
 
     public void addEdge(Edge edge) {
-
-        edge.setNext(header.getNext());
-        header.setNext(edge);
-
-        sizeEdge++;
+        edges.add(edge);
     }
 
-    public void removeEdge(Node adjacent) {
+    public boolean removeEdge(Edge edge) {
+        return edges.remove(edge);
+    }
 
-        if ( sizeEdge == 0) {
+    public boolean removeEdge(Node adjacent) {
+        if (edges.isEmpty()) {
             System.out.println("Rimozione fallita: non sono presenti archi");
+            return false;
         }
 
-        Edge tmp = header;
-        for ( int i = 0; i < sizeEdge - 1; i++ ) {
-            
-            if ( tmp.getNext().getNodeB() == adjacent ) {
-                tmp.setNext(tmp.getNext().getNext());
-                break;
+        for (Edge edge : edges) {
+            if (edge.getNodeB() == adjacent) {
+                edges.remove(edge);
+                return true;
             }
-
-          
-            tmp = tmp.getNext();
         }
-
-        sizeEdge--;
+        return false;
     }
 
-    public Node getNext() {
-        return next;
-    }
-
-    public void setNext(Node next) {
-        this.next = next;
-    }
-
-    public Edge getHeader() {
-        return header;
-    }
-
-     public String getName() {
+    public String getName() {
         return name;
     }
-     
+
     public Node getParent() {
         return parent;
     }
@@ -106,7 +103,7 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-    
+
     public boolean isDiscovered() {
         return isDiscovered;
     }

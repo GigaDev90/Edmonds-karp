@@ -5,6 +5,7 @@
  */
 package edmonds.karp;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,15 +15,12 @@ import java.util.Queue;
  */
 public class Graph {
 
-    private Node header;
-    public int size;
+    private ArrayList<Node> nodes;
     private Node source;
     private Node sink;
 
     public Graph() {
-
-        header = new Node("header");
-        size = 0;
+        nodes = new ArrayList<>();
         source = null;
         sink = null;
     }
@@ -31,31 +29,19 @@ public class Graph {
         return source;
     }
 
-    public Node getHeader() {
-        return header;
-    }
-
-    public void setHeader(Node header) {
-        this.header = header;
+    public ArrayList<Node> getNodes() {
+        return nodes;
     }
 
     public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
+        return nodes.size();
     }
 
     public boolean setSource(Node source) {
-
-        Edge tmpEdge = source.getHeader().getNext();
-        for (int j = 0; j < source.sizeEdge; j++) {
-            if (tmpEdge.isIsResidual() && tmpEdge.getNodeA() == source) {
+        for (Edge edge : source.getEdges()) {
+            if (edge.isResidual() && edge.getNodeA() == source) {
                 return false;
             }
-
-            tmpEdge = tmpEdge.getNext();
         }
 
         if (this.source != null) {
@@ -64,6 +50,7 @@ public class Graph {
 
         this.source = source;
         this.source.setSource(true);
+
         return true;
     }
 
@@ -72,80 +59,60 @@ public class Graph {
     }
 
     public boolean setSink(Node sink) {
-
-        Edge tmpEdge = sink.getHeader().getNext();
-        for (int j = 0; j < sink.sizeEdge; j++) {
-            if (!tmpEdge.isIsResidual() && tmpEdge.getNodeA() == sink) {
+        for (Edge edge : sink.getEdges()) {
+            if (!edge.isResidual() && edge.getNodeA() == sink) {
                 return false;
             }
-
-            tmpEdge = tmpEdge.getNext();
         }
+
         if (this.sink != null) {
             this.sink.setSink(false);
         }
 
         this.sink = sink;
         this.sink.setSink(true);
+
         return true;
     }
 
     public Node getNode(String name) {
-
-        Node tmpNode = header.getNext();
-        for (int i = 0; i < size; i++) {
-            if (tmpNode.getName().equals(name)) {
-                return tmpNode;
+        for (Node node : nodes) {
+            if (node.getName().equals(name)) {
+                return node;
             }
-
-            tmpNode = tmpNode.getNext();
         }
-
         return null;
     }
 
     public Node addNode(String name) {
-
         Node node = new Node(name);
-        node.setNext(header.getNext());
-        header.setNext(node);
-        size++;
+        nodes.add(node);
 
         return node;
     }
 
-    public void removeNode(Node node) {
-
-        if (size == 0) {
+    public boolean removeNode(Node node) {
+        if (nodes.isEmpty()) {
             System.out.println("rimozione fallita: non sono presenti nodi");
-            return;
+            return false;
         }
 
-        int sizeTmp = node.sizeEdge;
-        Edge tmpEdge = node.getHeader().getNext();
-        for (int i = 0; i < sizeTmp; i++) {
-            disconnect(tmpEdge);
-            tmpEdge = tmpEdge.getNext();
-
+        for (int i = 0; i < node.getEdges().size(); i++) {
+            disconnect(node.getEdges().get(i));
         }
 
-        Node prevTmp = header;
-        for (int i = 0; i < this.size; i++) {
-
-            if (prevTmp.getNext() == node) {
-                prevTmp.setNext(node.getNext());
-                break;
-            } else {
-                prevTmp = prevTmp.getNext();
-            }
+        if (node == source) {
+            source = null;
+        } else if (node == sink) {
+            sink = null;
         }
 
-        this.size--;
+        nodes.remove(node);
+        return true;
     }
 
     public Edge connect(Node a, Node adjacent, int capacity, int flow) {
-
-        if (size == 1 || capacity < flow) {
+        if (nodes.size() == 1 || capacity < flow) {
             System.out.println("connessione fallita: esiste un solo nodo o valore flusso non consentito");
             return null;
         } else if (adjacent == source) {
@@ -154,16 +121,8 @@ public class Graph {
         } else if (a == sink) {
             System.out.println("connessione fallita: il pozzo non può avere archi uscenti");
             return null;
-        } else {
-
-            Edge tmpEdge = a.getHeader().getNext();
-            for (int j = 0; j < a.sizeEdge; j++) {
-                if (!tmpEdge.isIsResidual() && tmpEdge.getNodeB() == adjacent) {
-                    return null;
-                }
-
-                tmpEdge = tmpEdge.getNext();
-            }
+        } else if (a.getEdgeB(adjacent) != null && !a.getEdgeB(adjacent).isResidual()) {
+            return null;
         }
 
         Edge edge = new Edge(a, adjacent);
@@ -178,6 +137,9 @@ public class Graph {
         edgeRes.setIsResidual(true);
         adjacent.addEdge(edgeRes);
 
+        edge.setInverse(edgeRes);
+        edgeRes.setInverse(edge);
+
         return edge;
     }
 
@@ -186,7 +148,7 @@ public class Graph {
     }
 
     public void disconnect(Edge edge) {
-        if (size == 1) {
+        if (nodes.size() == 1) {
             System.out.println("disconnessione fallita: esiste un solo nodo");
             return;
         }
@@ -195,72 +157,64 @@ public class Graph {
         Node b = edge.getNodeB();
 
         a.removeEdge(b);
-        b.removeEdge(a);
+        b.removeEdge(edge); //remove residual
     }
 
     public void BFVisitClear() {
-        Node tmp = header.getNext();
-        for (int i = 0; i < size; i++) {
-            tmp.setParent(null);
-            tmp.setIsDiscovered(false);
-            tmp = tmp.getNext();
+        for (Node node : nodes) {
+            node.setParent(null);
+            node.setIsDiscovered(false);
         }
     }
 
-    public boolean BFSVisit(Node root) {
-
-        if (root == null) {
+    public boolean BFSVisit() {
+        if (source == null) {
             return false;
         }
 
         BFVisitClear();
         Queue<Node> q = new LinkedList<>();
-        q.add(root);
-        root.setIsDiscovered(true);
-        root.setParent(null);
+        q.add(source);
+        source.setIsDiscovered(true);
+        source.setParent(null);
 
         System.out.println("BFS Path++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
         while (!q.isEmpty()) {
 
             Node current = q.remove();
-            Edge edge = current.getHeader().getNext();
 
             System.out.println("parent " + current.getName());
 
-            for (int i = 0; i < current.sizeEdge; i++) {
-
-                if (!edge.getNodeB().isDiscovered() && edge.getResidual() > 0) {
+            for (Edge edge : current.getEdges()) {
+                if ( !edge.getNodeB().isDiscovered() && edge.getResidual() > 0 ) {
                     edge.getNodeB().setIsDiscovered(true);
                     edge.getNodeB().setParent(current);
                     q.add(edge.getNodeB());
                     System.out.println("Son " + edge.getNodeB().getName());
                 }
-                edge = edge.getNext();
             }
         }
-
         return true;
     }
 
     public boolean EdmondsKarp() {
-
         if (source == null || sink == null) {
             System.out.println("sorgente o pozzo non sono stati assegnati");
             return false;
         }
 
         edmondsKarpClear();
-        BFSVisit(source);
+        BFSVisit();
 
         while (sink.getParent() != null) {
 
             Node tmpNode = sink.getParent();
-            int min = tmpNode.getEdge(sink).getResidual();
+            int min = tmpNode.getEdgeB(sink).getResidual();
 
             while (tmpNode.getParent() != null) {
-                if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min) {
-                    min = tmpNode.getParent().getEdge(tmpNode).getResidual();
+                if (tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
+                    min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
                 }
 
                 tmpNode = tmpNode.getParent();
@@ -269,53 +223,47 @@ public class Graph {
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
-                Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
+                Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
                 tmpEdge.setFlow(tmpEdge.getFlow() + min);
-                tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
+                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
                 System.out.println("Path " + tmpNode.getName());
                 tmpNode = tmpNode.getParent();
             }
 
-            BFSVisit(source);
+            BFSVisit();
         }
         return true;
     }
 
     public void edmondsKarpClear() {
-        Node tmpNode = header.getNext();
-        for (int i = 0; i < size; i++) {
-            Edge tmpEdge = tmpNode.getHeader().getNext();
-            for (int j = 0; j < tmpNode.sizeEdge; j++) {
-                if (!tmpEdge.isIsResidual()) {
-                    tmpEdge.setFlow(0);
+        for (Node node : nodes) {
+            for (Edge edge : node.getEdges()) {
+                if (!edge.isResidual()) {
+                    edge.setFlow(0);
                 }
-                tmpEdge.setIsDiscovered(false);
-                tmpEdge = tmpEdge.getNext();
+                edge.setIsDiscovered(false);
             }
-            tmpNode = tmpNode.getNext();
         }
     }
 
     public void selectPath() {
-
         Node tmpNode = sink;
-        // tmpNode.getEdge(sink).setIsDiscovered(true);
+
         while (tmpNode.getParent() != null) {
-            tmpNode.getParent().getEdge(tmpNode).setIsDiscovered(true);
+            tmpNode.getParent().getEdgeB(tmpNode).setIsDiscovered(true);
             tmpNode = tmpNode.getParent();
         }
     }
 
     public boolean isSelected() {
-        return sink.getParent().getEdge(sink).isDiscovered();
+        return sink.getParent().getEdgeB(sink).isDiscovered();
     }
 
     public boolean isSafe() {
-        return sink != null && sink.getParent() != null && sink.getParent().getEdge(sink) != null;
+        return sink != null && sink.getParent() != null && sink.getParent().getEdgeB(sink) != null;
     }
 
     public boolean EdmondsKarpOneStep() {
-
         if (source == null || sink == null) {
             System.out.println("sorgente o pozzo non sono stati assegnati");
             return false;
@@ -324,13 +272,13 @@ public class Graph {
         if (sink.getParent() != null) {
 
             Node tmpNode = sink.getParent();
-            int min = tmpNode.getEdge(sink).getResidual();
+            int min = tmpNode.getEdgeB(sink).getResidual();
 
             while (tmpNode.getParent() != null) {
-                if (tmpNode.getParent().getEdge(tmpNode).getResidual() < min) {
-                    min = tmpNode.getParent().getEdge(tmpNode).getResidual();
+                if (tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
+                    min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
                     System.out.println("Min " + min);
-                    System.out.println(tmpNode.getParent().getEdge(tmpNode).isIsResidual());
+                    System.out.println(tmpNode.getParent().getEdgeB(tmpNode).isResidual());
                 }
                 tmpNode = tmpNode.getParent();
             }
@@ -338,11 +286,12 @@ public class Graph {
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
-                Edge tmpEdge = tmpNode.getParent().getEdge(tmpNode);
+                Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
                 tmpEdge.setFlow(tmpEdge.getFlow() + min);
                 tmpEdge.setIsDiscovered(false);
-               // tmpNode.getEdge(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
+                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(Math.abs( (tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min ) ) ); //temp
                 System.out.println("Path " + tmpNode.getName());
+                System.out.println("meno" + (tmpEdge.getFlow() - min));
                 //System.out.println("Min " + min);
                 tmpNode = tmpNode.getParent();
             }

@@ -87,46 +87,27 @@ public class EdmondsKarpController {
     }
 
     public void play() {
-        tmr1.start();
+        if ( gui.isPlaySelected() )
+            tmr1.start();
+        else {
+            tmr1.stop();
+        }
     }
 
     public void setTimer() {
         int delay = 2000; //milliseconds
         ActionListener taskPerformer1 = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                if (!graph.BFSVisit(graph.getSource())) {
-                    gui.displayMessage("Finish");
-                    gui.setUpPlayButton();
-                    return;
-                }
-                if (graph.isSafe()) {
-                    graph.selectPath();
-                } else {
-                    gui.displayMessage("Errore: controllare sorgente o pozzo");
+                if ( oneStepForward() ) {
+                    tmr1.stop();
                     gui.setUpPlayButton();
                 }
-
-                gui.update();
-                if (gui.isPlaySelected()) {
-                    tmr2.start();
-                }
+                
             }
         };
 
         tmr1 = new Timer(delay, taskPerformer1);
-        tmr1.setRepeats(false);
-
-        ActionListener taskPerformer2 = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                graph.EdmondsKarpOneStep();
-                gui.update();
-                if (gui.isPlaySelected()) {
-                    tmr1.start();
-                }
-            }
-        };
-        tmr2 = new Timer(delay, taskPerformer2);
-        tmr2.setRepeats(false);
+        tmr1.setRepeats(true);
     }
 
     public void stop() {
@@ -136,36 +117,47 @@ public class EdmondsKarpController {
     }
 
     public void run() {
-        graph.edmondsKarpClear();
-        if (!graph.EdmondsKarp()) {
-            gui.displayMessage("sorgente o pozzo non sono stati assegnati");
+        if ( graph.getSource() != null && graph.getSink() != null) {
+            graph.edmondsKarpClear();
+            if (!graph.EdmondsKarp()) {
+                gui.displayMessage("Errore: controllare sorgente e pozzo");
+            }
+        } else {
+            gui.displayMessage("Errore: controllare sorgente e pozzo");
         }
         gui.update();
     }
 
-    public void oneStepForward() {
-        
-        if (!graph.BFSVisit(graph.getSource())) {
-            gui.displayMessage("Finish");
-            return;
-        }
-        if ( graph.isSafe() ) {
-            if ( !graph.isSelected() ) {
-                graph.selectPath();
-                System.out.println("search");
-            } else {
-                if ( !graph.EdmondsKarpOneStep() ) {
-                    gui.displayMessage("Errore, controllare sorgente o pozzo");
+    public boolean oneStepForward() {
+        if ( graph.getSource() != null && graph.getSink() != null) {
+            if ( graph.getSink().getParent() == null ) {
+                if ( graph.BFSVisit() ) {
+                    if ( graph.getSink().getParent() == null ) {
+                        gui.displayMessage("Finito: è stato raggiunto il flusso massimo");
+                        return true;
+                    }
+                    graph.selectPath();
+                } else {
+                    gui.displayMessage("BFS fallita");
+                    return true;
                 }
-                System.out.println("EdmondsKarpOneStep");
+            } else {
+                if ( graph.EdmondsKarpOneStep() ) {
+                    graph.getSink().setParent(null);
+                } else {
+                    gui.displayMessage("Errore: controllare sorgente e pozzo");
+                    return true;
+                }
             }
         } else {
-            gui.displayMessage("Errore, controllare sorgente o pozzo");
+            gui.displayMessage("Errore: controllare sorgente e pozzo");
+            return true;
         }
         
-
         bfVisit++;
         gui.update();
+        
+        return false;
     }
     
     public void newGraph() {
@@ -193,10 +185,9 @@ public class EdmondsKarpController {
 
             point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
             circle.setFirstPoint(point);
-            this.addNode(circle);
+            circle.addNode(graph.addNode("" + jNode.getString("ID")));
 
             circles.put(jNode.getString("ID"), circle);
-
         }
 
         for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
@@ -207,6 +198,8 @@ public class EdmondsKarpController {
             circles.get(jEdge.getString("From")).addArrowFrom(arrow);
             circles.get(jEdge.getString("To")).addArrowTo(arrow);
             arrow.getEdge().setCapacity(jEdge.getInt("Capacity"));
+            arrow.getEdge().getInverse().setCapacity(jEdge.getInt("Capacity"));
+            arrow.getEdge().getInverse().setFlow(jEdge.getInt("Capacity"));
         }
         //System.out.println(jNodeEdge.getString("Sink"));
         if ( !jNodeEdge.getString("Source").equals("") )
@@ -237,7 +230,7 @@ public class EdmondsKarpController {
 
             for (Arrow arrow : arrayArrow) {
 
-                if (!arrow.getEdge().isIsResidual()) {
+                if (!arrow.getEdge().isResidual()) {
                     JSONObject jEdge = new JSONObject();
                     jEdge.put("From", arrow.getEdge().getNodeA().getName());
                     jEdge.put("To", arrow.getEdge().getNodeB().getName());

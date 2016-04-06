@@ -47,7 +47,7 @@ public class EdmondsKarp {
         graph.connect(graph.getNode("3"), graph.getNode("6"), 5, 0);
         graph.connect(graph.getNode("5"), graph.getNode("6"), 4, 0);
         
-        Edge edge = graph.getNode("1").getEdge(graph.getNode("4"));
+        Edge edge = graph.getNode("1").getEdgeB(graph.getNode("4"));
         System.out.println(edge.getNodeB().getName());
         
 
