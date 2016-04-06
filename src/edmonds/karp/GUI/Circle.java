@@ -12,7 +12,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /**
@@ -141,9 +140,11 @@ public class Circle extends MyShape {
         if (!isUpdate) {
             for (Arrow arrow : arrowsFrom) {
                 arrow.update();
+                System.out.println("update from");
             }
             for (Arrow arrow : arrowsTo) {
                 arrow.update();
+                System.out.println("update to");
             }
             isUpdate = true;
         }
