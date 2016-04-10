@@ -31,7 +31,6 @@ public class Arrow extends MyShape {
         head2 =  new Line2D.Double();
         pointText =  new Point2D[2];
         points = new Point2D[2];
-        scale = 30;
         select = false;
         this.from = from;
         this.to = to;
@@ -61,8 +60,9 @@ public class Arrow extends MyShape {
 
         g2.translate(tmp.getX(), tmp.getY());
         g2.rotate(angle);
+        g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, MyShape.getConfig().getDimText()));
         if ( edge.getFlow() ==  edge.getCapacity())
-            g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
+            g2.setFont(new Font("Ubuntu", Font.BOLD, MyShape.getConfig().getDimText()));
         g2.drawString(edge.getFlow()+"/"+edge.getCapacity(),0,0);
         g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         g2.rotate(-angle);
@@ -71,22 +71,22 @@ public class Arrow extends MyShape {
     @Override
     public void draw(Graphics2D g2) {
         if (  edge.getFlow() == edge.getCapacity()) {
-            g2.setColor(Color.RED);
+            g2.setColor(MyShape.getConfig().getFilledArrow());
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
         } else if ( edge.isDiscovered() ) {
-            g2.setColor(Color.green);
+            g2.setColor(MyShape.getConfig().getSelectedArrow());
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
         } else if ( edge.getFlow() > 0 ) {
-            g2.setColor(Color.BLUE);
+            g2.setColor(MyShape.getConfig().getUsedArrow());
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
         } else {
-            g2.setColor(Color.DARK_GRAY);
+            g2.setColor(MyShape.getConfig().getDefaultArrow());
             g2.draw(shape);
             g2.draw(head1);
             g2.draw(head2);
@@ -113,8 +113,8 @@ public class Arrow extends MyShape {
     private Point2D[] calcPointsHead(double sinX, double cosX) {
         
         Point2D[] tmp = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 10, sinX, cosX );
-        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 50, sinX, cosX );
-        Point2D[] tmp3 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 28, sinX, cosX );
+        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + MyShape.getConfig().getPosText(), sinX, cosX );
+        Point2D[] tmp3 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + MyShape.getConfig().getPosText() - 22, sinX, cosX ); //28
       
         double catA = 7 * sinX;
         double catC = 7 * cosX;

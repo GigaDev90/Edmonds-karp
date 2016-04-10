@@ -5,6 +5,8 @@
  */
 package edmonds.karp.Controller;
 
+import edmonds.karp.BFSVisit;
+import edmonds.karp.DFSVisit;
 import edmonds.karp.Edge;
 import edmonds.karp.GUI.Arrow;
 import edmonds.karp.GUI.Circle;
@@ -34,7 +36,6 @@ public class EdmondsKarpController {
     private Graph graph;
     private EdmondsKarpGUI gui;
     private Timer tmr1;
-    private Timer tmr2;
     private int name = 0;
     private int bfVisit;
 
@@ -44,9 +45,12 @@ public class EdmondsKarpController {
         setTimer();
         bfVisit = 0;
     }
+    public boolean addEdge(Arrow arrow) { 
+        return addEdge(arrow, (int) (Math.random() * 100 + 1));
+    }
 
-    public boolean addEdge(Arrow arrow) {
-        Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), (int) (Math.random() * 100 + 1), 0);
+    public boolean addEdge(Arrow arrow, int capacity) {
+        Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), capacity, 0);
         if (e != null) {
             arrow.setEdge(e);
             return true;
@@ -111,8 +115,10 @@ public class EdmondsKarpController {
     }
 
     public void stop() {
+        bfVisit = 0;
         graph.edmondsKarpClear();
         graph.BFVisitClear();
+        tmr1.stop();
         gui.update();
     }
 
@@ -125,6 +131,23 @@ public class EdmondsKarpController {
         } else {
             gui.displayMessage("Errore: controllare sorgente e pozzo");
         }
+        gui.update();
+    }
+    
+    public void onStepBack() {
+        if ( bfVisit == 0) return;
+        else if (bfVisit == 1) {
+            stop();
+            return;
+        }
+        graph.edmondsKarpClear();
+        graph.BFVisitClear();
+        int temp = bfVisit - 1;
+        
+        for ( int i = 0; i < temp; i++ ) {
+            oneStepForward(); 
+        }
+        bfVisit = temp;
         gui.update();
     }
 
@@ -167,11 +190,18 @@ public class EdmondsKarpController {
         graph = new Graph();
         gui.update();
     }
+    
+    public void setVisit(int visit) {
+        if ( visit == 0) {
+            graph.setVisit(new BFSVisit());
+        } else {
+            graph.setVisit(new DFSVisit());
+        }
+    }
 
     public void open(String s) throws JSONException {
         Map<String, Circle> circles = new HashMap<String, Circle>();
-        graph = new Graph();
-        name = 0;
+        newGraph();
 
         JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
         JSONArray jNodes = jNodeEdge.getJSONArray("Node");
@@ -189,19 +219,18 @@ public class EdmondsKarpController {
 
             circles.put(jNode.getString("ID"), circle);
         }
+        
+        name = jNodes.length() + 1;
 
         for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
             JSONObject jEdge = jEdges.getJSONObject(i);
 
             Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
-            this.addEdge(arrow);
+            this.addEdge(arrow, jEdge.getInt("Capacity"));
             circles.get(jEdge.getString("From")).addArrowFrom(arrow);
             circles.get(jEdge.getString("To")).addArrowTo(arrow);
-            arrow.getEdge().setCapacity(jEdge.getInt("Capacity"));
-            arrow.getEdge().getInverse().setCapacity(jEdge.getInt("Capacity"));
-            arrow.getEdge().getInverse().setFlow(jEdge.getInt("Capacity"));
         }
-        //System.out.println(jNodeEdge.getString("Sink"));
+        
         if ( !jNodeEdge.getString("Source").equals("") )
             graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
         if ( !jNodeEdge.getString("Sink").equals(""))
@@ -264,5 +293,16 @@ public class EdmondsKarpController {
         } catch (IOException e) {
         }
         return;
+    }
+
+    public void setCapacity(Arrow arrow, int capacity) {
+        arrow.getEdge().setCapacity(capacity);
+        arrow.getEdge().getInverse().setCapacity(capacity);
+        arrow.getEdge().getInverse().setFlow(capacity);
+    }
+
+    public void setFlow(Arrow arrow, int flow) {
+        arrow.getEdge().setFlow(flow);
+        arrow.getEdge().getInverse().setFlow(-flow);
     }
 }

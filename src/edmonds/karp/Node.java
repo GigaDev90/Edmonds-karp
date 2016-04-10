@@ -13,9 +13,7 @@ import java.util.ArrayList;
  */
 public class Node {
 
-    //private Edge header;
     private ArrayList<Edge> edges;
-    //private Node next;
     private Node parent;
     private String name;
     private boolean isSource;

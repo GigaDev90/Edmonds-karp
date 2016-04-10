@@ -6,8 +6,6 @@
 package edmonds.karp;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  *
@@ -18,11 +16,13 @@ public class Graph {
     private ArrayList<Node> nodes;
     private Node source;
     private Node sink;
+    private Visit visit;
 
     public Graph() {
         nodes = new ArrayList<>();
         source = null;
         sink = null;
+        visit = new BFSVisit();
     }
 
     public Node getSource() {
@@ -155,9 +155,16 @@ public class Graph {
 
         Node a = edge.getNodeA();
         Node b = edge.getNodeB();
+        
 
-        a.removeEdge(b);
-        b.removeEdge(edge); //remove residual
+        if ( !a.removeEdge(b) )
+            System.out.println("Errore aliminazione");
+        if ( !b.removeEdge(edge.getInverse()) ) //remove residual
+            System.out.println("Errore aliminazione");
+    }
+    
+    public void setVisit(Visit visit) {
+        this.visit = visit;
     }
 
     public void BFVisitClear() {
@@ -173,29 +180,7 @@ public class Graph {
         }
 
         BFVisitClear();
-        Queue<Node> q = new LinkedList<>();
-        q.add(source);
-        source.setIsDiscovered(true);
-        source.setParent(null);
-
-        System.out.println("BFS Path++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-        while (!q.isEmpty()) {
-
-            Node current = q.remove();
-
-            System.out.println("parent " + current.getName());
-
-            for (Edge edge : current.getEdges()) {
-                if ( !edge.getNodeB().isDiscovered() && edge.getResidual() > 0 ) {
-                    edge.getNodeB().setIsDiscovered(true);
-                    edge.getNodeB().setParent(current);
-                    q.add(edge.getNodeB());
-                    System.out.println("Son " + edge.getNodeB().getName());
-                }
-            }
-        }
-        return true;
+        return visit.visitGraph(source);
     }
 
     public boolean EdmondsKarp() {
@@ -225,8 +210,7 @@ public class Graph {
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
                 tmpEdge.setFlow(tmpEdge.getFlow() + min);
-                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpEdge.getFlow() - min);
-                System.out.println("Path " + tmpNode.getName());
+                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
                 tmpNode = tmpNode.getParent();
             }
 
@@ -240,6 +224,8 @@ public class Graph {
             for (Edge edge : node.getEdges()) {
                 if (!edge.isResidual()) {
                     edge.setFlow(0);
+                } else {
+                    edge.setFlow(edge.getCapacity());
                 }
                 edge.setIsDiscovered(false);
             }
@@ -278,7 +264,6 @@ public class Graph {
                 if (tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
                     min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
                     System.out.println("Min " + min);
-                    System.out.println(tmpNode.getParent().getEdgeB(tmpNode).isResidual());
                 }
                 tmpNode = tmpNode.getParent();
             }
@@ -289,10 +274,7 @@ public class Graph {
                 Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
                 tmpEdge.setFlow(tmpEdge.getFlow() + min);
                 tmpEdge.setIsDiscovered(false);
-                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(Math.abs( (tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min ) ) ); //temp
-                System.out.println("Path " + tmpNode.getName());
-                System.out.println("meno" + (tmpEdge.getFlow() - min));
-                //System.out.println("Min " + min);
+                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
                 tmpNode = tmpNode.getParent();
             }
 

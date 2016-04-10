@@ -14,15 +14,23 @@ public abstract class MyShape {
     protected Color c;
     //Oggetto Shape è quello che andrà realmente ad essere disegnato
     protected Shape shape;
-    //dimensione
-    protected double scale;
     //booleano per verificare se si tratta di una classe che può essere selezionata
     protected boolean select;
+    
+    private static Config config = new Config();
 
     public MyShape() {}
 
     public Shape getShape() {
         return shape;
+    }
+    
+    public static Config getConfig() {
+        return config;
+    }
+    
+    public static void setConfig(Config config) {
+        MyShape.config = config;
     }
     
     public Point2D[] getPoints() { return points; }
@@ -36,10 +44,6 @@ public abstract class MyShape {
     public void setColor(Color colorC) { c = colorC; }
 
     public Color getColor() { return c; }
-
-    public void setScale(int i) { scale = i; }
-    
-    public double getScale() { return scale; }
 
     public abstract void makeShape();
 
