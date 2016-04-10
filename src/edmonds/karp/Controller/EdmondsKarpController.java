@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -304,5 +306,22 @@ public class EdmondsKarpController {
     public void setFlow(Arrow arrow, int flow) {
         arrow.getEdge().setFlow(flow);
         arrow.getEdge().getInverse().setFlow(-flow);
+    }
+
+    public void loadExample() {
+        String example = "{\"Source\":\"0\",\"Node\":[{\"PosY\":261,\"PosX\":643,\"ID\":\"3\"},{\"PosY\":453,\"PosX\":549,\"ID\":\"2\"},"
+                + "{\"PosY\":454,\"PosX\":181,\"ID\":\"1\"},{\"PosY\":260,\"PosX\":112,\"ID\":\"0\"},{\"PosY\":59,\"PosX\":548,\"ID\":\"7\"},"
+                + "{\"PosY\":58,\"PosX\":163,\"ID\":\"6\"},{\"PosY\":320,\"PosX\":477,\"ID\":\"5\"},{\"PosY\":318,\"PosX\":279,\"ID\":\"4\"},"
+                + "{\"PosY\":181,\"PosX\":476,\"ID\":\"9\"},{\"PosY\":181,\"PosX\":278,\"ID\":\"8\"}],\"Sink\":\"3\",\"Edge\":[{\"To\":\"3\",\"Capacity\":4,\"From\":\"2\"},"
+                + "{\"To\":\"2\",\"Capacity\":4,\"From\":\"1\"},{\"To\":\"5\",\"Capacity\":5,\"From\":\"1\"},{\"To\":\"1\",\"Capacity\":4,\"From\":\"0\"},"
+                + "{\"To\":\"4\",\"Capacity\":8,\"From\":\"0\"},{\"To\":\"6\",\"Capacity\":4,\"From\":\"0\"},{\"To\":\"8\",\"Capacity\":8,\"From\":\"0\"},"
+                + "{\"To\":\"3\",\"Capacity\":4,\"From\":\"7\"},{\"To\":\"7\",\"Capacity\":4,\"From\":\"6\"},{\"To\":\"9\",\"Capacity\":5,\"From\":\"6\"},"
+                + "{\"To\":\"3\",\"Capacity\":5,\"From\":\"5\"},{\"To\":\"2\",\"Capacity\":5,\"From\":\"4\"},{\"To\":\"9\",\"Capacity\":4,\"From\":\"4\"},"
+                + "{\"To\":\"3\",\"Capacity\":5,\"From\":\"9\"},{\"To\":\"7\",\"Capacity\":5,\"From\":\"8\"},{\"To\":\"5\",\"Capacity\":4,\"From\":\"8\"}]}";
+        try {
+            open(example);
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

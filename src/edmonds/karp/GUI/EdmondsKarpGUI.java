@@ -42,22 +42,15 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private final int ERASE = 3;
     private EdmondsKarpController controller;
     private Point2D pointTmp;
-    private JFileChooser chooser = new JFileChooser();
+    private JFileChooser chooser;
 
     private EdmondsKarpGUI() {
         initComponents();
         circles = new ArrayList<>();
         controller = new EdmondsKarpController(this);
+        chooser = new JFileChooser();
         isSecond = false;
         isInDragging = false;
-        try {
-            String tmp = openGraph("/home/gabriele/truePatologic.txt");
-            if (tmp != null) {
-                controller.open(tmp);
-            }
-        } catch (JSONException ex) {
-            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -124,6 +117,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItemExample = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
 
         jPopupMenu1.setLightWeightPopupEnabled(false);
@@ -658,6 +652,14 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jMenu2.setText("Edit");
         jMenu2.setPreferredSize(new java.awt.Dimension(50, 21));
 
+        jMenuItemExample.setText("carica esempio");
+        jMenuItemExample.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExampleActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemExample);
+
         jMenuItem10.setText("Preference");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -969,6 +971,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         MyShape.getConfig().setRandomCapacity(false);
     }//GEN-LAST:event_jRadioButtonDefaultCapActionPerformed
 
+    private void jMenuItemExampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExampleActionPerformed
+        // TODO add your handling code here:
+        controller.loadExample();
+    }//GEN-LAST:event_jMenuItemExampleActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1230,6 +1237,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem jMenuItemExample;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
