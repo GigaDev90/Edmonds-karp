@@ -93,7 +93,6 @@ public class Graph {
 
     public boolean removeNode(Node node) {
         if (nodes.isEmpty()) {
-            System.out.println("rimozione fallita: non sono presenti nodi");
             return false;
         }
 
@@ -155,14 +154,16 @@ public class Graph {
 
         Node a = edge.getNodeA();
         Node b = edge.getNodeB();
-        
 
-        if ( !a.removeEdge(b) )
+        if (!a.removeEdge(b)) {
             System.out.println("Errore aliminazione");
-        if ( !b.removeEdge(edge.getInverse()) ) //remove residual
+        }
+        if (!b.removeEdge(edge.getInverse())) //remove residual
+        {
             System.out.println("Errore aliminazione");
+        }
     }
-    
+
     public void setVisit(Visit visit) {
         this.visit = visit;
     }
@@ -204,7 +205,7 @@ public class Graph {
 
                 tmpNode = tmpNode.getParent();
             }
-            System.out.println("Min " + min);
+            //System.out.println("Min " + min);
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
@@ -258,12 +259,19 @@ public class Graph {
         if (sink.getParent() != null) {
 
             Node tmpNode = sink.getParent();
-            int min = tmpNode.getEdgeB(sink).getResidual();
+            int min = 0;
+            if (tmpNode.getEdgeB(sink) != null) {
+                min = tmpNode.getEdgeB(sink).getResidual();
+            } else {
+                return false;
+            }
 
             while (tmpNode.getParent() != null) {
-                if (tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
+                if (tmpNode.getParent().getEdgeB(tmpNode) != null
+                        && tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
+
                     min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
-                    System.out.println("Min " + min);
+                    //System.out.println("Min " + min);
                 }
                 tmpNode = tmpNode.getParent();
             }
@@ -272,10 +280,14 @@ public class Graph {
 
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
-                tmpEdge.setFlow(tmpEdge.getFlow() + min);
-                tmpEdge.setIsDiscovered(false);
-                tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
-                tmpNode = tmpNode.getParent();
+                if ( tmpEdge != null) {
+                    tmpEdge.setFlow(tmpEdge.getFlow() + min);
+                    tmpEdge.setIsDiscovered(false);
+                    tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
+                    tmpNode = tmpNode.getParent();
+                } else {
+                    return false;
+                }
             }
 
             return true;

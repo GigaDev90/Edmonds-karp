@@ -46,7 +46,7 @@ public class Edge {
         return capacity;
     }
 
-    public void setCapacity(int capacity) { 
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
@@ -59,10 +59,6 @@ public class Edge {
     }
 
     public void setFlow(int flow) {
-        if (flow < 0) {
-            System.out.println("minore di 0");
-        }
-        
         this.flow = flow;
     }
 

@@ -22,7 +22,7 @@
       <SubComponents>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="set Source"/>
+            <Property name="text" type="java.lang.String" value="Imposta sorgente"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setSourceActionPerformed"/>
@@ -30,7 +30,7 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="set Sink"/>
+            <Property name="text" type="java.lang.String" value="Imposta pozzo"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setSinkActionPerformed"/>
@@ -40,7 +40,7 @@
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="delete node"/>
+            <Property name="text" type="java.lang.String" value="Elimina nodo"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteNodeActionPerformed"/>
@@ -56,7 +56,7 @@
       <SubComponents>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="set capacity"/>
+            <Property name="text" type="java.lang.String" value="Imposta capacit&#xe0;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setCapacityActionPerformed"/>
@@ -64,7 +64,7 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem8">
           <Properties>
-            <Property name="text" type="java.lang.String" value="set flow"/>
+            <Property name="text" type="java.lang.String" value="Imposta flusso"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setFlowActionPerformed"/>
@@ -74,7 +74,7 @@
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
           <Properties>
-            <Property name="text" type="java.lang.String" value="delete edge"/>
+            <Property name="text" type="java.lang.String" value="Elimina arco"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteEdgeActionPerformed"/>
@@ -149,7 +149,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Set capacity"/>
+            <Property name="text" type="java.lang.String" value="imposta capacit&#xe0;"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -215,7 +215,7 @@
                               <Component id="jRadioButtonRandomCap" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jRadioButtonDefaultCap" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="113" max="32767" attributes="0"/>
+                          <EmptySpace pref="111" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -249,7 +249,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="capacit&#xe0; default"/>
+                    <Property name="text" type="java.lang.String" value="Capacit&#xe0; default"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
@@ -258,6 +258,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JSlider" name="jSliderPosText">
+                  <Properties>
+                    <Property name="maximum" type="int" value="150"/>
+                    <Property name="minimum" type="int" value="30"/>
+                  </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSliderPosTextStateChanged"/>
                   </Events>
@@ -273,7 +277,7 @@
                 <Component class="javax.swing.JRadioButton" name="jRadioButtonRandomCap">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="set random capacity"/>
+                    <Property name="text" type="java.lang.String" value="Capcit&#xe0; random"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButtonRandomCapActionPerformed"/>
@@ -281,7 +285,7 @@
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="jRadioButtonDefaultCap">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="set default capacity"/>
+                    <Property name="text" type="java.lang.String" value="Capacit&#xe0; default"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButtonDefaultCapActionPerformed"/>
@@ -550,7 +554,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+N"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="text" type="java.lang.String" value="Nuovo"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[110, 25]"/>
                 </Property>
@@ -564,7 +568,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+O"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Open"/>
+                <Property name="text" type="java.lang.String" value="Apri"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[110, 25]"/>
                 </Property>
@@ -578,7 +582,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+S"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save"/>
+                <Property name="text" type="java.lang.String" value="Salva"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[110, 25]"/>
                 </Property>
@@ -591,15 +595,18 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" value="Modifica"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[70, 32767]"/>
+            </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[50, 21]"/>
+              <Dimension value="[60, 21]"/>
             </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemExample">
               <Properties>
-                <Property name="text" type="java.lang.String" value="carica esempio"/>
+                <Property name="text" type="java.lang.String" value="Carica esempio"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemExampleActionPerformed"/>

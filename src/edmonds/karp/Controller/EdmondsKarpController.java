@@ -36,7 +36,7 @@ import org.json.JSONObject;
 public class EdmondsKarpController {
 
     private Graph graph;
-    private EdmondsKarpGUI gui;
+    private final EdmondsKarpGUI gui;
     private Timer tmr1;
     private int name = 0;
     private int bfVisit;
@@ -170,7 +170,7 @@ public class EdmondsKarpController {
                 if ( graph.EdmondsKarpOneStep() ) {
                     graph.getSink().setParent(null);
                 } else {
-                    gui.displayMessage("Errore: controllare sorgente e pozzo");
+                    gui.displayMessage("Errore: stato grafo inconsistente.\nPremere stop per riavviare la simulazione");
                     return true;
                 }
             }

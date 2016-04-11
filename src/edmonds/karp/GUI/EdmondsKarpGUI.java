@@ -40,9 +40,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private Circle shapeTmp;
     private final int DRAW = 0;
     private final int ERASE = 3;
-    private EdmondsKarpController controller;
+    private final EdmondsKarpController controller;
     private Point2D pointTmp;
-    private JFileChooser chooser;
+    private final JFileChooser chooser;
 
     private EdmondsKarpGUI() {
         initComponents();
@@ -124,7 +124,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPopupMenu1.setMaximumSize(new java.awt.Dimension(97, 54));
         jPopupMenu1.setMinimumSize(new java.awt.Dimension(97, 54));
 
-        jMenuItem2.setText("set Source");
+        jMenuItem2.setText("Imposta sorgente");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setSourceActionPerformed(evt);
@@ -132,7 +132,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
         jPopupMenu1.add(jMenuItem2);
 
-        jMenuItem3.setText("set Sink");
+        jMenuItem3.setText("Imposta pozzo");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setSinkActionPerformed(evt);
@@ -141,7 +141,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPopupMenu1.add(jMenuItem3);
         jPopupMenu1.add(jSeparator1);
 
-        jMenuItem6.setText("delete node");
+        jMenuItem6.setText("Elimina nodo");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteNodeActionPerformed(evt);
@@ -151,7 +151,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         jPopupMenu1.getAccessibleContext().setAccessibleDescription("");
 
-        jMenuItem7.setText("set capacity");
+        jMenuItem7.setText("Imposta capacità");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setCapacityActionPerformed(evt);
@@ -159,7 +159,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
         jPopupMenu2.add(jMenuItem7);
 
-        jMenuItem8.setText("set flow");
+        jMenuItem8.setText("Imposta flusso");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setFlowActionPerformed(evt);
@@ -168,7 +168,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPopupMenu2.add(jMenuItem8);
         jPopupMenu2.add(jSeparator2);
 
-        jMenuItem9.setText("delete edge");
+        jMenuItem9.setText("Elimina arco");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteEdgeActionPerformed(evt);
@@ -190,7 +190,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         jTextField2.setNextFocusableComponent(jButton2);
 
-        jLabel1.setText("Set capacity");
+        jLabel1.setText("imposta capacità");
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -228,10 +228,12 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         jTextField1.setEnabled(false);
 
-        jLabel2.setText("capacità default");
+        jLabel2.setText("Capacità default");
 
         jLabel7.setText("Posizione testo");
 
+        jSliderPosText.setMaximum(150);
+        jSliderPosText.setMinimum(30);
         jSliderPosText.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSliderPosTextStateChanged(evt);
@@ -246,14 +248,14 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         });
 
         jRadioButtonRandomCap.setSelected(true);
-        jRadioButtonRandomCap.setText("set random capacity");
+        jRadioButtonRandomCap.setText("Capcità random");
         jRadioButtonRandomCap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonRandomCapActionPerformed(evt);
             }
         });
 
-        jRadioButtonDefaultCap.setText("set default capacity");
+        jRadioButtonDefaultCap.setText("Capacità default");
         jRadioButtonDefaultCap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonDefaultCapActionPerformed(evt);
@@ -277,7 +279,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     .addComponent(jSliderPosText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jRadioButtonRandomCap)
                     .addComponent(jRadioButtonDefaultCap))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,7 +620,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jMenu1.setPreferredSize(new java.awt.Dimension(50, 21));
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem5.setText("New");
+        jMenuItem5.setText("Nuovo");
         jMenuItem5.setPreferredSize(new java.awt.Dimension(110, 25));
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -628,7 +630,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jMenu1.add(jMenuItem5);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Open");
+        jMenuItem1.setText("Apri");
         jMenuItem1.setPreferredSize(new java.awt.Dimension(110, 25));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -638,7 +640,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem4.setText("Save");
+        jMenuItem4.setText("Salva");
         jMenuItem4.setPreferredSize(new java.awt.Dimension(110, 25));
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -649,10 +651,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
-        jMenu2.setPreferredSize(new java.awt.Dimension(50, 21));
+        jMenu2.setText("Modifica");
+        jMenu2.setMaximumSize(new java.awt.Dimension(70, 32767));
+        jMenu2.setPreferredSize(new java.awt.Dimension(60, 21));
 
-        jMenuItemExample.setText("carica esempio");
+        jMenuItemExample.setText("Carica esempio");
         jMenuItemExample.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemExampleActionPerformed(evt);
