@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edmonds.karp.GUI;
+package edmondskarp.Gui;
 
-import edmonds.karp.Controller.EdmondsKarpController;
+import edmondskarp.Controller.EdmondsKarpController;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -461,7 +461,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(169, 169, 169));
         jPanel1.setPreferredSize(new java.awt.Dimension(824, 50));
 
-        pencilButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/draw.png"))); // NOI18N
+        pencilButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/draw.png"))); // NOI18N
         pencilButton.setSelected(true);
         pencilButton.setToolTipText("draw");
         pencilButton.setFocusable(false);
@@ -475,7 +475,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        rubberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/remove.png"))); // NOI18N
+        rubberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/remove.png"))); // NOI18N
         rubberButton.setToolTipText("erase");
         rubberButton.setFocusable(false);
         rubberButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -488,7 +488,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        playButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/play.png"))); // NOI18N
+        playButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/play.png"))); // NOI18N
         playButton.setToolTipText("play");
         playButton.setFocusable(false);
         playButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -501,7 +501,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/back.png"))); // NOI18N
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/back 1.png"))); // NOI18N
         backButton.setFocusable(false);
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -509,7 +509,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        forwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/forward.png"))); // NOI18N
+        forwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/forward 1.png"))); // NOI18N
         forwardButton.setFocusable(false);
         forwardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -517,7 +517,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
-        stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmonds/karp/GUI/square.png"))); // NOI18N
+        stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/square.png"))); // NOI18N
         stopButton.setToolTipText("stop");
         stopButton.setFocusable(false);
         stopButton.addActionListener(new java.awt.event.ActionListener() {

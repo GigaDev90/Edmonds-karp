@@ -713,7 +713,7 @@
         <Component class="javax.swing.JToggleButton" name="pencilButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/draw.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/draw.png"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="toolTipText" type="java.lang.String" value="draw"/>
@@ -734,7 +734,7 @@
         <Component class="javax.swing.JToggleButton" name="rubberButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/remove.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/remove.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="erase"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -754,7 +754,7 @@
         <Component class="javax.swing.JToggleButton" name="playButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/play.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/play.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="play"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -774,7 +774,7 @@
         <Component class="javax.swing.JButton" name="backButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/back.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/back 1.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
@@ -785,7 +785,7 @@
         <Component class="javax.swing.JButton" name="forwardButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/forward.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/forward 1.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
@@ -796,7 +796,7 @@
         <Component class="javax.swing.JButton" name="stopButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/edmonds/karp/GUI/square.png"/>
+              <Image iconType="3" name="/edmondskarp/Gui/icon/square.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="stop"/>
             <Property name="focusable" type="boolean" value="false"/>

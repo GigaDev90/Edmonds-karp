@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edmonds.karp.Controller;
+package edmondskarp.Controller;
 
-import edmonds.karp.BFSVisit;
-import edmonds.karp.DFSVisit;
-import edmonds.karp.Edge;
-import edmonds.karp.GUI.Arrow;
-import edmonds.karp.GUI.Circle;
-import edmonds.karp.GUI.EdmondsKarpGUI;
-import edmonds.karp.Graph;
+import edmondskarp.Model.BFSVisit;
+import edmondskarp.Model.DFSVisit;
+import edmondskarp.Model.Edge;
+import edmondskarp.Gui.Arrow;
+import edmondskarp.Gui.Circle;
+import edmondskarp.Gui.EdmondsKarpGUI;
+import edmondskarp.Model.Graph;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

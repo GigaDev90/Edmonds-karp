@@ -1,4 +1,4 @@
-package edmonds.karp.GUI;
+package edmondskarp.Gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

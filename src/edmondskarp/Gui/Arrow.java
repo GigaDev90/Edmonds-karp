@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edmonds.karp.GUI;
+package edmondskarp.Gui;
 
-import edmonds.karp.Edge;
+import edmondskarp.Model.Edge;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;

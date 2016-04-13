@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edmonds.karp;
+package edmondskarp.Model;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
