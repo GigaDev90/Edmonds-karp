@@ -120,7 +120,7 @@ public class Graph {
         } else if (a == sink) {
             System.out.println("connessione fallita: il pozzo non può avere archi uscenti");
             return null;
-        } else if (a.getEdgeB(adjacent) != null && !a.getEdgeB(adjacent).isResidual()) {
+        } else if (a.getEdgeBNotResidual(adjacent) != null) {
             return null;
         }
 
