@@ -23,8 +23,9 @@ public class Config {
     private int fixedCapacity;
     private boolean randomCapacity;
     private boolean needUpdate;
+    private static Config  config= new Config();
     
-    public Config() {
+    private Config() {
         defaultArrow = Color.BLACK;
         selectedArrow = Color.GREEN;
         usedArrow = Color.BLUE;
@@ -35,6 +36,10 @@ public class Config {
         fixedCapacity = 10;
         randomCapacity = true;
         needUpdate = false;
+    }
+    
+    public static Config getConfig() {
+        return config;
     }
     
     public boolean isNeedUpdate() {

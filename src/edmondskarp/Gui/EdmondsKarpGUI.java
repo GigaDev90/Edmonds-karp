@@ -39,10 +39,12 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private boolean isInDragging;
     private Circle shapeTmp;
     private final int DRAW = 0;
+    private final int DRAG = 1;
     private final int ERASE = 3;
     private final EdmondsKarpController controller;
     private Point2D pointTmp;
     private final JFileChooser chooser;
+    
 
     private EdmondsKarpGUI() {
         initComponents();
@@ -110,6 +112,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         stopButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        dragButton = new javax.swing.JToggleButton();
         myPanel = new MyPanel(this);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -543,6 +546,19 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
+        dragButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/drag.png"))); // NOI18N
+        dragButton.setToolTipText("erase");
+        dragButton.setFocusable(false);
+        dragButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dragButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        dragButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        dragButton.setName(""); // NOI18N
+        dragButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dragButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -553,6 +569,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rubberButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dragButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -564,7 +582,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 .addComponent(runButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(418, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -578,7 +596,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     .addComponent(rubberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pencilButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1))
+                    .addComponent(jComboBox1)
+                    .addComponent(dragButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(670, 670, 670))
         );
 
@@ -726,30 +745,33 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_myPanelMouseClicked
 
     private void myPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseDragged
-        if (!isInDragging) {
+        if ( MODE == DRAG ) {
+            if (!isInDragging) {
 
-            if (shapeTmp != null) {
-                shapeTmp.setSelect(false);
-                isSecond = false;
-            }
+                if (shapeTmp != null) {
+                    shapeTmp.setSelect(false);
+                    isSecond = false;
+                }
 
-            shapeTmp = getSelectedCircle(evt.getPoint());
-            if (shapeTmp != null) {
+                shapeTmp = getSelectedCircle(evt.getPoint());
+                if (shapeTmp != null) {
+                    shapeTmp.setFirstPoint(evt.getPoint());
+                    shapeTmp.needUpdate();
+                    isInDragging = true;
+                } else {
+                    // addCircle(evt.getPoint());
+                    isInDragging = false;
+                    shapeTmp = null;
+                }
+                
+            } else {
                 shapeTmp.setFirstPoint(evt.getPoint());
                 shapeTmp.needUpdate();
-                isInDragging = true;
-            } else {
-                // addCircle(evt.getPoint());
-                isInDragging = false;
-                shapeTmp = null;
+                shapeTmp.updateArrow();
+                update();
             }
-
-        } else {
-            shapeTmp.setFirstPoint(evt.getPoint());
-            shapeTmp.needUpdate();
-            shapeTmp.updateArrow();
-            update();
         }
+        
     }//GEN-LAST:event_myPanelMouseDragged
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
@@ -759,12 +781,14 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
         // TODO add your handling code here:
         rubberButton.setSelected(false);
+        dragButton.setSelected(false);
         MODE = DRAW;
     }//GEN-LAST:event_pencilButtonActionPerformed
 
     private void rubberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rubberButtonActionPerformed
         // TODO add your handling code here:
         pencilButton.setSelected(false);
+        dragButton.setSelected(false);
         MODE = ERASE;
     }//GEN-LAST:event_rubberButtonActionPerformed
 
@@ -889,16 +913,16 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void preferenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferenceActionPerformed
         // TODO add your handling code here:
-        jButtonAttraversatoColor.setBackground(MyShape.getConfig().getUsedArrow());
-        jButtonDefaultColor.setBackground(MyShape.getConfig().getDefaultArrow());
-        jButtonSaturoColor.setBackground(MyShape.getConfig().getFilledArrow());
-        jButtonSelezionatoColor.setBackground(MyShape.getConfig().getSelectedArrow());
+        jButtonAttraversatoColor.setBackground(Config.getConfig().getUsedArrow());
+        jButtonDefaultColor.setBackground(Config.getConfig().getDefaultArrow());
+        jButtonSaturoColor.setBackground(Config.getConfig().getFilledArrow());
+        jButtonSelezionatoColor.setBackground(Config.getConfig().getSelectedArrow());
         jDialog2.setVisible(true);
     }//GEN-LAST:event_preferenceActionPerformed
 
     private void DimTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DimTextActionPerformed
         // TODO add your handling code here:
-        MyShape.getConfig().setDimText(Integer.parseInt(jComboBoxDimText.getItemAt(jComboBoxDimText.getSelectedIndex())));
+        Config.getConfig().setDimText(Integer.parseInt(jComboBoxDimText.getItemAt(jComboBoxDimText.getSelectedIndex())));
         update();
     }//GEN-LAST:event_DimTextActionPerformed
 
@@ -906,7 +930,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         Color c = JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonDefaultColor.setBackground(c);
-        MyShape.getConfig().setDefaultArrow(c);
+        Config.getConfig().setDefaultArrow(c);
         update();
     }//GEN-LAST:event_defaultColorActionPerformed
 
@@ -914,7 +938,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonAttraversatoColor.setBackground(c);
-        MyShape.getConfig().setUsedArrow(c);
+        Config.getConfig().setUsedArrow(c);
         update();
     }//GEN-LAST:event_attraversatoColorActionPerformed
 
@@ -922,7 +946,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonSaturoColor.setBackground(c);
-        MyShape.getConfig().setFilledArrow(c);
+        Config.getConfig().setFilledArrow(c);
         update();
     }//GEN-LAST:event_saturoColorActionPerformed
 
@@ -930,19 +954,19 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonSelezionatoColor.setBackground(c);
-        MyShape.getConfig().setSelectedArrow(c);
+        Config.getConfig().setSelectedArrow(c);
         update();
     }//GEN-LAST:event_selezionatoColorActionPerformed
 
     private void jComboBoxDimCircleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDimCircleActionPerformed
         // TODO add your handling code here:
-        MyShape.getConfig().setDimCircle(Integer.parseInt(jComboBoxDimCircle.getItemAt(jComboBoxDimCircle.getSelectedIndex())));
+        Config.getConfig().setDimCircle(Integer.parseInt(jComboBoxDimCircle.getItemAt(jComboBoxDimCircle.getSelectedIndex())));
         update();
     }//GEN-LAST:event_jComboBoxDimCircleActionPerformed
 
     private void jSliderPosTextStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderPosTextStateChanged
         // TODO add your handling code here:
-        MyShape.getConfig().setPosText(jSliderPosText.getValue());
+        Config.getConfig().setPosText(jSliderPosText.getValue());
         update();
     }//GEN-LAST:event_jSliderPosTextStateChanged
 
@@ -956,7 +980,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 displayMessage("Errore: inserire un valore numerico");
                 return;
             }
-            MyShape.getConfig().setFixedCapacity(capacity);
+            Config.getConfig().setFixedCapacity(capacity);
         }
     }//GEN-LAST:event_jButtonSetDefCapacityActionPerformed
 
@@ -964,20 +988,27 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         jRadioButtonDefaultCap.setSelected(false);
         jTextField1.setEnabled(false);
-        MyShape.getConfig().setRandomCapacity(true);
+        Config.getConfig().setRandomCapacity(true);
     }//GEN-LAST:event_jRadioButtonRandomCapActionPerformed
 
     private void jRadioButtonDefaultCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonDefaultCapActionPerformed
         // TODO add your handling code here:
         jRadioButtonRandomCap.setSelected(false);
         jTextField1.setEnabled(true);
-        MyShape.getConfig().setRandomCapacity(false);
+        Config.getConfig().setRandomCapacity(false);
     }//GEN-LAST:event_jRadioButtonDefaultCapActionPerformed
 
     private void jMenuItemExampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExampleActionPerformed
         // TODO add your handling code here:
         controller.loadExample();
     }//GEN-LAST:event_jMenuItemExampleActionPerformed
+
+    private void dragButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dragButtonActionPerformed
+        // TODO add your handling code here:
+        MODE = DRAG;
+        rubberButton.setSelected(false);
+        pencilButton.setSelected(false);
+    }//GEN-LAST:event_dragButtonActionPerformed
 
     public boolean isPlaySelected() {
         return playButton.isSelected();
@@ -1044,7 +1075,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             circle.updateArrow();
             circle.drawArrows(g2);
         }
-        MyShape.getConfig().setNeedUpdate(false);
+        Config.getConfig().setNeedUpdate(false);
     }
 
     public void update() {
@@ -1061,14 +1092,14 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
     private void addArrow(Circle circ) {
         Arrow arrow = new Arrow(shapeTmp, circ);
-        if ( MyShape.getConfig().isRandomCapacity() ) {
+        if ( Config.getConfig().isRandomCapacity() ) {
             if (controller.addEdge(arrow)) {
                 shapeTmp.addArrowFrom(arrow);
                 circ.addArrowTo(arrow);
                 update();
             }
         } else {
-            if (controller.addEdge(arrow, MyShape.getConfig().getFixedCapacity())) {
+            if (controller.addEdge(arrow, Config.getConfig().getFixedCapacity())) {
                 shapeTmp.addArrowFrom(arrow);
                 circ.addArrowTo(arrow);
                 update();
@@ -1205,6 +1236,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JToggleButton dragButton;
     private javax.swing.JButton forwardButton;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonAttraversatoColor;

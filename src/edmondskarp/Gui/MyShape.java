@@ -17,20 +17,12 @@ public abstract class MyShape {
     //booleano per verificare se si tratta di una classe che può essere selezionata
     protected boolean select;
     
-    private static Config config = new Config();
+   
 
     public MyShape() {}
 
     public Shape getShape() {
         return shape;
-    }
-    
-    public static Config getConfig() {
-        return config;
-    }
-    
-    public static void setConfig(Config config) {
-        MyShape.config = config;
     }
     
     public Point2D[] getPoints() { return points; }

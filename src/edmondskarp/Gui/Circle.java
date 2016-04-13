@@ -78,8 +78,8 @@ public class Circle extends MyShape {
     }
 
     public void setFirstPoint(Point2D point) {
-        Point2D temp1 = new Point2D.Double(point.getX() + MyShape.getConfig().getDimCircle(), point.getY() + MyShape.getConfig().getDimCircle());
-        Point2D temp2 = new Point2D.Double(point.getX() - MyShape.getConfig().getDimCircle(), point.getY() - MyShape.getConfig().getDimCircle());
+        Point2D temp1 = new Point2D.Double(point.getX() + Config.getConfig().getDimCircle(), point.getY() + Config.getConfig().getDimCircle());
+        Point2D temp2 = new Point2D.Double(point.getX() - Config.getConfig().getDimCircle(), point.getY() - Config.getConfig().getDimCircle());
         Point2D temp3 = new Point2D.Double((int) point.getX() - 3, (int) point.getY() + 5);
         points[1] = temp1;
         points[0] = temp2;
@@ -94,12 +94,12 @@ public class Circle extends MyShape {
 
     @Override
     public void draw(Graphics2D g2) {
-        if ( MyShape.getConfig().isNeedUpdate() )
+        if ( Config.getConfig().isNeedUpdate() )
             setFirstPoint(getCenter());
         g2.setColor(c);
         g2.draw(shape);
         if (select) {
-            double scale2 = MyShape.getConfig().getDimCircle() - 10;
+            double scale2 = Config.getConfig().getDimCircle() - 10;
             Point2D temp0 = this.getCenter();
             Point2D temp1 = new Point2D.Double(temp0.getX() + scale2, temp0.getY() + scale2);
             Point2D temp2 = new Point2D.Double(temp0.getX() - scale2, temp0.getY() - scale2);
@@ -138,7 +138,7 @@ public class Circle extends MyShape {
     }
 
     public void updateArrow() {
-        if ( !isUpdate || MyShape.getConfig().isNeedUpdate() ) {
+        if ( !isUpdate || Config.getConfig().isNeedUpdate() ) {
             for (Arrow arrow : arrowsFrom) {
                 arrow.update();
             }

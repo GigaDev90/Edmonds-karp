@@ -675,6 +675,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="rubberButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="dragButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   <Component id="backButton" min="-2" pref="33" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Component id="playButton" min="-2" max="-2" attributes="0"/>
@@ -686,7 +688,7 @@
                   <Component id="runButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jComboBox1" min="-2" pref="103" max="-2" attributes="0"/>
-                  <EmptySpace pref="418" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -703,6 +705,7 @@
                       <Component id="pencilButton" max="32767" attributes="0"/>
                       <Component id="runButton" alignment="0" max="32767" attributes="0"/>
                       <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dragButton" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="670" max="-2" attributes="0"/>
               </Group>
@@ -834,6 +837,26 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="dragButton">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/edmondskarp/Gui/icon/drag.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="erase"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[30, 30]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[24, 24]"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dragButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
