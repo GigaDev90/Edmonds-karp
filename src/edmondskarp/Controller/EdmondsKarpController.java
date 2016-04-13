@@ -40,15 +40,25 @@ public class EdmondsKarpController {
     private Timer tmr1;
     private int name = 0;
     private int bfVisit;
+    private int MAXHISTORY;
 
     public EdmondsKarpController(EdmondsKarpGUI gui) {
         this.gui = gui;
         graph = new Graph();
         setTimer();
         bfVisit = 0;
+        MAXHISTORY = 30;
     }
     public boolean addEdge(Arrow arrow) { 
         return addEdge(arrow, (int) (Math.random() * 100 + 1));
+    }
+    
+    public void saveState() {
+      
+    }
+    
+    public void restoreState() {
+
     }
 
     public boolean addEdge(Arrow arrow, int capacity) {
@@ -294,9 +304,8 @@ public class EdmondsKarpController {
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }
-        return;
     }
-
+   
     public void setCapacity(Arrow arrow, int capacity) {
         arrow.getEdge().setCapacity(capacity);
         arrow.getEdge().getInverse().setCapacity(capacity);

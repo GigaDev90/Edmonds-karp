@@ -163,4 +163,43 @@ public class Arrow extends MyShape {
         
         makeShape();
     }
+    
+    public void setMementoArrow(MementoArrow memento) {
+        
+    }
+    
+    public MementoArrow getMememntoArrow() {
+        return new MementoArrow(edge.getCapacity(), edge.getFlow(), edge.getNodeA().getName(), edge.getNodeB().getName());
+    }
+    
+    public static class MementoArrow {
+        
+        private final int capacity;
+        private final int flow;
+        private final String to;
+        private final String from;
+        
+        public MementoArrow(int capacity, int flow, String to, String from) {
+            this.capacity = capacity;
+            this.flow = flow;
+            this.from = from;
+            this.to = to;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public int getFlow() {
+            return flow;
+        }
+
+        public String getTo() {
+            return to;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+    }
 }

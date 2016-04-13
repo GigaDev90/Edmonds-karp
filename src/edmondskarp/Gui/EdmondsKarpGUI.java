@@ -775,7 +775,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_myPanelMouseDragged
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
-        isInDragging = false;
+            isInDragging = false; 
     }//GEN-LAST:event_myPanelMouseReleased
 
     private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
@@ -1122,22 +1122,6 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private String openGraph(String defaultGraph) {
 
         String txt = "";
-        if (defaultGraph != null) {
-            // File f = defaultGraph;
-            try {
-                FileReader fileReader = new FileReader(defaultGraph);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    txt += line;
-                }
-
-                return txt;
-
-            } catch (IOException e) {
-            }
-        }
-
         //Visualizzo la finestra di dialogo
         int risposta = chooser.showOpenDialog(this);
         //String txt = "";
