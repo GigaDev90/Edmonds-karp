@@ -31,7 +31,7 @@ import org.json.JSONException;
  *
  * @author gabriele
  */
-public class EdmondsKarpGUI extends javax.swing.JFrame {
+public class EdmondsKarpGui extends javax.swing.JFrame {
 
     private ArrayList<Circle> circles;
     private int MODE = 0;
@@ -41,18 +41,42 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private final int DRAW = 0;
     private final int DRAG = 1;
     private final int ERASE = 3;
-    private final EdmondsKarpController controller;
+    private  EdmondsKarpController controller;
+    private static EdmondsKarpGui gui = new EdmondsKarpGui();
     private Point2D pointTmp;
     private final JFileChooser chooser;
     
 
-    private EdmondsKarpGUI() {
+    private EdmondsKarpGui() {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(EdmondsKarpGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(EdmondsKarpGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(EdmondsKarpGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(EdmondsKarpGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         initComponents();
         circles = new ArrayList<>();
-        controller = new EdmondsKarpController(this);
         chooser = new JFileChooser();
         isSecond = false;
         isInDragging = false;
+    }
+    
+    public static EdmondsKarpGui getGui() {
+        return gui;
+    }
+    
+    public void setController(EdmondsKarpController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -113,6 +137,8 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         runButton = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         dragButton = new javax.swing.JToggleButton();
+        undoButton = new javax.swing.JButton();
+        redoButton = new javax.swing.JButton();
         myPanel = new MyPanel(this);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -559,6 +585,24 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
         });
 
+        undoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/undo.png"))); // NOI18N
+        undoButton.setToolTipText("undo");
+        undoButton.setFocusable(false);
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoButtonActionPerformed(evt);
+            }
+        });
+
+        redoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edmondskarp/Gui/icon/redo.png"))); // NOI18N
+        redoButton.setToolTipText("redo");
+        redoButton.setFocusable(false);
+        redoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -570,7 +614,11 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 .addComponent(rubberButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dragButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addGap(18, 18, 18)
+                .addComponent(undoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(redoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -582,7 +630,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                 .addComponent(runButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(264, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -597,7 +645,9 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
                     .addComponent(pencilButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBox1)
-                    .addComponent(dragButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dragButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(undoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(redoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(670, 670, 670))
         );
 
@@ -630,7 +680,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         );
         myPanelLayout.setVerticalGroup(
             myPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 763, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         getContentPane().add(myPanel, java.awt.BorderLayout.CENTER);
@@ -755,6 +805,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
 
                 shapeTmp = getSelectedCircle(evt.getPoint());
                 if (shapeTmp != null) {
+                    controller.saveState();
                     shapeTmp.setFirstPoint(evt.getPoint());
                     shapeTmp.needUpdate();
                     isInDragging = true;
@@ -775,7 +826,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_myPanelMouseDragged
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
-            isInDragging = false; 
+        isInDragging = false;
     }//GEN-LAST:event_myPanelMouseReleased
 
     private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
@@ -831,7 +882,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             }
             update();
         } catch (JSONException ex) {
-            Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EdmondsKarpGui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_OpenActionPerformed
 
@@ -1010,6 +1061,15 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
         pencilButton.setSelected(false);
     }//GEN-LAST:event_dragButtonActionPerformed
 
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+        // TODO add your handling code here:
+        controller.restoreState();
+    }//GEN-LAST:event_undoButtonActionPerformed
+
+    private void redoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_redoButtonActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1019,6 +1079,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }
 
     public void eraseCircle(Circle circle) {
+        controller.saveState();
         circles.remove(circle);
         controller.removeNode(circle);
         circle.removeArrows();
@@ -1026,6 +1087,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }
 
     public void eraseArrow(Arrow arrow) {
+        controller.saveState();
         arrow.getFrom().removeArrowFrom(arrow);
         arrow.getTo().removeArrowTo(arrow);
         controller.removeEdge(arrow);
@@ -1083,6 +1145,7 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     }
 
     private void addCircle(Point point) {
+        controller.saveState();
         Circle circle = new Circle();
         circle.setFirstPoint(point);
         circles.add(circle);
@@ -1178,46 +1241,12 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
             try {
                 controller.save(str);
             } catch (JSONException ex) {
-                Logger.getLogger(EdmondsKarpGUI.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EdmondsKarpGui.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EdmondsKarpGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EdmondsKarpGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EdmondsKarpGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EdmondsKarpGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EdmondsKarpGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JToggleButton dragButton;
@@ -1274,17 +1303,19 @@ public class EdmondsKarpGUI extends javax.swing.JFrame {
     private javax.swing.JPanel myPanel;
     private javax.swing.JToggleButton pencilButton;
     private javax.swing.JToggleButton playButton;
+    private javax.swing.JButton redoButton;
     private javax.swing.JToggleButton rubberButton;
     private javax.swing.JButton runButton;
     private javax.swing.JButton stopButton;
+    private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
 }
 
 class MyPanel extends JPanel {
 
-    private final EdmondsKarpGUI gui;
+    private final EdmondsKarpGui gui;
 
-    public MyPanel(EdmondsKarpGUI gui) {
+    public MyPanel(EdmondsKarpGui gui) {
         this.gui = gui;
     }
 

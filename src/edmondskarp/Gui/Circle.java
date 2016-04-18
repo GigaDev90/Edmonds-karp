@@ -138,16 +138,13 @@ public class Circle extends MyShape {
     }
 
     public void updateArrow() {
-        int i = 0;
         if ( !isUpdate || Config.getConfig().isNeedUpdate() ) {
             for (Arrow arrow : arrowsFrom) {
                 arrow.update();
-                System.out.println("update "+i++);
             }
             
             for (Arrow arrow : arrowsTo) {
                 arrow.update();
-                System.out.println("update2 "+i++);
             }
             isUpdate = true;
         }
@@ -167,36 +164,5 @@ public class Circle extends MyShape {
         }
 
         return null;
-    }
-    
-    public static class MementoCircle {
-        
-        private final String name;
-        private final double x;
-        private final double y;
-        private final boolean isUpdate;
-        
-        public MementoCircle(String name, double x, double y, boolean isUpdate) {
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.isUpdate = isUpdate;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        public boolean isUpdate() {
-            return isUpdate;
-        }
     }
 }

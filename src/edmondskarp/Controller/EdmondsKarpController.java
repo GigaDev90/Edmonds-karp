@@ -10,7 +10,7 @@ import edmondskarp.Model.DFSVisit;
 import edmondskarp.Model.Edge;
 import edmondskarp.Gui.Arrow;
 import edmondskarp.Gui.Circle;
-import edmondskarp.Gui.EdmondsKarpGUI;
+import edmondskarp.Gui.EdmondsKarpGui;
 import edmondskarp.Model.Graph;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -36,34 +36,62 @@ import org.json.JSONObject;
 public class EdmondsKarpController {
 
     private Graph graph;
-    private final EdmondsKarpGUI gui;
+    private final EdmondsKarpGui gui;
     private Timer tmr1;
     private int name = 0;
     private int bfVisit;
     private int MAXHISTORY;
+    private String[] history;
+    private int indexHistory;
 
-    public EdmondsKarpController(EdmondsKarpGUI gui) {
+    public EdmondsKarpController(EdmondsKarpGui gui) {
         this.gui = gui;
         graph = new Graph();
         setTimer();
         bfVisit = 0;
-        MAXHISTORY = 30;
+        history = new String[30];
+        //MAXHISTORY = history.length;
+        indexHistory = 0;
     }
     public boolean addEdge(Arrow arrow) { 
         return addEdge(arrow, (int) (Math.random() * 100 + 1));
     }
     
+    public void saveState(String state) {
+        history[indexHistory % history.length] = state;
+        indexHistory++;
+        System.out.println("state saved "+indexHistory);
+    }
+    
     public void saveState() {
-      
+        try {
+            saveState(getState());
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void restoreState() {
-
+        try {
+            open(history[(((indexHistory - 1) % history.length) + history.length ) % history.length]);
+            indexHistory--;
+            System.out.println("restored state "+indexHistory);
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }
 
     public boolean addEdge(Arrow arrow, int capacity) {
+        String tmp = "";
+        try {
+            tmp = getState();
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), capacity, 0);
         if (e != null) {
+            saveState(tmp);
             arrow.setEdge(e);
             return true;
         } else {
@@ -78,28 +106,41 @@ public class EdmondsKarpController {
 
     public void removeNode(Circle circle) {
         graph.removeNode(graph.getNode(circle.getName()));
-
     }
 
     public void setSink(Circle circle) {
+        String tmp = "";
+        try {
+            tmp = getState();
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (!graph.setSink(graph.getNode(circle.getName()))) {
             gui.displayMessage("Il pozzo non può avere archi uscenti");
         } else {
+            saveState(tmp);
             gui.update();
         }
     }
 
     public void setSource(Circle node) {
+        String tmp = "";
+        try {
+            tmp = getState();
+        } catch (JSONException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (!graph.setSource(graph.getNode(node.getName()))) {
             gui.displayMessage("La sorgente non può avere archi entranti");
         } else {
+            saveState(tmp);
             gui.update();
         }
     }
 
     public void removeEdge(Arrow edge) {
+        saveState();
         graph.disconnect(edge.getEdge());
-
     }
 
     public void play() {
@@ -212,48 +253,110 @@ public class EdmondsKarpController {
     }
 
     public void open(String s) throws JSONException {
-        Map<String, Circle> circles = new HashMap<String, Circle>();
-        newGraph();
-
-        JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
-        JSONArray jNodes = jNodeEdge.getJSONArray("Node");
-        JSONArray jEdges = jNodeEdge.getJSONArray("Edge");
-
-        for (int i = 0; i < jNodes.length(); i++) { // Loop over each each row of node
-            Circle circle = new Circle();
-            Point point = new Point();
-
-            JSONObject jNode = jNodes.getJSONObject(i);
-
-            point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
-            circle.setFirstPoint(point);
-            circle.addNode(graph.addNode("" + jNode.getString("ID")));
-
-            circles.put(jNode.getString("ID"), circle);
+            Map<String, Circle> circles = new HashMap<String, Circle>();
+            newGraph();
+            
+            if ( s == null || s.equals("") ) return;
+            
+            JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
+            JSONArray jNodes = jNodeEdge.getJSONArray("Node");
+            JSONArray jEdges = jNodeEdge.getJSONArray("Edge");
+            
+            for (int i = 0; i < jNodes.length(); i++) { // Loop over each each row of node
+                Circle circle = new Circle();
+                Point point = new Point();
+                
+                JSONObject jNode = jNodes.getJSONObject(i);
+                
+                point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
+                circle.setFirstPoint(point);
+                circle.addNode(graph.addNode("" + jNode.getString("ID")));
+                
+                circles.put(jNode.getString("ID"), circle);
+            }
+            
+            name = jNodes.length() + 1;
+            
+            for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
+                JSONObject jEdge = jEdges.getJSONObject(i);
+                
+                Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
+                Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), jEdge.getInt("Capacity"), 0);
+                arrow.setEdge(e);
+                circles.get(jEdge.getString("From")).addArrowFrom(arrow);
+                circles.get(jEdge.getString("To")).addArrowTo(arrow);
+            }
+            
+            if ( !jNodeEdge.getString("Source").equals("") )
+                graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
+            if ( !jNodeEdge.getString("Sink").equals(""))
+                graph.setSink(graph.getNode(jNodeEdge.getString("Sink")));
+            
+            gui.setCircles(new ArrayList(circles.values()));
+            gui.update();
+            System.gc();
         }
-        
-        name = jNodes.length() + 1;
-
-        for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
-            JSONObject jEdge = jEdges.getJSONObject(i);
-
-            Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
-            this.addEdge(arrow, jEdge.getInt("Capacity"));
-            circles.get(jEdge.getString("From")).addArrowFrom(arrow);
-            circles.get(jEdge.getString("To")).addArrowTo(arrow);
-        }
-        
-        if ( !jNodeEdge.getString("Source").equals("") )
-            graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
-        if ( !jNodeEdge.getString("Sink").equals(""))
-            graph.setSink(graph.getNode(jNodeEdge.getString("Sink")));
-
-        gui.setCircles(new ArrayList(circles.values()));
-        gui.update();
-        System.gc();
-    }
 
     public void save(String path) throws JSONException {
+
+        JSONArray nodeJArray = new JSONArray();
+        JSONArray edgeJArray = new JSONArray();
+
+        ArrayList<Circle> arrayCircle = gui.getCircles();
+        ArrayList<Arrow> arrayArrow;
+
+            for (Circle circle : arrayCircle) {
+                arrayArrow = circle.getArrowFrom();
+                JSONObject jNode = new JSONObject();
+
+                jNode.put("ID", circle.getNode().getName());
+                jNode.put("PosX", circle.getCenter().getX());
+                jNode.put("PosY", circle.getCenter().getY());
+
+                for (Arrow arrow : arrayArrow) {
+
+                    if (!arrow.getEdge().isResidual()) {
+                        JSONObject jEdge = new JSONObject();
+                        jEdge.put("From", arrow.getEdge().getNodeA().getName());
+                        jEdge.put("To", arrow.getEdge().getNodeB().getName());
+                        jEdge.put("Capacity", arrow.getEdge().getCapacity());
+                        edgeJArray.put(jEdge);
+                    }
+                }
+                nodeJArray.put(jNode);
+            }
+
+        JSONObject jNodeEdge = new JSONObject();
+        jNodeEdge.put("Node", nodeJArray);
+        jNodeEdge.put("Edge", edgeJArray);
+
+        if (graph.getSource() != null) {
+            jNodeEdge.put("Source", graph.getSource().getName());
+        } else {
+            jNodeEdge.put("Source", "");
+        }
+        if (graph.getSink() != null) {
+            jNodeEdge.put("Sink", graph.getSink().getName());
+        } else {
+            jNodeEdge.put("Sink", "");
+        }
+
+        try {
+            FileWriter writer = new FileWriter(path);
+            BufferedWriter bWriter = new BufferedWriter(writer);
+            bWriter.write(jNodeEdge.toString());
+            bWriter.close();
+            writer.close();
+        } catch (MalformedURLException e) {
+        } catch (IOException e) {
+        }
+    }
+    
+    public String getState() throws JSONException {
+        
+        if ( graph.getNodes().isEmpty() ) {
+            return "";
+        }
 
         JSONArray nodeJArray = new JSONArray();
         JSONArray edgeJArray = new JSONArray();
@@ -295,24 +398,18 @@ public class EdmondsKarpController {
         else
             jNodeEdge.put("Sink", "");
 
-        try {
-            FileWriter writer = new FileWriter(path);
-            BufferedWriter bWriter = new BufferedWriter(writer);
-            bWriter.write(jNodeEdge.toString());
-            bWriter.close();
-            writer.close();
-        } catch (MalformedURLException e) {
-        } catch (IOException e) {
-        }
+        return jNodeEdge.toString();
     }
    
     public void setCapacity(Arrow arrow, int capacity) {
+        saveState();
         arrow.getEdge().setCapacity(capacity);
         arrow.getEdge().getInverse().setCapacity(capacity);
         arrow.getEdge().getInverse().setFlow(capacity);
     }
 
     public void setFlow(Arrow arrow, int flow) {
+        saveState();
         arrow.getEdge().setFlow(flow);
         arrow.getEdge().getInverse().setFlow(-flow);
     }
