@@ -120,6 +120,7 @@ public class Circle extends MyShape {
 
     @Override
     public void drawText(Graphics2D g2) {
+        g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
         if (node.isSource()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));

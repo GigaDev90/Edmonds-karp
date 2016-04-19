@@ -13,6 +13,8 @@ import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,6 +67,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(EdmondsKarpGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         initComponents();
+        this.addWindowListener(new WListener());
         circles = new ArrayList<>();
         chooser = new JFileChooser();
         isSecond = false;
@@ -484,7 +487,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(169, 169, 169));
@@ -805,10 +808,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
 
                 shapeTmp = getSelectedCircle(evt.getPoint());
                 if (shapeTmp != null) {
-                    controller.saveState();
                     shapeTmp.setFirstPoint(evt.getPoint());
                     shapeTmp.needUpdate();
                     isInDragging = true;
+                    
                 } else {
                     // addCircle(evt.getPoint());
                     isInDragging = false;
@@ -826,7 +829,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     }//GEN-LAST:event_myPanelMouseDragged
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
-        isInDragging = false;
+        if (isInDragging) {
+            isInDragging = false;
+            controller.saveState();
+        }
     }//GEN-LAST:event_myPanelMouseReleased
 
     private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
@@ -876,14 +882,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
 
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
         try {
-            String tmp = openGraph(null);
-            if (tmp != null) {
-                controller.open(tmp);
-            }
-            update();
+            controller.open(openGraph());
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGui.class.getName()).log(Level.SEVERE, null, ex);
         }
+            update();
     }//GEN-LAST:event_OpenActionPerformed
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
@@ -1063,11 +1066,12 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
         // TODO add your handling code here:
-        controller.restoreState();
+        controller.restoreState(true);
     }//GEN-LAST:event_undoButtonActionPerformed
 
     private void redoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoButtonActionPerformed
         // TODO add your handling code here:
+        controller.restoreState(false);
     }//GEN-LAST:event_redoButtonActionPerformed
 
     public boolean isPlaySelected() {
@@ -1079,7 +1083,6 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     }
 
     public void eraseCircle(Circle circle) {
-        controller.saveState();
         circles.remove(circle);
         controller.removeNode(circle);
         circle.removeArrows();
@@ -1087,7 +1090,6 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     }
 
     public void eraseArrow(Arrow arrow) {
-        controller.saveState();
         arrow.getFrom().removeArrowFrom(arrow);
         arrow.getTo().removeArrowTo(arrow);
         controller.removeEdge(arrow);
@@ -1145,7 +1147,6 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     }
 
     private void addCircle(Point point) {
-        controller.saveState();
         Circle circle = new Circle();
         circle.setFirstPoint(point);
         circles.add(circle);
@@ -1159,12 +1160,14 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             if (controller.addEdge(arrow)) {
                 shapeTmp.addArrowFrom(arrow);
                 circ.addArrowTo(arrow);
+                controller.saveState();
                 update();
             }
         } else {
             if (controller.addEdge(arrow, Config.getConfig().getFixedCapacity())) {
                 shapeTmp.addArrowFrom(arrow);
                 circ.addArrowTo(arrow);
+                controller.saveState();
                 update();
             }
         } 
@@ -1182,28 +1185,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         circles = array;
     }
 
-    private String openGraph(String defaultGraph) {
-
-        String txt = "";
+    private File openGraph() {
         //Visualizzo la finestra di dialogo
         int risposta = chooser.showOpenDialog(this);
-        //String txt = "";
         if (risposta == JFileChooser.APPROVE_OPTION) {//Se ho premuto il tasto apri
-
-            //Recupero il file selezionato
-            File f = chooser.getSelectedFile();
-            try {
-                FileReader fileReader = new FileReader(f);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    txt += line;
-                }
-
-                return txt;
-
-            } catch (IOException e) {
-            }
+            return chooser.getSelectedFile();
         }
         return null;
     }
@@ -1244,6 +1230,13 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 Logger.getLogger(EdmondsKarpGui.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        }
+    }
+    
+    private class WListener extends WindowAdapter {
+
+        public void windowClosing(WindowEvent e) {
+            controller.exit();
         }
     }
 
