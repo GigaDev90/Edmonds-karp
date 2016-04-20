@@ -21,6 +21,8 @@ public class Config {
     private int dimCircle;
     private int posText;
     private int fixedCapacity;
+    private float strokeCircle;
+    private float strokeArrow;
     private boolean randomCapacity;
     private boolean needUpdate;
     private static Config  config= new Config();
@@ -36,6 +38,8 @@ public class Config {
         fixedCapacity = 10;
         randomCapacity = true;
         needUpdate = false;
+        strokeArrow = 10;
+        strokeCircle = 10;
     }
     
     public static Config getConfig() {
@@ -123,5 +127,22 @@ public class Config {
 
     public void setRandomCapacity(boolean randomCapacity) {
         this.randomCapacity = randomCapacity;
+    }
+
+
+    public float getStrokeCircle() {
+        return strokeCircle;
+    }
+    
+    public void setStrokeCircle(float strokeCircle) {
+        this.strokeCircle = strokeCircle;
+    }
+    
+    public float getStrokeArrow() {
+        return strokeArrow;
+    }
+    
+    public void setStrokeArrow(float strokeArrow) {
+        this.strokeArrow = strokeArrow;
     }
 }

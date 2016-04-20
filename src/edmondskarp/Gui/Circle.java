@@ -6,6 +6,7 @@
 package edmondskarp.Gui;
 
 import edmondskarp.Model.Node;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -80,7 +81,7 @@ public class Circle extends MyShape {
     public void setFirstPoint(Point2D point) {
         Point2D temp1 = new Point2D.Double(point.getX() + Config.getConfig().getDimCircle(), point.getY() + Config.getConfig().getDimCircle());
         Point2D temp2 = new Point2D.Double(point.getX() - Config.getConfig().getDimCircle(), point.getY() - Config.getConfig().getDimCircle());
-        Point2D temp3 = new Point2D.Double((int) point.getX() - 4, (int) point.getY() + 6);
+        Point2D temp3 = new Point2D.Double((int) point.getX() - 7, (int) point.getY() + 7);
         points[1] = temp1;
         points[0] = temp2;
         pointText[0] = temp3;
@@ -94,6 +95,7 @@ public class Circle extends MyShape {
 
     @Override
     public void draw(Graphics2D g2) {
+        g2.setStroke(new BasicStroke((float) (Config.getConfig().getStrokeCircle() * 0.1)));
         if ( Config.getConfig().isNeedUpdate() )
             setFirstPoint(getCenter());
         g2.setColor(c);
@@ -109,18 +111,22 @@ public class Circle extends MyShape {
             g2.draw(circle);
             g2.setColor(c);
         }
+        
+         g2.setStroke(new BasicStroke(1));
     }
 
     public void drawArrows(Graphics2D g2) {
+        g2.setStroke(new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1)));
         for (Arrow arrow : arrowsFrom) {
             arrow.draw(g2);
             arrow.drawText(g2);
         }
+        
     }
 
     @Override
     public void drawText(Graphics2D g2) {
-        g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
+        g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 20));
         if ( node.getName().length() > 2 ) {
             g2.drawString(node.getName(), (int) pointText[0].getX() - 8, (int) pointText[0].getY());
         } else if ( node.getName().length() > 1) {
@@ -132,12 +138,12 @@ public class Circle extends MyShape {
         
         if (node.isSource()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
-            g2.drawString("S", (int) pointText[0].getX() + 1, (int) pointText[0].getY() - 13);
+            g2.drawString("S", (int) pointText[0].getX() + 4, (int) pointText[0].getY() - 18);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         }
         else if (node.isSink()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
-            g2.drawString("T", (int) pointText[0].getX() + 1, (int) pointText[0].getY() - 13);
+            g2.drawString("T", (int) pointText[0].getX() + 4, (int) pointText[0].getY() - 18);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         }
     }

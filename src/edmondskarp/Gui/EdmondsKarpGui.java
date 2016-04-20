@@ -128,6 +128,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jComboBoxDimCircle = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jComboBoxDimText = new javax.swing.JComboBox<>();
+        StrokeCirclejSlider = new javax.swing.JSlider();
+        StrokeArrowjSlider = new javax.swing.JSlider();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         pencilButton = new javax.swing.JToggleButton();
         rubberButton = new javax.swing.JToggleButton();
@@ -378,19 +382,17 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(58, 58, 58)
-                        .addComponent(jButtonDefaultColor, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel11))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(23, 23, 23)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonSaturoColor, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonAttraversatoColor, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonSelezionatoColor, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButtonSelezionatoColor, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonDefaultColor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(221, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -421,10 +423,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
 
         jPanel5.setMinimumSize(new java.awt.Dimension(341, 266));
 
-        jLabel8.setText("Nodi");
+        jLabel8.setText("Circonferenza nodi");
 
-        jComboBoxDimCircle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "20", "25", "30", "35", "40", "45", "50", "55", "60", "65" }));
-        jComboBoxDimCircle.setSelectedIndex(2);
+        jComboBoxDimCircle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "25", "30", "35", "40", "45", "50", "55", "60", "65" }));
+        jComboBoxDimCircle.setToolTipText("");
         jComboBoxDimCircle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxDimCircleActionPerformed(evt);
@@ -441,6 +443,32 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             }
         });
 
+        StrokeCirclejSlider.setMaximum(60);
+        StrokeCirclejSlider.setMinimum(1);
+        StrokeCirclejSlider.setPaintLabels(true);
+        StrokeCirclejSlider.setPaintTicks(true);
+        StrokeCirclejSlider.setValue(10);
+        StrokeCirclejSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                StrokeCirclejSliderStateChanged(evt);
+            }
+        });
+
+        StrokeArrowjSlider.setMaximum(60);
+        StrokeArrowjSlider.setMinimum(1);
+        StrokeArrowjSlider.setPaintLabels(true);
+        StrokeArrowjSlider.setPaintTicks(true);
+        StrokeArrowjSlider.setValue(10);
+        StrokeArrowjSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                StrokeArrowjSliderStateChanged(evt);
+            }
+        });
+
+        jLabel10.setText("Linea Nodi");
+
+        jLabel12.setText("Linea Archi");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -449,19 +477,30 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBoxDimCircle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jComboBoxDimText, javax.swing.GroupLayout.Alignment.LEADING, 0, 64, Short.MAX_VALUE)
+                            .addComponent(jComboBoxDimCircle, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(154, 154, 154))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBoxDimText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(275, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(StrokeCirclejSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                                    .addComponent(jLabel12)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(StrokeArrowjSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxDimCircle))
@@ -469,7 +508,15 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxDimText))
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(StrokeCirclejSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(StrokeArrowjSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
         );
 
         jTabbedPane2.addTab("Dimensioni", jPanel5);
@@ -1072,6 +1119,18 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         controller.restoreState(false);
     }//GEN-LAST:event_redoButtonActionPerformed
 
+    private void StrokeCirclejSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StrokeCirclejSliderStateChanged
+        // TODO add your handling code here:
+        Config.getConfig().setStrokeCircle(StrokeCirclejSlider.getValue());
+        update();
+    }//GEN-LAST:event_StrokeCirclejSliderStateChanged
+
+    private void StrokeArrowjSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StrokeArrowjSliderStateChanged
+        // TODO add your handling code here:
+        Config.getConfig().setStrokeArrow(StrokeArrowjSlider.getValue());
+        update();
+    }//GEN-LAST:event_StrokeArrowjSliderStateChanged
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1251,6 +1310,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSlider StrokeArrowjSlider;
+    private javax.swing.JSlider StrokeCirclejSlider;
     private javax.swing.JButton backButton;
     private javax.swing.JToggleButton dragButton;
     private javax.swing.JButton forwardButton;
@@ -1266,7 +1327,9 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
