@@ -118,6 +118,9 @@ public class Circle extends MyShape {
     public void drawArrows(Graphics2D g2) {
         g2.setStroke(new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1)));
         for (Arrow arrow : arrowsFrom) {
+            if ( Config.getConfig().isNeedUpdate() ) {
+                arrow.update();
+            }
             arrow.draw(g2);
             arrow.drawText(g2);
         }
@@ -128,9 +131,9 @@ public class Circle extends MyShape {
     public void drawText(Graphics2D g2) {
         g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 20));
         if ( node.getName().length() > 2 ) {
-            g2.drawString(node.getName(), (int) pointText[0].getX() - 8, (int) pointText[0].getY());
+            g2.drawString(node.getName(), (int) pointText[0].getX() - 10, (int) pointText[0].getY());
         } else if ( node.getName().length() > 1) {
-            g2.drawString(node.getName(), (int) pointText[0].getX() - 4, (int) pointText[0].getY());
+            g2.drawString(node.getName(), (int) pointText[0].getX() - 5, (int) pointText[0].getY());
         } else {
             g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
         }

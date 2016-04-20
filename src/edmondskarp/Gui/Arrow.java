@@ -113,15 +113,15 @@ public class Arrow extends MyShape {
     private Point2D[] calcPointsHead(double sinX, double cosX) {
         
         Point2D[] tmp = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + 10, sinX, cosX );
-        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + Config.getConfig().getPosText(), sinX, cosX );
-        Point2D[] tmp3 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + Config.getConfig().getPosText() - 22, sinX, cosX ); //28
+        Point2D[] tmp2 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + (Config.getConfig().getPosText() + 3.5 * Config.getConfig().getDimText()/5 - 5), sinX, cosX );
+        Point2D[] tmp3 = calcPoints( from.getCenter(), to.getCenter(), ((Ellipse2D)from.getShape()).getHeight()/2 + (Config.getConfig().getPosText() - 3.5 * Config.getConfig().getDimText()/5) - 22, sinX, cosX ); //28
       
         double catA = 7 * sinX;
         double catC = 7 * cosX;
-        double catA2 = 16 * sinX;
-        double catC2 = 16 * cosX;
-        double catA3 = 8 * sinX;
-        double catC3 = 8 * cosX;
+        double catA2 = (15 * Config.getConfig().getDimText()/14) * sinX;
+        double catC2 = (15 * Config.getConfig().getDimText()/14) * cosX;
+        double catA3 = (7 * Config.getConfig().getDimText()/14) * sinX;
+        double catC3 = (7 * Config.getConfig().getDimText()/14) * cosX;
         
         Point2D[] pointsTmp = new Point2D.Double[2];
         

@@ -54,7 +54,7 @@ public class EdmondsKarpController {
         graph = new Graph();
         setTimer();
         bfVisit = 0;
-        name = 0;
+        name = 100;
         history = new String[30];
         isSaved = false;
         indexHistory = 0;

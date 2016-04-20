@@ -91,6 +91,7 @@ public class Config {
     }
 
     public void setDimText(int dimText) {
+        needUpdate = true;
         this.dimText = dimText;
     }
 
