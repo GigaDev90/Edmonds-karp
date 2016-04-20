@@ -16,9 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -44,7 +42,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private final int DRAG = 1;
     private final int ERASE = 3;
     private  EdmondsKarpController controller;
-    private static EdmondsKarpGui gui = new EdmondsKarpGui();
+    private static final EdmondsKarpGui gui = new EdmondsKarpGui();
     private Point2D pointTmp;
     private final JFileChooser chooser;
     
@@ -1176,6 +1174,17 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     public void displayMessage(String str) {
         JOptionPane.showMessageDialog(this, str);
     }
+    
+    public void checkSave() {
+        int response = JOptionPane.showConfirmDialog(
+            null,"Sono state fatte modifiche,\nvuoi salvare",
+            "Attenzione",
+            JOptionPane.YES_NO_OPTION);
+        if (response == 0) {
+            saveGraph();
+        }
+        
+    }
 
     public ArrayList getCircles() {
         return circles;
@@ -1235,6 +1244,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     
     private class WListener extends WindowAdapter {
 
+        @Override
         public void windowClosing(WindowEvent e) {
             controller.exit();
         }

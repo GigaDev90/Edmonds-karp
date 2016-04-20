@@ -41,20 +41,22 @@ public class EdmondsKarpController {
     private Graph graph;
     private final EdmondsKarpGui gui;
     private Timer tmr1;
-    private int name = 0;
+    private int name;
     private int bfVisit;
-    private int MAXHISTORY;
     private String[] history;
     private int indexHistory;
     private int older;
     private int newest;
+    private boolean isSaved;
 
     public EdmondsKarpController(EdmondsKarpGui gui) {
         this.gui = gui;
         graph = new Graph();
         setTimer();
         bfVisit = 0;
+        name = 0;
         history = new String[30];
+        isSaved = false;
         indexHistory = 0;
         newest = 0;
         older = 0;
@@ -69,8 +71,8 @@ public class EdmondsKarpController {
         System.out.println("index "+indexHistory);
         indexHistory++;
         newest++;
-        
         older = indexHistory < history.length ? 0 : indexHistory - history.length;
+        isSaved = false;
     }
     
     public void saveState() {
@@ -313,7 +315,7 @@ public class EdmondsKarpController {
                 circles.put(jNode.getString("ID"), circle);
             }
             
-            name = jNodes.length() + 1;
+            name = jNodes.length();
             
             for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
                 JSONObject jEdge = jEdges.getJSONObject(i);
@@ -342,6 +344,7 @@ public class EdmondsKarpController {
             bWriter.write(getState());
             bWriter.close();
             writer.close();
+            isSaved = true;
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }
@@ -425,12 +428,20 @@ public class EdmondsKarpController {
         try {
             openState(example);
             saveState();
+            isSaved = true;
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void exit() {
+        checkSave();
         System.exit(0);
+    }
+    
+    public void checkSave() {
+        if ( indexHistory > 1 && !isSaved) {
+            gui.checkSave();
+        }
     }
 }

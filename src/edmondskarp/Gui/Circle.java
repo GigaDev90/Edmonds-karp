@@ -80,7 +80,7 @@ public class Circle extends MyShape {
     public void setFirstPoint(Point2D point) {
         Point2D temp1 = new Point2D.Double(point.getX() + Config.getConfig().getDimCircle(), point.getY() + Config.getConfig().getDimCircle());
         Point2D temp2 = new Point2D.Double(point.getX() - Config.getConfig().getDimCircle(), point.getY() - Config.getConfig().getDimCircle());
-        Point2D temp3 = new Point2D.Double((int) point.getX() - 3, (int) point.getY() + 5);
+        Point2D temp3 = new Point2D.Double((int) point.getX() - 4, (int) point.getY() + 6);
         points[1] = temp1;
         points[0] = temp2;
         pointText[0] = temp3;
@@ -121,15 +121,23 @@ public class Circle extends MyShape {
     @Override
     public void drawText(Graphics2D g2) {
         g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-        g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
+        if ( node.getName().length() > 2 ) {
+            g2.drawString(node.getName(), (int) pointText[0].getX() - 8, (int) pointText[0].getY());
+        } else if ( node.getName().length() > 1) {
+            g2.drawString(node.getName(), (int) pointText[0].getX() - 4, (int) pointText[0].getY());
+        } else {
+            g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
+        }
+        
+        
         if (node.isSource()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
-            g2.drawString("S", (int) pointText[0].getX(), (int) pointText[0].getY() - 15);
+            g2.drawString("S", (int) pointText[0].getX() + 1, (int) pointText[0].getY() - 13);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         }
         else if (node.isSink()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
-            g2.drawString("P", (int) pointText[0].getX(), (int) pointText[0].getY() - 15);
+            g2.drawString("T", (int) pointText[0].getX() + 1, (int) pointText[0].getY() - 13);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
         }
     }
