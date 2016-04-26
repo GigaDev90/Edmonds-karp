@@ -25,6 +25,7 @@ public class Config {
     private float strokeArrow;
     private boolean randomCapacity;
     private boolean needUpdate;
+    private boolean residualMode;
     private static Config  config= new Config();
     
     private Config() {
@@ -38,6 +39,7 @@ public class Config {
         fixedCapacity = 10;
         randomCapacity = true;
         needUpdate = false;
+        residualMode = false;
         strokeArrow = 10;
         strokeCircle = 10;
     }
@@ -145,5 +147,13 @@ public class Config {
     
     public void setStrokeArrow(float strokeArrow) {
         this.strokeArrow = strokeArrow;
+    }
+    
+    public boolean getResidualMode() {
+        return residualMode;
+    }
+    
+    public void setResitualMode(boolean residualMode) {
+        this.residualMode = residualMode;
     }
 }

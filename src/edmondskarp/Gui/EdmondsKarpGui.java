@@ -12,6 +12,9 @@ import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -21,10 +24,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.InputMap;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import org.json.JSONException;
 
 /**
@@ -66,10 +74,12 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         }
         initComponents();
         this.addWindowListener(new WListener());
+        setupUndoHotkeys();
         circles = new ArrayList<>();
         chooser = new JFileChooser();
         isSecond = false;
         isInDragging = false;
+        pointTmp = new Point2D.Double();
     }
     
     public static EdmondsKarpGui getGui() {
@@ -144,6 +154,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         dragButton = new javax.swing.JToggleButton();
         undoButton = new javax.swing.JButton();
         redoButton = new javax.swing.JButton();
+        residualButton = new javax.swing.JToggleButton();
         myPanel = new MyPanel(this);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -651,6 +662,19 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             }
         });
 
+        residualButton.setText("Residuo");
+        residualButton.setToolTipText("grafo residuo");
+        residualButton.setFocusable(false);
+        residualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        residualButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        residualButton.setMinimumSize(new java.awt.Dimension(24, 24));
+        residualButton.setName(""); // NOI18N
+        residualButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                residualButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -678,7 +702,9 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 .addComponent(runButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addGap(71, 71, 71)
+                .addComponent(residualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -695,7 +721,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                     .addComponent(jComboBox1)
                     .addComponent(dragButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(undoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(redoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(redoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(residualButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(670, 670, 670))
         );
 
@@ -833,10 +860,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             }
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
             if (getSelectedCircle(evt.getPoint()) != null) {
-                pointTmp = evt.getPoint();
+                pointTmp.setLocation(evt.getPoint().getX(), evt.getPoint().getY());
                 jPopupMenu1.show(myPanel, evt.getX(), evt.getY());
             } else if (getSelectedArrow(evt.getPoint()) != null) {
-                pointTmp = evt.getPoint();
+                pointTmp.setLocation(evt.getPoint().getX(), evt.getPoint().getY());
                 jPopupMenu2.show(myPanel, evt.getX(), evt.getY());
             }
         }
@@ -941,6 +968,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private void newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newActionPerformed
         // TODO add your handling code here:
         controller.newGraph();
+        controller.saveState();
     }//GEN-LAST:event_newActionPerformed
 
     private void deleteNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNodeActionPerformed
@@ -953,7 +981,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jLabel1.setText("Set capacity");
         jTextField2.setText("");
         jDialog1.setVisible(true);
-        jDialog1.setLocation((Point) pointTmp);
+        jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
     }//GEN-LAST:event_setCapacityActionPerformed
 
     private void setFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setFlowActionPerformed
@@ -961,19 +989,19 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jLabel1.setText("Set flow");
         jTextField2.setText("");
         jDialog1.setVisible(true);
-        jDialog1.setLocation((Point) pointTmp);
+        jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
     }//GEN-LAST:event_setFlowActionPerformed
 
     private void deleteEdgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEdgeActionPerformed
         // TODO add your handling code here:
-        eraseArrow(getSelectedArrow((Point) pointTmp));
+        eraseArrow(getSelectedArrow(pointTmp));
     }//GEN-LAST:event_deleteEdgeActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         if (!jTextField2.getText().equals("")) {
             if (jLabel1.getText().equals("Set capacity")) {
-                Arrow arrow = getSelectedArrow((Point) pointTmp);
+                Arrow arrow = getSelectedArrow(pointTmp);
                 int capacity = 0;
                 try {
                     capacity = Integer.parseInt(jTextField2.getText());
@@ -984,7 +1012,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 controller.setCapacity(arrow, capacity);
 
             } else {
-                Arrow arrow = getSelectedArrow((Point) pointTmp);
+                Arrow arrow = getSelectedArrow(pointTmp);
                 int flow = 0;
                 try {
                     flow = Integer.parseInt(jTextField2.getText());
@@ -1131,6 +1159,12 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         update();
     }//GEN-LAST:event_StrokeArrowjSliderStateChanged
 
+    private void residualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_residualButtonActionPerformed
+        // TODO add your handling code here:
+        Config.getConfig().setResitualMode(!Config.getConfig().getResidualMode());
+        update();
+    }//GEN-LAST:event_residualButtonActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1178,7 +1212,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         return null;
     }
 
-    private Arrow getSelectedArrow(Point point) {
+    private Arrow getSelectedArrow(Point2D point) {
         for (Circle circle : circles) {
             Arrow arrow = circle.checkForArrow(point);
             if (arrow != null) {
@@ -1203,7 +1237,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         myPanel.repaint();
     }
 
-    private void addCircle(Point point) {
+    public void addCircle(Point point) {
         Circle circle = new Circle();
         circle.setFirstPoint(point);
         circles.add(circle);
@@ -1301,6 +1335,36 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         }
     }
     
+    private void setupUndoHotkeys() {
+        String UNDO = "Undo action key";
+        String REDO = "Redo action key";
+        Action undoAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.restoreState(true);
+            }
+        };
+        Action redoAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.restoreState(false);
+            }
+        };
+
+        myPanel.getActionMap().put(UNDO, undoAction);
+        myPanel.getActionMap().put(REDO, redoAction);
+
+        InputMap[] inputMaps = new InputMap[]{
+            myPanel.getInputMap(JComponent.WHEN_FOCUSED),
+            myPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT),
+            myPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW),};
+        for (InputMap i : inputMaps) {
+            i.put(KeyStroke.getKeyStroke("control Z"), UNDO);
+            i.put(KeyStroke.getKeyStroke("control Y"), REDO);
+            i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), UNDO);
+        }
+    }
+    
     private class WListener extends WindowAdapter {
 
         @Override
@@ -1370,6 +1434,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private javax.swing.JToggleButton pencilButton;
     private javax.swing.JToggleButton playButton;
     private javax.swing.JButton redoButton;
+    private javax.swing.JToggleButton residualButton;
     private javax.swing.JToggleButton rubberButton;
     private javax.swing.JButton runButton;
     private javax.swing.JButton stopButton;

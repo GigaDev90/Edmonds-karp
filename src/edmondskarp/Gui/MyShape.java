@@ -37,8 +37,6 @@ public abstract class MyShape {
 
     public Color getColor() { return c; }
 
-    public abstract void makeShape();
-
     public abstract void draw(Graphics2D graphics2D);
 
     public abstract void drawText(Graphics2D graphics2D);  

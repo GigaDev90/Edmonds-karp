@@ -32,7 +32,7 @@ public class Circle extends MyShape {
         select = false;
         arrowsFrom = new ArrayList<>();
         arrowsTo = new ArrayList<>();
-        pointText = new Point2D.Double[2];
+        pointText = new Point2D[2];
         isUpdate = false;
         c = Color.BLACK;
     }
@@ -73,11 +73,6 @@ public class Circle extends MyShape {
         arrowsTo.clear();
     }
 
-    @Override
-    public void makeShape() {
-        ((Ellipse2D) shape).setFrameFromDiagonal(points[0], points[1]);
-    }
-
     public void setFirstPoint(Point2D point) {
         Point2D temp1 = new Point2D.Double(point.getX() + Config.getConfig().getDimCircle(), point.getY() + Config.getConfig().getDimCircle());
         Point2D temp2 = new Point2D.Double(point.getX() - Config.getConfig().getDimCircle(), point.getY() - Config.getConfig().getDimCircle());
@@ -85,7 +80,7 @@ public class Circle extends MyShape {
         points[1] = temp1;
         points[0] = temp2;
         pointText[0] = temp3;
-        makeShape();
+        ((Ellipse2D) shape).setFrameFromDiagonal(points[0], points[1]);
     }
 
     public Point2D getCenter() {
@@ -112,15 +107,12 @@ public class Circle extends MyShape {
             g2.setColor(c);
         }
         
-         g2.setStroke(new BasicStroke(1));
+        g2.setStroke(new BasicStroke(1));
     }
 
     public void drawArrows(Graphics2D g2) {
         g2.setStroke(new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1)));
         for (Arrow arrow : arrowsFrom) {
-            if ( Config.getConfig().isNeedUpdate() ) {
-                arrow.update();
-            }
             arrow.draw(g2);
             arrow.drawText(g2);
         }

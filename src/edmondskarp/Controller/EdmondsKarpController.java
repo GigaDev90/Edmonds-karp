@@ -54,7 +54,7 @@ public class EdmondsKarpController {
         graph = new Graph();
         setTimer();
         bfVisit = 0;
-        name = 100;
+        name = 0;
         history = new String[30];
         isSaved = false;
         indexHistory = 0;
@@ -89,8 +89,7 @@ public class EdmondsKarpController {
                 if (indexHistory > older +1) {
                     openState(history[(indexHistory - 2) % history.length]);
                     System.out.println("restored index "+(indexHistory - 2));
-                    indexHistory--;
-                    
+                    indexHistory--; 
                 }
             } else {
                 if (indexHistory < newest) {
@@ -101,8 +100,7 @@ public class EdmondsKarpController {
             }
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
+        }    
     }
 
     public boolean addEdge(Arrow arrow, int capacity) {
