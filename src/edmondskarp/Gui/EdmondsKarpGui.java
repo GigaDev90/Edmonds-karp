@@ -1268,7 +1268,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, str);
     }
     
-    public void checkSave() {
+    public int checkSave() {
         int response = JOptionPane.showConfirmDialog(
             null,"Sono state fatte modifiche,\nvuoi salvare",
             "Attenzione",
@@ -1276,7 +1276,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         if (response == 0) {
             saveGraph();
         }
-        
+        return response;  
     }
 
     public ArrayList getCircles() {

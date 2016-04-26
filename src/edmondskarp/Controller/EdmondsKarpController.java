@@ -70,8 +70,10 @@ public class EdmondsKarpController {
         history[indexHistory % history.length] = state;
         System.out.println("index "+indexHistory);
         indexHistory++;
-        newest++;
-        older = indexHistory < history.length ? 0 : indexHistory - history.length;
+        if (newest == indexHistory -1) {
+            newest++;
+        }
+        older = indexHistory < history.length ? 0 : (indexHistory % history.length);
         isSaved = false;
     }
     
@@ -291,49 +293,54 @@ public class EdmondsKarpController {
             gui.update();
             return;
         }
-        
+
         Map<String, Circle> circles = new HashMap<String, Circle>();
         graph = new Graph();
-        
 
+        int maxIndex = 0;
         JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
         JSONArray jNodes = jNodeEdge.getJSONArray("Node");
         JSONArray jEdges = jNodeEdge.getJSONArray("Edge");
-            
-            for (int i = 0; i < jNodes.length(); i++) { // Loop over each each row of node
-                Circle circle = new Circle();
-                Point point = new Point();
-                
-                JSONObject jNode = jNodes.getJSONObject(i);
-                
-                point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
-                circle.setFirstPoint(point);
-                circle.addNode(graph.addNode("" + jNode.getString("ID")));
-                
-                circles.put(jNode.getString("ID"), circle);
+
+        for (int i = 0; i < jNodes.length(); i++) { // Loop over each each row of node
+            Circle circle = new Circle();
+            Point point = new Point();
+
+            JSONObject jNode = jNodes.getJSONObject(i);
+
+            point.setLocation(jNode.getInt("PosX"), jNode.getInt("PosY"));
+            circle.setFirstPoint(point);
+            circle.addNode(graph.addNode("" + jNode.getString("ID")));
+
+            circles.put(jNode.getString("ID"), circle);
+            if (jNode.getInt("ID") > maxIndex) {
+                maxIndex = jNode.getInt("ID");
             }
-            
-            name = jNodes.length();
-            
-            for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
-                JSONObject jEdge = jEdges.getJSONObject(i);
-                
-                Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
-                Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), jEdge.getInt("Capacity"), 0);
-                arrow.setEdge(e);
-                circles.get(jEdge.getString("From")).addArrowFrom(arrow);
-                circles.get(jEdge.getString("To")).addArrowTo(arrow);
-            }
-            
-            if ( !jNodeEdge.getString("Source").equals("") )
-                graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
-            if ( !jNodeEdge.getString("Sink").equals(""))
-                graph.setSink(graph.getNode(jNodeEdge.getString("Sink")));
-            
-            gui.setCircles(new ArrayList(circles.values()));
-            gui.update();
-            System.gc();
         }
+
+        name = ++maxIndex;
+
+        for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
+            JSONObject jEdge = jEdges.getJSONObject(i);
+
+            Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
+            Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), jEdge.getInt("Capacity"), 0);
+            arrow.setEdge(e);
+            circles.get(jEdge.getString("From")).addArrowFrom(arrow);
+            circles.get(jEdge.getString("To")).addArrowTo(arrow);
+        }
+
+        if (!jNodeEdge.getString("Source").equals("")) {
+            graph.setSource(graph.getNode(jNodeEdge.getString("Source")));
+        }
+        if (!jNodeEdge.getString("Sink").equals("")) {
+            graph.setSink(graph.getNode(jNodeEdge.getString("Sink")));
+        }
+
+        gui.setCircles(new ArrayList(circles.values()));
+        gui.update();
+        System.gc();
+    }
 
     public void save(String path) throws JSONException {
         try {
@@ -433,13 +440,14 @@ public class EdmondsKarpController {
     }
 
     public void exit() {
-        checkSave();
-        System.exit(0);
-    }
-    
-    public void checkSave() {
+        int response = 0;
         if ( indexHistory > 1 && !isSaved) {
-            gui.checkSave();
+            response = gui.checkSave();
         }
+        
+        if (response == -1)
+            return;
+        
+        System.exit(0);
     }
 }
