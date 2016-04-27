@@ -122,6 +122,8 @@ public class Graph {
             return null;
         } else if (a.getEdgeBNotResidual(adjacent) != null) {
             return null;
+        } else if (adjacent.getEdgeBNotResidual(a) != null) {
+            return null;
         }
 
         Edge edge = new Edge(a, adjacent);
