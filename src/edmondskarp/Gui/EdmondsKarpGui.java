@@ -110,9 +110,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem9 = new javax.swing.JMenuItem();
         jDialog1 = new javax.swing.JDialog();
-        jButton2 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
         jDialog2 = new javax.swing.JDialog();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
@@ -222,8 +223,15 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jPopupMenu2.add(jMenuItem9);
 
         jDialog1.setTitle("Inserisci il valore");
-        jDialog1.setMinimumSize(new java.awt.Dimension(170, 70));
-        jDialog1.setPreferredSize(new java.awt.Dimension(170, 70));
+
+        jLabel1.setText("imposta capacità");
+
+        jTextField2.setNextFocusableComponent(jButton2);
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Ok");
         jButton2.setFocusable(false);
@@ -233,37 +241,46 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setNextFocusableComponent(jButton2);
-
-        jLabel1.setText("imposta capacità");
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addContainerGap(24, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))))
+        );
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
         jDialog1Layout.setHorizontalGroup(
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addGroup(jDialog1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jDialog1Layout.setVerticalGroup(
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog1Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addGap(0, 9, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-
-        jDialog1.getAccessibleContext().setAccessibleParent(myPanel);
 
         jDialog2.setMinimumSize(new java.awt.Dimension(341, 266));
 
@@ -982,6 +999,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jTextField2.setText("");
         jDialog1.setVisible(true);
         jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
+        jDialog1.pack();
     }//GEN-LAST:event_setCapacityActionPerformed
 
     private void setFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setFlowActionPerformed
@@ -990,6 +1008,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jTextField2.setText("");
         jDialog1.setVisible(true);
         jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
+        jDialog1.pack();
     }//GEN-LAST:event_setFlowActionPerformed
 
     private void deleteEdgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEdgeActionPerformed
@@ -1050,6 +1069,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private void DimTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DimTextActionPerformed
         // TODO add your handling code here:
         Config.getConfig().setDimText(Integer.parseInt(jComboBoxDimText.getItemAt(jComboBoxDimText.getSelectedIndex())));
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_DimTextActionPerformed
 
@@ -1058,6 +1078,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         Color c = JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonDefaultColor.setBackground(c);
         Config.getConfig().setDefaultArrow(c);
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_defaultColorActionPerformed
 
@@ -1066,6 +1087,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonAttraversatoColor.setBackground(c);
         Config.getConfig().setUsedArrow(c);
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_attraversatoColorActionPerformed
 
@@ -1074,6 +1096,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonSaturoColor.setBackground(c);
         Config.getConfig().setFilledArrow(c);
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_saturoColorActionPerformed
 
@@ -1082,18 +1105,21 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
         jButtonSelezionatoColor.setBackground(c);
         Config.getConfig().setSelectedArrow(c);
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_selezionatoColorActionPerformed
 
     private void jComboBoxDimCircleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDimCircleActionPerformed
         // TODO add your handling code here:
         Config.getConfig().setDimCircle(Integer.parseInt(jComboBoxDimCircle.getItemAt(jComboBoxDimCircle.getSelectedIndex())));
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_jComboBoxDimCircleActionPerformed
 
     private void jSliderPosTextStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderPosTextStateChanged
         // TODO add your handling code here:
         Config.getConfig().setPosText(jSliderPosText.getValue());
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_jSliderPosTextStateChanged
 
@@ -1108,6 +1134,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 return;
             }
             Config.getConfig().setFixedCapacity(capacity);
+            controller.saveConfig();
         }
     }//GEN-LAST:event_jButtonSetDefCapacityActionPerformed
 
@@ -1116,6 +1143,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jRadioButtonDefaultCap.setSelected(false);
         jTextField1.setEnabled(false);
         Config.getConfig().setRandomCapacity(true);
+        controller.saveConfig();
     }//GEN-LAST:event_jRadioButtonRandomCapActionPerformed
 
     private void jRadioButtonDefaultCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonDefaultCapActionPerformed
@@ -1123,6 +1151,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jRadioButtonRandomCap.setSelected(false);
         jTextField1.setEnabled(true);
         Config.getConfig().setRandomCapacity(false);
+        controller.saveConfig();
     }//GEN-LAST:event_jRadioButtonDefaultCapActionPerformed
 
     private void jMenuItemExampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExampleActionPerformed
@@ -1150,20 +1179,27 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private void StrokeCirclejSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StrokeCirclejSliderStateChanged
         // TODO add your handling code here:
         Config.getConfig().setStrokeCircle(StrokeCirclejSlider.getValue());
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_StrokeCirclejSliderStateChanged
 
     private void StrokeArrowjSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StrokeArrowjSliderStateChanged
         // TODO add your handling code here:
         Config.getConfig().setStrokeArrow(StrokeArrowjSlider.getValue());
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_StrokeArrowjSliderStateChanged
 
     private void residualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_residualButtonActionPerformed
         // TODO add your handling code here:
         Config.getConfig().setResitualMode(!Config.getConfig().getResidualMode());
+        controller.saveConfig();
         update();
     }//GEN-LAST:event_residualButtonActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     public boolean isPlaySelected() {
         return playButton.isSelected();
@@ -1364,6 +1400,20 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), UNDO);
         }
     }
+
+    public void updatePrefMenu() {
+        jRadioButtonDefaultCap.setSelected(!Config.getConfig().isRandomCapacity());
+        jRadioButtonRandomCap.setSelected(Config.getConfig().isRandomCapacity());
+        if ( !Config.getConfig().isRandomCapacity()) {
+            jTextField1.setText(Config.getConfig().getFixedCapacity()+"");
+            jTextField1.setEnabled(true);
+        }
+        jSliderPosText.setValue(Config.getConfig().getPosText());
+        jComboBoxDimCircle.setSelectedItem(Config.getConfig().getDimCircle()+"");
+        jComboBoxDimText.setSelectedItem(Config.getConfig().getDimText()+"");
+        StrokeArrowjSlider.setValue((int) Config.getConfig().getStrokeArrow());
+        StrokeCirclejSlider.setValue((int) Config.getConfig().getStrokeCircle());
+    }
     
     private class WListener extends WindowAdapter {
 
@@ -1417,6 +1467,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem jMenuItemExample;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

@@ -24,5 +24,8 @@ public class Main {
             }
         });
         
+        controller.searchDefaultPreference();
+        
+        
     }
 }

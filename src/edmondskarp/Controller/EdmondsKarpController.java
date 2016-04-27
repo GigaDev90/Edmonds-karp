@@ -10,21 +10,31 @@ import edmondskarp.Model.DFSVisit;
 import edmondskarp.Model.Edge;
 import edmondskarp.Gui.Arrow;
 import edmondskarp.Gui.Circle;
+import edmondskarp.Gui.Config;
 import edmondskarp.Gui.EdmondsKarpGui;
 import edmondskarp.Model.Graph;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -449,5 +459,58 @@ public class EdmondsKarpController {
             return;
         
         System.exit(0);
+    }
+
+    public void searchDefaultPreference() {
+        File newFile = new File("config.properties");
+        InputStream os;
+        try {
+            Properties properties =  new Properties();
+            os = new FileInputStream(newFile);
+            properties.load(os);
+            Config.getConfig().setDefaultArrow(new Color(Integer.parseInt(properties.getProperty("defaultArrow"))));
+            Config.getConfig().setUsedArrow(new Color(Integer.parseInt(properties.getProperty("usedArrow"))));
+            Config.getConfig().setFilledArrow(new Color(Integer.parseInt(properties.getProperty("filledArrow"))));
+            Config.getConfig().setSelectedArrow(new Color(Integer.parseInt(properties.getProperty("selectedArrow"))));
+            Config.getConfig().setDimText(Integer.parseInt(properties.getProperty("dimText")));
+            Config.getConfig().setDimCircle(Integer.parseInt(properties.getProperty("dimCircle")));
+            Config.getConfig().setPosText(Integer.parseInt(properties.getProperty("posText")));
+            Config.getConfig().setFixedCapacity(Integer.parseInt(properties.getProperty("fixedCapacity")));
+            Config.getConfig().setStrokeCircle(Float.parseFloat(properties.getProperty("strokeCircle")));
+            Config.getConfig().setStrokeArrow(Float.parseFloat(properties.getProperty("strokeArrow")));
+            Config.getConfig().setRandomCapacity(Boolean.valueOf(properties.getProperty("randomCapacity")));
+            gui.updatePrefMenu();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public void saveConfig() {
+        File newFile = new File("config.properties");
+        OutputStream os;
+        try {
+            Properties properties =  new Properties();
+            os = new FileOutputStream(newFile);
+            
+            properties.setProperty("defaultArrow", Config.getConfig().getDefaultArrow().getRGB()+"");
+            properties.setProperty("selectedArrow", Config.getConfig().getSelectedArrow().getRGB()+"");
+            properties.setProperty("usedArrow", Config.getConfig().getUsedArrow().getRGB()+"");
+            properties.setProperty("filledArrow", Config.getConfig().getFilledArrow().getRGB()+"");
+            properties.setProperty("dimText", Config.getConfig().getDimText()+"");
+            properties.setProperty("dimCircle", Config.getConfig().getDimCircle()+"");
+            properties.setProperty("posText", Config.getConfig().getPosText()+"");
+            properties.setProperty("fixedCapacity", Config.getConfig().getFixedCapacity()+"");
+            properties.setProperty("strokeCircle", Config.getConfig().getStrokeCircle()+"");
+            properties.setProperty("strokeArrow", Config.getConfig().getStrokeArrow()+"");
+            properties.setProperty("randomCapacity", Config.getConfig().isRandomCapacity()+"");
+            properties.store(os, "Properties File");  
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
