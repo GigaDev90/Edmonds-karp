@@ -7,9 +7,11 @@ package edmondskarp.Gui;
 
 import edmondskarp.Model.Edge;
 import edmondskarp.Model.Node;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -121,9 +123,13 @@ public class Arrow extends MyShape {
                 g2.draw(ABPointer2);
 
                 g2.setColor(getColor(edge.getInverse()));
-                g2.draw(BAArrow);
                 g2.draw(BAPointer1);
                 g2.draw(BAPointer2);
+                Stroke tmp = g2.getStroke();
+                BasicStroke bs = new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 10, new float[]{5, 5, 5}, 7);
+                g2.setStroke(bs);
+                g2.draw(BAArrow);
+                g2.setStroke(tmp);
             } else if (edge.getResidual() > 0) {
                 g2.setColor(getColor(edge));
                 g2.draw(shape);
@@ -135,9 +141,13 @@ public class Arrow extends MyShape {
                 to = tmp;
                 update();
                 g2.setColor(getColor(edge.getInverse()));
-                g2.draw(shape);
                 g2.draw(centerPointer1);
                 g2.draw(centerPointer2);
+                Stroke tmpStroke = g2.getStroke();
+                BasicStroke bs = new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 10, new float[]{5, 5, 5}, 7);
+                g2.setStroke(bs);
+                g2.draw(shape);
+                g2.setStroke(tmpStroke);
                 to = from;
                 from = tmp;
                 update();
@@ -147,11 +157,16 @@ public class Arrow extends MyShape {
             g2.draw(ABArrow);
             g2.draw(ABPointer1);
             g2.draw(ABPointer2);
-
+            
+            
             g2.setColor(getColor(edge.getInverse()));
-            g2.draw(BAArrow);
             g2.draw(BAPointer1);
             g2.draw(BAPointer2);
+            Stroke tmp = g2.getStroke();
+            BasicStroke bs = new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1),BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,10,new float[]{5,5,5},7);
+            g2.setStroke(bs);
+            g2.draw(BAArrow);
+            g2.setStroke(tmp);
         } else {
             g2.setColor(getColor(edge));
             g2.draw(shape);
