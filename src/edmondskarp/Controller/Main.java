@@ -23,9 +23,5 @@ public class Main {
                 EdmondsKarpGui.getGui().setVisible(true);
             }
         });
-        
-        controller.searchDefaultPreference();
-        
-        
-    }
+    }   
 }

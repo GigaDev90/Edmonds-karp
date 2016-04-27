@@ -6,23 +6,35 @@
 package edmondskarp.Model;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  *
  * @author gabriele
  */
-public class Graph {
+public class Graph extends Observable{
 
     private ArrayList<Node> nodes;
     private Node source;
     private Node sink;
     private Visit visit;
+    public static Graph graph = new Graph();
 
-    public Graph() {
+    private Graph() {
         nodes = new ArrayList<>();
         source = null;
         sink = null;
         visit = new BFSVisit();
+    }
+    
+    public static Graph getGraph() {
+        return graph;
+    }
+    
+    public void clearGraph() {
+        nodes.clear();
+        source = null;
+        sink = null;
     }
 
     public Node getSource() {
@@ -183,8 +195,15 @@ public class Graph {
         }
 
         BFVisitClear();
-        return visit.visitGraph(source);
+        boolean pathFound = visit.visitGraph(source);
+        if (pathFound) {
+            this.setChanged();
+            this.notifyObservers(0);
+        }
+        
+        return pathFound;
     }
+    
 
     public boolean EdmondsKarp() {
         if (source == null || sink == null) {
@@ -216,10 +235,53 @@ public class Graph {
                 tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
                 tmpNode = tmpNode.getParent();
             }
-
             BFSVisit();
         }
+
+        this.setChanged();
+        this.notifyObservers(1);
         return true;
+    }
+    
+
+    
+    public int getMaxFlow() {
+        if ( source == null) {
+            return 0;
+        }
+        int max = 0;
+        for (Edge edge: source.getEdges()) {
+            if ( !edge.isResidual() ) {
+                max += edge.getFlow();
+            }
+        }
+        
+        return max;
+    }
+    
+    public int getMinFlow() {
+        if (sink == null || sink.getParent() == null) {
+            return 0;
+        }
+        
+        int min;
+        Node tmpNode = sink.getParent();
+        if (tmpNode.getEdgeB(sink) != null) {
+            min = tmpNode.getEdgeB(sink).getResidual();
+        } else {
+            return 0;
+        }
+
+        while (tmpNode.getParent() != null) {
+            if (tmpNode.getParent().getEdgeB(tmpNode) != null
+                    && tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
+                min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
+                //System.out.println("Min " + min);
+            }
+            tmpNode = tmpNode.getParent();
+        }
+        
+        return min;
     }
 
     public void edmondsKarpClear() {
@@ -259,7 +321,7 @@ public class Graph {
         }
 
         if (sink.getParent() != null) {
-
+            
             Node tmpNode = sink.getParent();
             int min = 0;
             if (tmpNode.getEdgeB(sink) != null) {
@@ -291,7 +353,9 @@ public class Graph {
                     return false;
                 }
             }
-
+            
+            this.setChanged();
+            this.notifyObservers(1);
             return true;
         }
         return false;

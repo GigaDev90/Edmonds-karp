@@ -28,9 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +59,7 @@ public class EdmondsKarpController {
 
     public EdmondsKarpController(EdmondsKarpGui gui) {
         this.gui = gui;
-        graph = new Graph();
+        graph = Graph.getGraph();
         setTimer();
         bfVisit = 0;
         name = 0;
@@ -71,6 +69,7 @@ public class EdmondsKarpController {
         newest = 0;
         older = 0;
         saveState();
+        graph.addObserver(gui);
     }
     public boolean addEdge(Arrow arrow) { 
         return addEdge(arrow, (int) (Math.random() * 100 + 1));
@@ -78,7 +77,6 @@ public class EdmondsKarpController {
     
     public void saveState(String state) {
         history[indexHistory % history.length] = state;
-        System.out.println("index "+indexHistory);
         indexHistory++;
         if (newest == indexHistory -1) {
             newest++;
@@ -100,13 +98,11 @@ public class EdmondsKarpController {
             if (back) {
                 if (indexHistory > older +1) {
                     openState(history[(indexHistory - 2) % history.length]);
-                    System.out.println("restored index "+(indexHistory - 2));
                     indexHistory--; 
                 }
             } else {
                 if (indexHistory < newest) {
                     openState(history[indexHistory % history.length]);
-                    System.out.println("restored index "+indexHistory);
                     indexHistory++;
                 }
             }
@@ -208,8 +204,10 @@ public class EdmondsKarpController {
         if ( bfVisit == 0) return;
         else if (bfVisit == 1) {
             stop();
+            gui.resetLabel();
             return;
         }
+        gui.resetLabel();
         graph.edmondsKarpClear();
         graph.BFVisitClear();
         int temp = bfVisit - 1;
@@ -260,7 +258,7 @@ public class EdmondsKarpController {
         indexHistory = 0;
         newest = 0;
         older = 0;
-        graph = new Graph();
+        graph.clearGraph();
         gui.update();
     }
     
@@ -297,7 +295,7 @@ public class EdmondsKarpController {
     
     public void openState(String s) throws JSONException {
         if (s == null || s.equals("")) {
-            graph = new Graph();
+            graph.clearGraph();
             gui.getCircles().clear();
             name = 0;
             gui.update();
@@ -305,7 +303,7 @@ public class EdmondsKarpController {
         }
 
         Map<String, Circle> circles = new HashMap<String, Circle>();
-        graph = new Graph();
+        graph.clearGraph();;
 
         int maxIndex = 0;
         JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject

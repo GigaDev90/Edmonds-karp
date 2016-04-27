@@ -91,15 +91,27 @@ public class Arrow extends MyShape {
         if (Config.getConfig().getResidualMode()) {
             if (edge.getResidual() > 0 && edge.getInverse().getResidual() > 0) {
                 g2.setColor(getColor(edge));
-                drawRotateText(g2, ABtmp, edge.getResidual()+"", angle, false);
+                drawRotateText(g2, ABtmp, "<"+edge.getResidual()+">", angle, false);
                 g2.setColor(getColor(edge.getInverse()));
-                drawRotateText(g2, BAtmp, edge.getResidual()+"", angle, false);
+                drawRotateText(g2, BAtmp, "<"+edge.getResidual()+">", angle, false);
             } else if (edge.getInverse().getResidual() > 0) {
+                Circle tmp = from; //hack
+                from = to;
+                to = tmp;
+                update();
+                Point2D tmpText = pointText[1];
+                if (from.getCenter().getX() < to.getCenter().getX()) {
+                    tmpText = pointText[0];
+                }
                 g2.setColor(getColor(edge.getInverse()));
-                drawRotateText(g2, centerText, edge.getInverse().getResidual()+"", angle, false);
+                drawRotateText(g2, tmpText, "<"+edge.getInverse().getResidual()+">", angle, false);
+                to = from;
+                from = tmp;
+                System.out.println("testtmp");
+                update();
             } else {
                 g2.setColor(getColor(edge));
-                drawRotateText(g2, centerText, edge.getResidual()+"", angle, false);
+                drawRotateText(g2, centerText, "<"+edge.getResidual()+">", angle, false);
             }
         } else if (edge.getInverse().isDiscovered()) {
             g2.setColor(getColor(edge));
@@ -136,7 +148,7 @@ public class Arrow extends MyShape {
                 g2.draw(centerPointer1);
                 g2.draw(centerPointer2);
             } else {
-                Circle tmp = from;
+                Circle tmp = from; //hack
                 from = to;
                 to = tmp;
                 update();

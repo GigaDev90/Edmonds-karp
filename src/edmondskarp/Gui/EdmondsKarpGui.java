@@ -6,6 +6,7 @@
 package edmondskarp.Gui;
 
 import edmondskarp.Controller.EdmondsKarpController;
+import edmondskarp.Model.Graph;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,6 +23,8 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -39,7 +42,7 @@ import org.json.JSONException;
  *
  * @author gabriele
  */
-public class EdmondsKarpGui extends javax.swing.JFrame {
+public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     private ArrayList<Circle> circles;
     private int MODE = 0;
@@ -88,6 +91,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     
     public void setController(EdmondsKarpController controller) {
         this.controller = controller;
+        controller.searchDefaultPreference();
+        updatePrefMenu();
     }
 
     /**
@@ -156,6 +161,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         undoButton = new javax.swing.JButton();
         redoButton = new javax.swing.JButton();
         residualButton = new javax.swing.JToggleButton();
+        jLabelMin = new javax.swing.JLabel();
+        jLabelMaxFlow = new javax.swing.JLabel();
         myPanel = new MyPanel(this);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -227,11 +234,6 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         jLabel1.setText("imposta capacità");
 
         jTextField2.setNextFocusableComponent(jButton2);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
 
         jButton2.setText("Ok");
         jButton2.setFocusable(false);
@@ -562,6 +564,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(1100, 650));
 
         jPanel1.setBackground(new java.awt.Color(169, 169, 169));
         jPanel1.setPreferredSize(new java.awt.Dimension(824, 50));
@@ -692,6 +695,12 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
             }
         });
 
+        jLabelMin.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
+        jLabelMin.setText("Min = 0");
+
+        jLabelMaxFlow.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
+        jLabelMaxFlow.setText("Flow = 0");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -719,27 +728,33 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
                 .addComponent(runButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
+                .addGap(26, 26, 26)
                 .addComponent(residualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(jLabelMin)
+                .addGap(35, 35, 35)
+                .addComponent(jLabelMaxFlow)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(stopButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(forwardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(playButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rubberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pencilButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1)
-                    .addComponent(dragButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(undoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(redoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(residualButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(stopButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(forwardButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(backButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(playButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rubberButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pencilButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(runButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dragButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(undoButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(redoButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(residualButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelMaxFlow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(670, 670, 670))
         );
 
@@ -768,7 +783,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         myPanel.setLayout(myPanelLayout);
         myPanelLayout.setHorizontalGroup(
             myPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 824, Short.MAX_VALUE)
+            .addGap(0, 973, Short.MAX_VALUE)
         );
         myPanelLayout.setVerticalGroup(
             myPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -947,6 +962,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         // TODO add your handling code here:
         playButton.setSelected(false);
         controller.stop();
+        jLabelMin.setText("Min = 0");
+        jLabelMaxFlow.setText("Flow = 0");
     }//GEN-LAST:event_stopButtonActionPerformed
 
     private void setSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSourceActionPerformed
@@ -1197,10 +1214,6 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         update();
     }//GEN-LAST:event_residualButtonActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1415,6 +1428,22 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
         StrokeCirclejSlider.setValue((int) Config.getConfig().getStrokeCircle());
     }
     
+    public void resetLabel() {
+        jLabelMin.setText("Min = 0");
+        jLabelMaxFlow.setText("Flow = 0");
+    }
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+       if (arg0 instanceof Graph) {
+           if ((int)arg1 == 1) {
+                jLabelMaxFlow.setText("Flow = "+((Graph) arg0).getMaxFlow());
+           } else if ((int)arg1 == 0) {
+                jLabelMin.setText("Min = "+((Graph) arg0).getMinFlow());
+           }
+       }
+    }
+    
     private class WListener extends WindowAdapter {
 
         @Override
@@ -1452,6 +1481,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelMaxFlow;
+    private javax.swing.JLabel jLabelMin;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
