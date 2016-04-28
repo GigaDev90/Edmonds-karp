@@ -5,6 +5,7 @@
  */
 package edmondskarp.Gui;
 
+import edmondskarp.Model.Edge;
 import edmondskarp.Model.Node;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -168,9 +169,9 @@ public class Circle extends MyShape {
             int width = 30;
             int height = 30;
 
-            if (((Line2D)arrow.getShape()).intersects(boxX, boxY, width, height)) {
-                    return arrow;	
-            }	
+            if(arrow.getSelectedEdge(point) == 1 || arrow.getSelectedEdge(point) == 0) {
+                return arrow;
+            }
         }
 
         return null;

@@ -1038,6 +1038,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
         if (!jTextField2.getText().equals("")) {
             if (jLabel1.getText().equals("Set capacity")) {
                 Arrow arrow = getSelectedArrow(pointTmp);
+                int edge = arrow.getSelectedEdge(pointTmp);
                 int capacity = 0;
                 try {
                     capacity = Integer.parseInt(jTextField2.getText());
@@ -1045,10 +1046,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
                     displayMessage("Errore: inserire un valore numerico");
                     return;
                 }
-                controller.setCapacity(arrow, capacity);
+                controller.setCapacity(arrow, capacity, edge);
 
             } else {
                 Arrow arrow = getSelectedArrow(pointTmp);
+                int edge = arrow.getSelectedEdge(pointTmp);
                 int flow = 0;
                 try {
                     flow = Integer.parseInt(jTextField2.getText());
@@ -1056,7 +1058,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
                     displayMessage("Errore: inserire un valore numerico");
                     return;
                 }
-                controller.setFlow(arrow, flow);
+                controller.setFlow(arrow, flow, edge);
             }
             update();
         }
@@ -1223,6 +1225,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     }
 
     public void eraseCircle(Circle circle) {
+        controller.saveState();
         circles.remove(circle);
         controller.removeNode(circle);
         circle.removeArrows();
@@ -1230,6 +1233,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     }
 
     public void eraseArrow(Arrow arrow) {
+        controller.saveState();
         arrow.getFrom().removeArrowFrom(arrow);
         arrow.getTo().removeArrowTo(arrow);
         controller.removeEdge(arrow);
@@ -1295,22 +1299,17 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     }
 
     private void addArrow(Circle circ) {
+        if (controller.checkAddInverseArrow(shapeTmp.getName(), circ.getName())) {
+            controller.saveState();
+            return;
+        }
         Arrow arrow = new Arrow(shapeTmp, circ);
-        if ( Config.getConfig().isRandomCapacity() ) {
-            if (controller.addEdge(arrow)) {
-                shapeTmp.addArrowFrom(arrow);
-                circ.addArrowTo(arrow);
-                controller.saveState();
-                update();
-            }
-        } else {
-            if (controller.addEdge(arrow, Config.getConfig().getFixedCapacity())) {
-                shapeTmp.addArrowFrom(arrow);
-                circ.addArrowTo(arrow);
-                controller.saveState();
-                update();
-            }
-        } 
+        if (controller.addEdge(arrow)) {
+            shapeTmp.addArrowFrom(arrow);
+            circ.addArrowTo(arrow);
+            controller.saveState();
+            update();
+        }
     }
 
     public void displayMessage(String str) {

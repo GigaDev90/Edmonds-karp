@@ -63,7 +63,7 @@ public class EdmondsKarpController {
         setTimer();
         bfVisit = 0;
         name = 0;
-        history = new String[30];
+        history = new String[60];
         isSaved = false;
         indexHistory = 0;
         newest = 0;
@@ -71,16 +71,14 @@ public class EdmondsKarpController {
         saveState();
         graph.addObserver(gui);
     }
-    public boolean addEdge(Arrow arrow) { 
-        return addEdge(arrow, (int) (Math.random() * 100 + 1));
-    }
-    
+   
     public void saveState(String state) {
         history[indexHistory % history.length] = state;
         indexHistory++;
         if (newest == indexHistory -1) {
             newest++;
         }
+        System.out.println("indexHistory "+(indexHistory -1));
         older = indexHistory < history.length ? 0 : (indexHistory % history.length);
         isSaved = false;
     }
@@ -98,21 +96,39 @@ public class EdmondsKarpController {
             if (back) {
                 if (indexHistory > older +1) {
                     openState(history[(indexHistory - 2) % history.length]);
-                    indexHistory--; 
+                    indexHistory--;
+                    System.out.println("restore back"+(indexHistory - 1));
                 }
             } else {
                 if (indexHistory < newest) {
                     openState(history[indexHistory % history.length]);
+                    System.out.println("restore forward"+(indexHistory));
                     indexHistory++;
+                    
                 }
             }
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
         }    
     }
-
-    public boolean addEdge(Arrow arrow, int capacity) {
-        Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), capacity, 0);
+    
+    public boolean checkAddInverseArrow(String from, String to) {
+        if ( !Config.getConfig().isRandomCapacity()) {
+            return graph.checkInverseArrowConnection(from, to, Config.getConfig().getFixedCapacity());
+        }
+        
+        return graph.checkInverseArrowConnection(from, to, (int)((Math.random() * 100) + 1));
+    }
+    
+    public boolean addEdge(Arrow arrow) {
+        Edge e = null;
+        
+        if ( !Config.getConfig().isRandomCapacity()) {
+            e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), Config.getConfig().getFixedCapacity(), 0);
+        } else {
+            e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), (int)((Math.random() * 100) + 1), 0);
+        }
+       
         if (e != null) {
             arrow.setEdge(e);
             return true;
@@ -129,7 +145,6 @@ public class EdmondsKarpController {
 
     public void removeNode(Circle circle) {
         graph.removeNode(graph.getNode(circle.getName()));
-        saveState();
     }
 
     public void setSink(Circle circle) {
@@ -152,8 +167,6 @@ public class EdmondsKarpController {
 
     public void removeEdge(Arrow edge) {
         graph.disconnect(edge.getEdge());
-        saveState();
-
     }
 
     public void play() {
@@ -330,12 +343,16 @@ public class EdmondsKarpController {
 
         for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
             JSONObject jEdge = jEdges.getJSONObject(i);
-
-            Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
-            Edge e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), jEdge.getInt("Capacity"), 0);
-            arrow.setEdge(e);
-            circles.get(jEdge.getString("From")).addArrowFrom(arrow);
-            circles.get(jEdge.getString("To")).addArrowTo(arrow);
+            Edge e = graph.connect(jEdge.getString("From"), jEdge.getString("To"), jEdge.getInt("Capacity"), 0);
+            if ( e == null) {
+                graph.checkInverseArrowConnection(jEdge.getString("From"), jEdge.getString("To"), jEdge.getInt("Capacity"));
+            } else {
+                Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
+                arrow.setEdge(e);
+                circles.get(jEdge.getString("From")).addArrowFrom(arrow);
+                circles.get(jEdge.getString("To")).addArrowTo(arrow);
+            }
+            
         }
 
         if (!jNodeEdge.getString("Source").equals("")) {
@@ -385,12 +402,18 @@ public class EdmondsKarpController {
 
             for (Arrow arrow : arrayArrow) {
 
-                if (!arrow.getEdge().isResidual()) {
-                    JSONObject jEdge = new JSONObject();
-                    jEdge.put("From", arrow.getEdge().getNodeA().getName());
-                    jEdge.put("To", arrow.getEdge().getNodeB().getName());
-                    jEdge.put("Capacity", arrow.getEdge().getCapacity());
-                    edgeJArray.put(jEdge);
+                JSONObject jEdge = new JSONObject();
+                jEdge.put("From", arrow.getEdge().getNodeA().getName());
+                jEdge.put("To", arrow.getEdge().getNodeB().getName());
+                jEdge.put("Capacity", arrow.getEdge().getCapacity());
+                edgeJArray.put(jEdge);
+          
+                if (!arrow.getEdge().getInverse().isResidual()) {
+                    JSONObject jEdge2 = new JSONObject();
+                    jEdge2.put("From", arrow.getEdge().getInverse().getNodeA().getName());
+                    jEdge2.put("To", arrow.getEdge().getInverse().getNodeB().getName());
+                    jEdge2.put("Capacity", arrow.getEdge().getInverse().getCapacity());
+                    edgeJArray.put(jEdge2);
                 }
             }
             nodeJArray.put(jNode);
@@ -412,17 +435,24 @@ public class EdmondsKarpController {
         return jNodeEdge.toString();
     }
    
-    public void setCapacity(Arrow arrow, int capacity) {
-        arrow.getEdge().setCapacity(capacity);
-        arrow.getEdge().getInverse().setCapacity(capacity);
-        arrow.getEdge().getInverse().setFlow(capacity);
+    public void setCapacity(Arrow arrow, int capacity, int edge) {
+        if ( edge == 0 ) {
+            arrow.getEdge().setCapacity(capacity);
+        } else if ( edge == 1 ) {
+            arrow.getEdge().getInverse().setCapacity(capacity);
+        }
+
         saveState();
 
     }
 
-    public void setFlow(Arrow arrow, int flow) {
+    public void setFlow(Arrow arrow, int flow, int edge) {
         arrow.getEdge().setFlow(flow);
-        arrow.getEdge().getInverse().setFlow(-flow);
+        if (edge == 0) {
+            arrow.getEdge().setFlow(flow);
+        } else if (edge == 1) {
+            arrow.getEdge().getInverse().setFlow(flow);
+        }
         saveState();
 
     }

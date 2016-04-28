@@ -72,7 +72,7 @@ public class Graph extends Observable{
 
     public boolean setSink(Node sink) {
         for (Edge edge : sink.getEdges()) {
-            if (!edge.isResidual() && edge.getNodeA() == sink) {
+            if (!edge.isResidual() && edge.getInverse().isResidual() && edge.getNodeA() == sink) {
                 return false;
             }
         }
@@ -121,6 +121,20 @@ public class Graph extends Observable{
         nodes.remove(node);
         return true;
     }
+    
+    public boolean checkInverseArrowConnection(String a, String b, int capacity) {
+        if ( getNode(b) == null ) {
+            return false;
+        }
+        Edge inverse = getNode(b).getEdgeBNotResidual(getNode(a));
+        if ( inverse != null && getNode(a).getEdgeBNotResidual(getNode(b)) == null ) {
+            inverse.getInverse().setIsResidual(false);
+            inverse.getInverse().setCapacity(capacity);
+            inverse.getInverse().setFlow(0);
+            return true;
+        }
+        return false;
+    }
 
     public Edge connect(Node a, Node adjacent, int capacity, int flow) {
         if (nodes.size() == 1 || capacity < flow) {
@@ -137,7 +151,7 @@ public class Graph extends Observable{
         } else if (adjacent.getEdgeBNotResidual(a) != null) {
             return null;
         }
-
+        
         Edge edge = new Edge(a, adjacent);
         edge.setCapacity(capacity);
         edge.setIsResidual(false);
@@ -145,8 +159,8 @@ public class Graph extends Observable{
         a.addEdge(edge);
 
         Edge edgeRes = new Edge(adjacent, a);
-        edgeRes.setCapacity(capacity);
-        edgeRes.setFlow(capacity);
+        edgeRes.setCapacity(0);
+        edgeRes.setFlow(0);
         edgeRes.setIsResidual(true);
         adjacent.addEdge(edgeRes);
 
