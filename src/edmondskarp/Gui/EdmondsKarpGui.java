@@ -168,6 +168,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItemExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemExample = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -826,6 +827,14 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         });
         jMenu1.add(jMenuItem4);
 
+        jMenuItemExit.setText("Exit");
+        jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemExit);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Modifica");
@@ -1235,6 +1244,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         displayMessage("Created by Gabriele Gelardi\nemail: gabriele.gelardi@gmail.com");
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
+    private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
+        // TODO add your handling code here:
+        controller.exit();
+    }//GEN-LAST:event_jMenuItemExitActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1517,6 +1531,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExample;
+    private javax.swing.JMenuItem jMenuItemExit;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
