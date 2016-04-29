@@ -171,6 +171,8 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         jMenu2 = new javax.swing.JMenu();
         jMenuItemExample = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItemAbout = new javax.swing.JMenuItem();
 
         jPopupMenu1.setLightWeightPopupEnabled(false);
         jPopupMenu1.setMaximumSize(new java.awt.Dimension(97, 54));
@@ -828,7 +830,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
 
         jMenu2.setText("Modifica");
         jMenu2.setMaximumSize(new java.awt.Dimension(70, 32767));
-        jMenu2.setPreferredSize(new java.awt.Dimension(60, 21));
+        jMenu2.setPreferredSize(new java.awt.Dimension(90, 21));
 
         jMenuItemExample.setText("Carica esempio");
         jMenuItemExample.addActionListener(new java.awt.event.ActionListener() {
@@ -847,6 +849,19 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         jMenu2.add(jMenuItem10);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("help");
+        jMenu3.setPreferredSize(new java.awt.Dimension(40, 21));
+
+        jMenuItemAbout.setText("About");
+        jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAboutActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItemAbout);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -1215,6 +1230,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
         update();
     }//GEN-LAST:event_residualButtonActionPerformed
 
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
+        // TODO add your handling code here:
+        displayMessage("Created by Gabriele Gelardi\nemail: gabriele.gelardi@gmail.com");
+    }//GEN-LAST:event_jMenuItemAboutActionPerformed
+
     public boolean isPlaySelected() {
         return playButton.isSelected();
     }
@@ -1483,6 +1503,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabelMin;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
@@ -1494,6 +1515,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExample;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
