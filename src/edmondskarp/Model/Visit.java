@@ -10,6 +10,6 @@ package edmondskarp.Model;
  * @author gabriele
  */
 public abstract class Visit {
-    
+
     public abstract boolean visitGraph(Node source);
 }

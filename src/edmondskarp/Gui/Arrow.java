@@ -6,11 +6,9 @@
 package edmondskarp.Gui;
 
 import edmondskarp.Model.Edge;
-import edmondskarp.Model.Node;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
@@ -33,8 +31,8 @@ public class Arrow extends MyShape {
     private final Line2D.Double ABArrow;
     private final Line2D.Double ABPointer1;
     private final Line2D.Double ABPointer2;
-    private Point2D[] textInverseABArrow;
-    private Point2D[] textInverseBAArrow;
+    private final Point2D[] textInverseABArrow;
+    private final Point2D[] textInverseBAArrow;
     protected Edge edge;
 
     public Arrow(Circle from, Circle to) {
@@ -56,7 +54,6 @@ public class Arrow extends MyShape {
         this.to = to;
         c = Color.BLACK;
         update();
-
     }
 
     public Circle getFrom() {
@@ -92,9 +89,9 @@ public class Arrow extends MyShape {
         if (Config.getConfig().getResidualMode()) {
             if (edge.getResidual() != 0 && edge.getInverse().getResidual() != 0) {
                 g2.setColor(getColor(edge));
-                drawRotateText(g2, ABtmp, "<"+edge.getResidual()+">", angle, false);
+                drawRotateText(g2, ABtmp, "<" + edge.getResidual() + ">", angle, false);
                 g2.setColor(getColor(edge.getInverse()));
-                drawRotateText(g2, BAtmp, "<"+edge.getInverse().getResidual()+">", angle, false);
+                drawRotateText(g2, BAtmp, "<" + edge.getInverse().getResidual() + ">", angle, false);
             } else if (edge.getInverse().getResidual() != 0) {
                 Circle tmp = from; //hack
                 from = to;
@@ -105,29 +102,27 @@ public class Arrow extends MyShape {
                     tmpText = pointText[0];
                 }
                 g2.setColor(getColor(edge.getInverse()));
-                drawRotateText(g2, tmpText, "<"+edge.getInverse().getResidual()+">", angle, false);
+                drawRotateText(g2, tmpText, "<" + edge.getInverse().getResidual() + ">", angle, false);
                 to = from;
                 from = tmp;
                 update();
             } else {
                 g2.setColor(getColor(edge));
-                drawRotateText(g2, centerText, "<"+edge.getResidual()+">", angle, false);
+                drawRotateText(g2, centerText, "<" + edge.getResidual() + ">", angle, false);
             }
         } else if (edge.getInverse().isDiscovered()) {
             g2.setColor(getColor(edge));
             drawRotateText(g2, ABtmp, edge.getFlow() + "/" + edge.getCapacity(), angle, false);
             g2.setColor(getColor(edge.getInverse()));
             drawRotateText(g2, BAtmp, edge.getInverse().getFlow() + "/" + edge.getInverse().getCapacity(), angle, false);
+        } else if (!edge.getInverse().isResidual()) {
+            g2.setColor(getColor(edge));
+            drawRotateText(g2, ABtmp, edge.getFlow() + "/" + edge.getCapacity(), angle, false);
+            g2.setColor(getColor(edge.getInverse()));
+            drawRotateText(g2, BAtmp, edge.getInverse().getFlow() + "/" + edge.getInverse().getCapacity(), angle, false);
         } else {
-            if (!edge.getInverse().isResidual()) {
-                g2.setColor(getColor(edge));
-                drawRotateText(g2, ABtmp, edge.getFlow() + "/" + edge.getCapacity(), angle, false);
-                g2.setColor(getColor(edge.getInverse()));
-                drawRotateText(g2, BAtmp, edge.getInverse().getFlow() + "/" + edge.getInverse().getCapacity(), angle, false);
-            } else {
-                g2.setColor(getColor(edge));
-                drawRotateText(g2, centerText, edge.getFlow() + "/" + edge.getCapacity(), angle, edge.getFlow() == edge.getCapacity());
-            }
+            g2.setColor(getColor(edge));
+            drawRotateText(g2, centerText, edge.getFlow() + "/" + edge.getCapacity(), angle, edge.getFlow() == edge.getCapacity());
         }
     }
 
@@ -144,23 +139,21 @@ public class Arrow extends MyShape {
             }
         } else if (edge.getInverse().isDiscovered()) {
             drawDoubleArrow(g2);
+        } else if (!edge.getInverse().isResidual()) {
+            drawDoubleArrow(g2);
         } else {
-            if (!edge.getInverse().isResidual()) {
-                drawDoubleArrow(g2);
-            } else {
-               drawSingleArrow(g2);
-            }
+            drawSingleArrow(g2);
         }
 
     }
-    
+
     private void drawSingleArrow(Graphics2D g2) {
         g2.setColor(getColor(edge));
         g2.draw(shape);
         g2.draw(centerPointer1);
         g2.draw(centerPointer2);
     }
-    
+
     private void drawSingleInvertedArrow(Graphics2D g2) {
         Circle tmp = from; //hack
         from = to;
@@ -178,7 +171,7 @@ public class Arrow extends MyShape {
         from = tmp;
         update();
     }
-    
+
     private void drawDoubleArrow(Graphics2D g2) {
         g2.setColor(getColor(edge));
         g2.draw(ABArrow);
@@ -208,7 +201,7 @@ public class Arrow extends MyShape {
         g2.rotate(-angle);
         g2.translate(-point.getX(), -point.getY());
     }
-    
+
     private void drawDashed(Graphics2D g2, Line2D line) {
         Stroke tmp = g2.getStroke();
         BasicStroke bs = new BasicStroke((float) (Config.getConfig().getStrokeArrow() * 0.1), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 10, new float[]{5, 5, 5}, 7);
@@ -390,7 +383,7 @@ public class Arrow extends MyShape {
 
         ((Line2D) shape).setLine(points[0], points[1]);
     }
-    
+
     public int getSelectedEdge(Point2D point) {
         int boxX = (int) (point.getX() - 30 / 2);
         int boxY = (int) (point.getY() - 30 / 2);
@@ -398,18 +391,16 @@ public class Arrow extends MyShape {
         int width = 30;
         int height = 30;
 
-        if ( !edge.getInverse().isResidual() ) {
+        if (!edge.getInverse().isResidual()) {
 
             if (ABArrow.intersects(boxX, boxY, width, height)) {
                 return 0;
             } else if (BAArrow.intersects(boxX, boxY, width, height)) {
                 return 1;
             }
-            
-        } else {
-            if (((Line2D) shape).intersects(boxX, boxY, width, height)) {
-                return 0;
-            }
+
+        } else if (((Line2D) shape).intersects(boxX, boxY, width, height)) {
+            return 0;
         }
         return -1;
     }

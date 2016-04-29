@@ -12,7 +12,7 @@ import java.awt.Color;
  * @author gabriele
  */
 public class Config {
-    
+
     private Color defaultArrow;
     private Color selectedArrow;
     private Color usedArrow;
@@ -26,8 +26,8 @@ public class Config {
     private boolean randomCapacity;
     private boolean needUpdate;
     private boolean residualMode;
-    private static Config  config= new Config();
-    
+    private static Config config = new Config();
+
     private Config() {
         defaultArrow = Color.BLACK;
         selectedArrow = Color.GREEN;
@@ -43,11 +43,11 @@ public class Config {
         strokeArrow = 10;
         strokeCircle = 10;
     }
-    
+
     public static Config getConfig() {
         return config;
     }
-    
+
     public boolean isNeedUpdate() {
         return needUpdate;
     }
@@ -113,7 +113,7 @@ public class Config {
     public void setPosText(int posText) {
         needUpdate = true;
         this.posText = posText;
-        
+
     }
 
     public int getFixedCapacity() {
@@ -132,27 +132,26 @@ public class Config {
         this.randomCapacity = randomCapacity;
     }
 
-
     public float getStrokeCircle() {
         return strokeCircle;
     }
-    
+
     public void setStrokeCircle(float strokeCircle) {
         this.strokeCircle = strokeCircle;
     }
-    
+
     public float getStrokeArrow() {
         return strokeArrow;
     }
-    
+
     public void setStrokeArrow(float strokeArrow) {
         this.strokeArrow = strokeArrow;
     }
-    
+
     public boolean getResidualMode() {
         return residualMode;
     }
-    
+
     public void setResitualMode(boolean residualMode) {
         this.residualMode = residualMode;
     }

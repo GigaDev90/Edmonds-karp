@@ -57,10 +57,10 @@ public class Node {
         }
         return null;
     }
-    
+
     public Edge getEdgeBNotResidual(Node adj) {
         for (Edge edge : edges) {
-            if ( edge.getNodeB() == adj && !edge.isResidual() ) {
+            if (edge.getNodeB() == adj && !edge.isResidual()) {
                 return edge;
             }
         }

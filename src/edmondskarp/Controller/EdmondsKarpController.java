@@ -46,12 +46,12 @@ import org.json.JSONObject;
  */
 public class EdmondsKarpController {
 
-    private Graph graph;
+    private final Graph graph;
     private final EdmondsKarpGui gui;
     private Timer tmr1;
     private int name;
     private int bfVisit;
-    private String[] history;
+    private final String[] history;
     private int indexHistory;
     private int older;
     private int newest;
@@ -71,18 +71,19 @@ public class EdmondsKarpController {
         saveState();
         graph.addObserver(gui);
     }
-   
+
     public void saveState(String state) {
         history[indexHistory % history.length] = state;
         indexHistory++;
-        if (newest == indexHistory -1) {
+        if (newest == indexHistory - 1) {
             newest++;
+        } else if (newest > indexHistory - 1) {
+            newest = indexHistory;
         }
-        System.out.println("indexHistory "+(indexHistory -1));
         older = indexHistory < history.length ? 0 : (indexHistory % history.length);
         isSaved = false;
     }
-    
+
     public void saveState() {
         try {
             saveState(getState());
@@ -90,45 +91,40 @@ public class EdmondsKarpController {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void restoreState(boolean back) {
-        try {         
+        try {
             if (back) {
-                if (indexHistory > older +1) {
+                if (indexHistory > older + 1) {
                     openState(history[(indexHistory - 2) % history.length]);
                     indexHistory--;
-                    System.out.println("restore back"+(indexHistory - 1));
                 }
-            } else {
-                if (indexHistory < newest) {
-                    openState(history[indexHistory % history.length]);
-                    System.out.println("restore forward"+(indexHistory));
-                    indexHistory++;
-                    
-                }
+            } else if (indexHistory < newest) {
+                openState(history[indexHistory % history.length]);
+                indexHistory++;
             }
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
-        }    
+        }
     }
-    
+
     public boolean checkAddInverseArrow(String from, String to) {
-        if ( !Config.getConfig().isRandomCapacity()) {
+        if (!Config.getConfig().isRandomCapacity()) {
             return graph.checkInverseArrowConnection(from, to, Config.getConfig().getFixedCapacity());
         }
-        
-        return graph.checkInverseArrowConnection(from, to, (int)((Math.random() * 100) + 1));
+
+        return graph.checkInverseArrowConnection(from, to, (int) ((Math.random() * 100) + 1));
     }
-    
+
     public boolean addEdge(Arrow arrow) {
-        Edge e = null;
-        
-        if ( !Config.getConfig().isRandomCapacity()) {
+        Edge e;
+
+        if (!Config.getConfig().isRandomCapacity()) {
             e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), Config.getConfig().getFixedCapacity(), 0);
         } else {
-            e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), (int)((Math.random() * 100) + 1), 0);
+            e = graph.connect(arrow.getFrom().getName(), arrow.getTo().getName(), (int) ((Math.random() * 100) + 1), 0);
         }
-       
+
         if (e != null) {
             arrow.setEdge(e);
             return true;
@@ -170,9 +166,9 @@ public class EdmondsKarpController {
     }
 
     public void play() {
-        if ( gui.isPlaySelected() )
+        if (gui.isPlaySelected()) {
             tmr1.start();
-        else {
+        } else {
             tmr1.stop();
         }
     }
@@ -181,11 +177,11 @@ public class EdmondsKarpController {
         int delay = 2000; //milliseconds
         ActionListener taskPerformer1 = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                if ( oneStepForward() ) {
+                if (oneStepForward()) {
                     tmr1.stop();
                     gui.setUpPlayButton();
                 }
-                
+
             }
         };
 
@@ -202,7 +198,7 @@ public class EdmondsKarpController {
     }
 
     public void run() {
-        if ( graph.getSource() != null && graph.getSink() != null) {
+        if (graph.getSource() != null && graph.getSink() != null) {
             graph.edmondsKarpClear();
             if (!graph.EdmondsKarp()) {
                 gui.displayMessage("Errore: controllare sorgente e pozzo");
@@ -212,10 +208,11 @@ public class EdmondsKarpController {
         }
         gui.update();
     }
-    
+
     public void onStepBack() {
-        if ( bfVisit == 0) return;
-        else if (bfVisit == 1) {
+        if (bfVisit == 0) {
+            return;
+        } else if (bfVisit == 1) {
             stop();
             gui.resetLabel();
             return;
@@ -224,19 +221,19 @@ public class EdmondsKarpController {
         graph.edmondsKarpClear();
         graph.BFVisitClear();
         int temp = bfVisit - 1;
-        
-        for ( int i = 0; i < temp; i++ ) {
-            oneStepForward(); 
+
+        for (int i = 0; i < temp; i++) {
+            oneStepForward();
         }
         bfVisit = temp;
         gui.update();
     }
 
     public boolean oneStepForward() {
-        if ( graph.getSource() != null && graph.getSink() != null) {
-            if ( graph.getSink().getParent() == null ) {
-                if ( graph.BFSVisit() ) {
-                    if ( graph.getSink().getParent() == null ) {
+        if (graph.getSource() != null && graph.getSink() != null) {
+            if (graph.getSink().getParent() == null) {
+                if (graph.BFSVisit()) {
+                    if (graph.getSink().getParent() == null) {
                         gui.displayMessage("Finito: è stato raggiunto il flusso massimo");
                         return true;
                     }
@@ -245,25 +242,23 @@ public class EdmondsKarpController {
                     gui.displayMessage("BFS fallita");
                     return true;
                 }
+            } else if (graph.EdmondsKarpOneStep()) {
+                graph.getSink().setParent(null);
             } else {
-                if ( graph.EdmondsKarpOneStep() ) {
-                    graph.getSink().setParent(null);
-                } else {
-                    gui.displayMessage("Errore: stato grafo inconsistente.\nPremere stop per riavviare la simulazione");
-                    return true;
-                }
+                gui.displayMessage("Errore: stato grafo inconsistente.\nPremere stop per riavviare la simulazione");
+                return true;
             }
         } else {
             gui.displayMessage("Errore: controllare sorgente e pozzo");
             return true;
         }
-        
+
         bfVisit++;
         gui.update();
-        
+
         return false;
     }
-    
+
     public void newGraph() {
         gui.getCircles().clear();
         name = 0;
@@ -274,9 +269,9 @@ public class EdmondsKarpController {
         graph.clearGraph();
         gui.update();
     }
-    
+
     public void setVisit(int visit) {
-        if ( visit == 0) {
+        if (visit == 0) {
             graph.setVisit(new BFSVisit());
         } else {
             graph.setVisit(new DFSVisit());
@@ -300,12 +295,12 @@ public class EdmondsKarpController {
         } catch (IOException e) {
 
         }
-        
+
         newGraph();
         saveState();
         openState(s);
     }
-    
+
     public void openState(String s) throws JSONException {
         if (s == null || s.equals("")) {
             graph.clearGraph();
@@ -315,8 +310,8 @@ public class EdmondsKarpController {
             return;
         }
 
-        Map<String, Circle> circles = new HashMap<String, Circle>();
-        graph.clearGraph();;
+        Map<String, Circle> circles = new HashMap<>();
+        graph.clearGraph();
 
         int maxIndex = 0;
         JSONObject jNodeEdge = new JSONObject(s); // Parse the JSON to a JSONObject
@@ -344,7 +339,7 @@ public class EdmondsKarpController {
         for (int i = 0; i < jEdges.length(); i++) { // Loop over each each row of edge
             JSONObject jEdge = jEdges.getJSONObject(i);
             Edge e = graph.connect(jEdge.getString("From"), jEdge.getString("To"), jEdge.getInt("Capacity"), 0);
-            if ( e == null) {
+            if (e == null) {
                 graph.checkInverseArrowConnection(jEdge.getString("From"), jEdge.getString("To"), jEdge.getInt("Capacity"));
             } else {
                 Arrow arrow = new Arrow(circles.get(jEdge.getString("From")), circles.get(jEdge.getString("To")));
@@ -352,7 +347,7 @@ public class EdmondsKarpController {
                 circles.get(jEdge.getString("From")).addArrowFrom(arrow);
                 circles.get(jEdge.getString("To")).addArrowTo(arrow);
             }
-            
+
         }
 
         if (!jNodeEdge.getString("Source").equals("")) {
@@ -379,10 +374,10 @@ public class EdmondsKarpController {
         } catch (IOException e) {
         }
     }
-    
+
     public String getState() throws JSONException {
-        
-        if ( graph.getNodes().isEmpty() ) {
+
+        if (graph.getNodes().isEmpty()) {
             return "";
         }
 
@@ -407,7 +402,7 @@ public class EdmondsKarpController {
                 jEdge.put("To", arrow.getEdge().getNodeB().getName());
                 jEdge.put("Capacity", arrow.getEdge().getCapacity());
                 edgeJArray.put(jEdge);
-          
+
                 if (!arrow.getEdge().getInverse().isResidual()) {
                     JSONObject jEdge2 = new JSONObject();
                     jEdge2.put("From", arrow.getEdge().getInverse().getNodeA().getName());
@@ -422,23 +417,25 @@ public class EdmondsKarpController {
         JSONObject jNodeEdge = new JSONObject();
         jNodeEdge.put("Node", nodeJArray);
         jNodeEdge.put("Edge", edgeJArray);
-        
-        if (graph.getSource() != null)
+
+        if (graph.getSource() != null) {
             jNodeEdge.put("Source", graph.getSource().getName());
-        else
+        } else {
             jNodeEdge.put("Source", "");
-        if ( graph.getSink() != null )
+        }
+        if (graph.getSink() != null) {
             jNodeEdge.put("Sink", graph.getSink().getName());
-        else
+        } else {
             jNodeEdge.put("Sink", "");
+        }
 
         return jNodeEdge.toString();
     }
-   
+
     public void setCapacity(Arrow arrow, int capacity, int edge) {
-        if ( edge == 0 ) {
+        if (edge == 0) {
             arrow.getEdge().setCapacity(capacity);
-        } else if ( edge == 1 ) {
+        } else if (edge == 1) {
             arrow.getEdge().getInverse().setCapacity(capacity);
         }
 
@@ -458,7 +455,7 @@ public class EdmondsKarpController {
     }
 
     public void loadExample() {
-        
+
         String example = "{\"Source\":\"0\",\"Node\":[{\"PosY\":261,\"PosX\":643,\"ID\":\"3\"},{\"PosY\":453,\"PosX\":549,\"ID\":\"2\"},"
                 + "{\"PosY\":454,\"PosX\":181,\"ID\":\"1\"},{\"PosY\":260,\"PosX\":112,\"ID\":\"0\"},{\"PosY\":59,\"PosX\":548,\"ID\":\"7\"},"
                 + "{\"PosY\":58,\"PosX\":163,\"ID\":\"6\"},{\"PosY\":320,\"PosX\":477,\"ID\":\"5\"},{\"PosY\":318,\"PosX\":279,\"ID\":\"4\"},"
@@ -479,13 +476,14 @@ public class EdmondsKarpController {
 
     public void exit() {
         int response = 0;
-        if ( indexHistory > 1 && !isSaved) {
+        if (indexHistory > 1 && !isSaved) {
             response = gui.checkSave();
         }
-        
-        if (response == -1)
+
+        if (response == -1) {
             return;
-        
+        }
+
         System.exit(0);
     }
 
@@ -493,7 +491,7 @@ public class EdmondsKarpController {
         File newFile = new File("config.properties");
         InputStream os;
         try {
-            Properties properties =  new Properties();
+            Properties properties = new Properties();
             os = new FileInputStream(newFile);
             properties.load(os);
             Config.getConfig().setDefaultArrow(new Color(Integer.parseInt(properties.getProperty("defaultArrow"))));
@@ -515,26 +513,26 @@ public class EdmondsKarpController {
         }
 
     }
-    
+
     public void saveConfig() {
         File newFile = new File("config.properties");
         OutputStream os;
         try {
-            Properties properties =  new Properties();
+            Properties properties = new Properties();
             os = new FileOutputStream(newFile);
-            
-            properties.setProperty("defaultArrow", Config.getConfig().getDefaultArrow().getRGB()+"");
-            properties.setProperty("selectedArrow", Config.getConfig().getSelectedArrow().getRGB()+"");
-            properties.setProperty("usedArrow", Config.getConfig().getUsedArrow().getRGB()+"");
-            properties.setProperty("filledArrow", Config.getConfig().getFilledArrow().getRGB()+"");
-            properties.setProperty("dimText", Config.getConfig().getDimText()+"");
-            properties.setProperty("dimCircle", Config.getConfig().getDimCircle()+"");
-            properties.setProperty("posText", Config.getConfig().getPosText()+"");
-            properties.setProperty("fixedCapacity", Config.getConfig().getFixedCapacity()+"");
-            properties.setProperty("strokeCircle", Config.getConfig().getStrokeCircle()+"");
-            properties.setProperty("strokeArrow", Config.getConfig().getStrokeArrow()+"");
-            properties.setProperty("randomCapacity", Config.getConfig().isRandomCapacity()+"");
-            properties.store(os, "Properties File");  
+
+            properties.setProperty("defaultArrow", Config.getConfig().getDefaultArrow().getRGB() + "");
+            properties.setProperty("selectedArrow", Config.getConfig().getSelectedArrow().getRGB() + "");
+            properties.setProperty("usedArrow", Config.getConfig().getUsedArrow().getRGB() + "");
+            properties.setProperty("filledArrow", Config.getConfig().getFilledArrow().getRGB() + "");
+            properties.setProperty("dimText", Config.getConfig().getDimText() + "");
+            properties.setProperty("dimCircle", Config.getConfig().getDimCircle() + "");
+            properties.setProperty("posText", Config.getConfig().getPosText() + "");
+            properties.setProperty("fixedCapacity", Config.getConfig().getFixedCapacity() + "");
+            properties.setProperty("strokeCircle", Config.getConfig().getStrokeCircle() + "");
+            properties.setProperty("strokeArrow", Config.getConfig().getStrokeArrow() + "");
+            properties.setProperty("randomCapacity", Config.getConfig().isRandomCapacity() + "");
+            properties.store(os, "Properties File");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(EdmondsKarpController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -5,14 +5,12 @@
  */
 package edmondskarp.Gui;
 
-import edmondskarp.Model.Edge;
 import edmondskarp.Model.Node;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -37,13 +35,22 @@ public class Circle extends MyShape {
         isUpdate = false;
         c = Color.BLACK;
     }
-    public String getName() { return node.getName(); }
-    
-    public ArrayList getArrowFrom() { return arrowsFrom; }
-    
-    public Node getNode() { return node; }
-    
-    public void addNode(Node node) {this.node = node; }
+
+    public String getName() {
+        return node.getName();
+    }
+
+    public ArrayList getArrowFrom() {
+        return arrowsFrom;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void addNode(Node node) {
+        this.node = node;
+    }
 
     public void addArrowFrom(Arrow arrow) {
         arrowsFrom.add(arrow);
@@ -92,8 +99,9 @@ public class Circle extends MyShape {
     @Override
     public void draw(Graphics2D g2) {
         g2.setStroke(new BasicStroke((float) (Config.getConfig().getStrokeCircle() * 0.1)));
-        if ( Config.getConfig().isNeedUpdate() )
+        if (Config.getConfig().isNeedUpdate()) {
             setFirstPoint(getCenter());
+        }
         g2.setColor(c);
         g2.draw(shape);
         if (select) {
@@ -107,7 +115,7 @@ public class Circle extends MyShape {
             g2.draw(circle);
             g2.setColor(c);
         }
-        
+
         g2.setStroke(new BasicStroke(1));
     }
 
@@ -117,27 +125,25 @@ public class Circle extends MyShape {
             arrow.draw(g2);
             arrow.drawText(g2);
         }
-        
+
     }
 
     @Override
     public void drawText(Graphics2D g2) {
         g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 20));
-        if ( node.getName().length() > 2 ) {
+        if (node.getName().length() > 2) {
             g2.drawString(node.getName(), (int) pointText[0].getX() - 10, (int) pointText[0].getY());
-        } else if ( node.getName().length() > 1) {
+        } else if (node.getName().length() > 1) {
             g2.drawString(node.getName(), (int) pointText[0].getX() - 5, (int) pointText[0].getY());
         } else {
             g2.drawString(node.getName(), (int) pointText[0].getX(), (int) pointText[0].getY());
         }
-        
-        
+
         if (node.isSource()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
             g2.drawString("S", (int) pointText[0].getX() + 4, (int) pointText[0].getY() - 18);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
-        }
-        else if (node.isSink()) {
+        } else if (node.isSink()) {
             g2.setFont(new Font("Ubuntu", Font.BOLD, 15));
             g2.drawString("T", (int) pointText[0].getX() + 4, (int) pointText[0].getY() - 18);
             g2.setFont(new Font("Ubuntu", Font.HANGING_BASELINE, 15));
@@ -149,11 +155,11 @@ public class Circle extends MyShape {
     }
 
     public void updateArrow() {
-        if ( !isUpdate || Config.getConfig().isNeedUpdate() ) {
+        if (!isUpdate || Config.getConfig().isNeedUpdate()) {
             for (Arrow arrow : arrowsFrom) {
                 arrow.update();
             }
-            
+
             for (Arrow arrow : arrowsTo) {
                 arrow.update();
             }
@@ -163,13 +169,8 @@ public class Circle extends MyShape {
 
     public Arrow checkForArrow(Point2D point) {
         for (Arrow arrow : arrowsFrom) {
-            int boxX = (int) (point.getX() - 30 / 2);
-            int boxY = (int) (point.getY() - 30 / 2);
 
-            int width = 30;
-            int height = 30;
-
-            if(arrow.getSelectedEdge(point) == 1 || arrow.getSelectedEdge(point) == 0) {
+            if (arrow.getSelectedEdge(point) == 1 || arrow.getSelectedEdge(point) == 0) {
                 return arrow;
             }
         }

@@ -12,9 +12,9 @@ import java.util.Observable;
  *
  * @author gabriele
  */
-public class Graph extends Observable{
+public class Graph extends Observable {
 
-    private ArrayList<Node> nodes;
+    private final ArrayList<Node> nodes;
     private Node source;
     private Node sink;
     private Visit visit;
@@ -26,11 +26,11 @@ public class Graph extends Observable{
         sink = null;
         visit = new BFSVisit();
     }
-    
+
     public static Graph getGraph() {
         return graph;
     }
-    
+
     public void clearGraph() {
         nodes.clear();
         source = null;
@@ -121,13 +121,13 @@ public class Graph extends Observable{
         nodes.remove(node);
         return true;
     }
-    
+
     public boolean checkInverseArrowConnection(String a, String b, int capacity) {
-        if ( getNode(b) == null ) {
+        if (getNode(b) == null) {
             return false;
         }
         Edge inverse = getNode(b).getEdgeBNotResidual(getNode(a));
-        if ( inverse != null && getNode(a).getEdgeBNotResidual(getNode(b)) == null ) {
+        if (inverse != null && getNode(a).getEdgeBNotResidual(getNode(b)) == null) {
             inverse.getInverse().setIsResidual(false);
             inverse.getInverse().setCapacity(capacity);
             inverse.getInverse().setFlow(0);
@@ -151,7 +151,7 @@ public class Graph extends Observable{
         } else if (adjacent.getEdgeBNotResidual(a) != null) {
             return null;
         }
-        
+
         Edge edge = new Edge(a, adjacent);
         edge.setCapacity(capacity);
         edge.setIsResidual(false);
@@ -214,10 +214,9 @@ public class Graph extends Observable{
             this.setChanged();
             this.notifyObservers(0);
         }
-        
+
         return pathFound;
     }
-    
 
     public boolean EdmondsKarp() {
         if (source == null || sink == null) {
@@ -240,7 +239,7 @@ public class Graph extends Observable{
 
                 tmpNode = tmpNode.getParent();
             }
-            //System.out.println("Min " + min);
+
             tmpNode = sink;
 
             while (tmpNode.getParent() != null) {
@@ -256,28 +255,26 @@ public class Graph extends Observable{
         this.notifyObservers(1);
         return true;
     }
-    
 
-    
     public int getMaxFlow() {
-        if ( source == null) {
+        if (source == null) {
             return 0;
         }
         int max = 0;
-        for (Edge edge: source.getEdges()) {
-            if ( !edge.isResidual() ) {
+        for (Edge edge : source.getEdges()) {
+            if (!edge.isResidual()) {
                 max += edge.getFlow();
             }
         }
-        
+
         return max;
     }
-    
+
     public int getMinFlow() {
         if (sink == null || sink.getParent() == null) {
             return 0;
         }
-        
+
         int min;
         Node tmpNode = sink.getParent();
         if (tmpNode.getEdgeB(sink) != null) {
@@ -290,11 +287,11 @@ public class Graph extends Observable{
             if (tmpNode.getParent().getEdgeB(tmpNode) != null
                     && tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
                 min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
-                //System.out.println("Min " + min);
+
             }
             tmpNode = tmpNode.getParent();
         }
-        
+
         return min;
     }
 
@@ -335,7 +332,7 @@ public class Graph extends Observable{
         }
 
         if (sink.getParent() != null) {
-            
+
             Node tmpNode = sink.getParent();
             int min = 0;
             if (tmpNode.getEdgeB(sink) != null) {
@@ -349,7 +346,7 @@ public class Graph extends Observable{
                         && tmpNode.getParent().getEdgeB(tmpNode).getResidual() < min) {
 
                     min = tmpNode.getParent().getEdgeB(tmpNode).getResidual();
-                    //System.out.println("Min " + min);
+
                 }
                 tmpNode = tmpNode.getParent();
             }
@@ -358,7 +355,7 @@ public class Graph extends Observable{
 
             while (tmpNode.getParent() != null) {
                 Edge tmpEdge = tmpNode.getParent().getEdgeB(tmpNode);
-                if ( tmpEdge != null) {
+                if (tmpEdge != null) {
                     tmpEdge.setFlow(tmpEdge.getFlow() + min);
                     tmpEdge.setIsDiscovered(false);
                     tmpNode.getEdgeB(tmpNode.getParent()).setFlow(tmpNode.getEdgeB(tmpNode.getParent()).getFlow() - min);
@@ -367,7 +364,7 @@ public class Graph extends Observable{
                     return false;
                 }
             }
-            
+
             this.setChanged();
             this.notifyObservers(1);
             return true;

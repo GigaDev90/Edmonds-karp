@@ -14,7 +14,7 @@ import edmondskarp.Gui.EdmondsKarpGui;
 public class Main {
 
     public static void main(String[] args) {
-        
+
         EdmondsKarpController controller = new EdmondsKarpController(EdmondsKarpGui.getGui());
         EdmondsKarpGui.getGui().setController(controller);
         /* Create and display the form */
@@ -23,5 +23,5 @@ public class Main {
                 EdmondsKarpGui.getGui().setVisible(true);
             }
         });
-    }   
+    }
 }

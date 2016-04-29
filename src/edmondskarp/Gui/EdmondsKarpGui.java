@@ -42,7 +42,7 @@ import org.json.JSONException;
  *
  * @author gabriele
  */
-public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
+public class EdmondsKarpGui extends javax.swing.JFrame implements Observer {
 
     private ArrayList<Circle> circles;
     private int MODE = 0;
@@ -52,11 +52,10 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     private final int DRAW = 0;
     private final int DRAG = 1;
     private final int ERASE = 3;
-    private  EdmondsKarpController controller;
+    private EdmondsKarpController controller;
     private static final EdmondsKarpGui gui = new EdmondsKarpGui();
     private Point2D pointTmp;
     private final JFileChooser chooser;
-    
 
     private EdmondsKarpGui() {
         try {
@@ -84,11 +83,11 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
         isInDragging = false;
         pointTmp = new Point2D.Double();
     }
-    
+
     public static EdmondsKarpGui getGui() {
         return gui;
     }
-    
+
     public void setController(EdmondsKarpController controller) {
         this.controller = controller;
         controller.searchDefaultPreference();
@@ -902,7 +901,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     }//GEN-LAST:event_myPanelMouseClicked
 
     private void myPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseDragged
-        if ( MODE == DRAG ) {
+        if (MODE == DRAG) {
             if (!isInDragging) {
 
                 if (shapeTmp != null) {
@@ -915,13 +914,13 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
                     shapeTmp.setFirstPoint(evt.getPoint());
                     shapeTmp.needUpdate();
                     isInDragging = true;
-                    
+
                 } else {
                     // addCircle(evt.getPoint());
                     isInDragging = false;
                     shapeTmp = null;
                 }
-                
+
             } else {
                 shapeTmp.setFirstPoint(evt.getPoint());
                 shapeTmp.needUpdate();
@@ -929,7 +928,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
                 update();
             }
         }
-        
+
     }//GEN-LAST:event_myPanelMouseDragged
 
     private void myPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myPanelMouseReleased
@@ -992,7 +991,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
         } catch (JSONException ex) {
             Logger.getLogger(EdmondsKarpGui.class.getName()).log(Level.SEVERE, null, ex);
         }
-            update();
+        update();
     }//GEN-LAST:event_OpenActionPerformed
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
@@ -1015,7 +1014,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
         jLabel1.setText("Set capacity");
         jTextField2.setText("");
         jDialog1.setVisible(true);
-        jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
+        jDialog1.setLocation((int) pointTmp.getX(), (int) pointTmp.getY());
         jDialog1.pack();
     }//GEN-LAST:event_setCapacityActionPerformed
 
@@ -1024,7 +1023,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
         jLabel1.setText("Set flow");
         jTextField2.setText("");
         jDialog1.setVisible(true);
-        jDialog1.setLocation((int)pointTmp.getX(), (int)pointTmp.getY());
+        jDialog1.setLocation((int) pointTmp.getX(), (int) pointTmp.getY());
         jDialog1.pack();
     }//GEN-LAST:event_setFlowActionPerformed
 
@@ -1094,7 +1093,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     private void defaultColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultColorActionPerformed
         // TODO add your handling code here:
-        Color c = JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
+        Color c = JColorChooser.showDialog(this, "Selezione Colore", Color.WHITE);
         jButtonDefaultColor.setBackground(c);
         Config.getConfig().setDefaultArrow(c);
         controller.saveConfig();
@@ -1103,7 +1102,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     private void attraversatoColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attraversatoColorActionPerformed
         // TODO add your handling code here:
-        Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
+        Color c = JColorChooser.showDialog(this, "Selezione Colore", Color.WHITE);
         jButtonAttraversatoColor.setBackground(c);
         Config.getConfig().setUsedArrow(c);
         controller.saveConfig();
@@ -1112,7 +1111,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     private void saturoColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saturoColorActionPerformed
         // TODO add your handling code here:
-        Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
+        Color c = JColorChooser.showDialog(this, "Selezione Colore", Color.WHITE);
         jButtonSaturoColor.setBackground(c);
         Config.getConfig().setFilledArrow(c);
         controller.saveConfig();
@@ -1121,7 +1120,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     private void selezionatoColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selezionatoColorActionPerformed
         // TODO add your handling code here:
-        Color c=JColorChooser.showDialog(this,"Selezione Colore",Color.WHITE);
+        Color c = JColorChooser.showDialog(this, "Selezione Colore", Color.WHITE);
         jButtonSelezionatoColor.setBackground(c);
         Config.getConfig().setSelectedArrow(c);
         controller.saveConfig();
@@ -1225,18 +1224,18 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     }
 
     public void eraseCircle(Circle circle) {
-        controller.saveState();
         circles.remove(circle);
         controller.removeNode(circle);
         circle.removeArrows();
+        controller.saveState();
         update();
     }
 
     public void eraseArrow(Arrow arrow) {
-        controller.saveState();
         arrow.getFrom().removeArrowFrom(arrow);
         arrow.getTo().removeArrowTo(arrow);
         controller.removeEdge(arrow);
+        controller.saveState();
         update();
     }
 
@@ -1315,16 +1314,16 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     public void displayMessage(String str) {
         JOptionPane.showMessageDialog(this, str);
     }
-    
+
     public int checkSave() {
         int response = JOptionPane.showConfirmDialog(
-            null,"Sono state fatte modifiche,\nvuoi salvare",
-            "Attenzione",
-            JOptionPane.YES_NO_OPTION);
+                null, "Sono state fatte modifiche,\nvuoi salvare",
+                "Attenzione",
+                JOptionPane.YES_NO_OPTION);
         if (response == 0) {
             saveGraph();
         }
-        return response;  
+        return response;
     }
 
     public ArrayList getCircles() {
@@ -1382,7 +1381,7 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
         }
     }
-    
+
     private void setupUndoHotkeys() {
         String UNDO = "Undo action key";
         String REDO = "Redo action key";
@@ -1416,17 +1415,17 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
     public void updatePrefMenu() {
         jRadioButtonDefaultCap.setSelected(!Config.getConfig().isRandomCapacity());
         jRadioButtonRandomCap.setSelected(Config.getConfig().isRandomCapacity());
-        if ( !Config.getConfig().isRandomCapacity()) {
-            jTextField1.setText(Config.getConfig().getFixedCapacity()+"");
+        if (!Config.getConfig().isRandomCapacity()) {
+            jTextField1.setText(Config.getConfig().getFixedCapacity() + "");
             jTextField1.setEnabled(true);
         }
         jSliderPosText.setValue(Config.getConfig().getPosText());
-        jComboBoxDimCircle.setSelectedItem(Config.getConfig().getDimCircle()+"");
-        jComboBoxDimText.setSelectedItem(Config.getConfig().getDimText()+"");
+        jComboBoxDimCircle.setSelectedItem(Config.getConfig().getDimCircle() + "");
+        jComboBoxDimText.setSelectedItem(Config.getConfig().getDimText() + "");
         StrokeArrowjSlider.setValue((int) Config.getConfig().getStrokeArrow());
         StrokeCirclejSlider.setValue((int) Config.getConfig().getStrokeCircle());
     }
-    
+
     public void resetLabel() {
         jLabelMin.setText("Min = 0");
         jLabelMaxFlow.setText("Flow = 0");
@@ -1434,15 +1433,15 @@ public class EdmondsKarpGui extends javax.swing.JFrame implements Observer{
 
     @Override
     public void update(Observable arg0, Object arg1) {
-       if (arg0 instanceof Graph) {
-           if ((int)arg1 == 1) {
-                jLabelMaxFlow.setText("Flow = "+((Graph) arg0).getMaxFlow());
-           } else if ((int)arg1 == 0) {
-                jLabelMin.setText("Min = "+((Graph) arg0).getMinFlow());
-           }
-       }
+        if (arg0 instanceof Graph) {
+            if ((int) arg1 == 1) {
+                jLabelMaxFlow.setText("Flow = " + ((Graph) arg0).getMaxFlow());
+            } else if ((int) arg1 == 0) {
+                jLabelMin.setText("Min = " + ((Graph) arg0).getMinFlow());
+            }
+        }
     }
-    
+
     private class WListener extends WindowAdapter {
 
         @Override
