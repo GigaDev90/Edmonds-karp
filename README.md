@@ -6,3 +6,5 @@
   - simulate every step of the algorithm (undo, pause, forward, autoplay)
   - choose different implementation of the algorith.
   - save/load previous graph.
+  
+![Alt text](/ed.png?raw=true "Edmonds-karp")
